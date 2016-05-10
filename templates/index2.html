@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<title> Oasis Dashboard </title>
+<meta charset="utf-8">
+<script src="../static/js/d3.js"></script>
+<script src="../static/js/klass.js"></script>
+<script src="../static/js/atlaspr.js"></script>
+<script src="../static/js/jquery.js"></script>
+<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>  -->
+<body>
+  <h1>Data from Puerto Rico</h1>
+  <div id='map'></div>
+  <script type = 'text/javascript'>
+    var my_node = document.getElementById("map");
+    new AtlasPR({
+      node: my_node, 
+      size: "large", 
+      tiles: ["pueblos"], 
+      zoom: true,
+      // on_ready: zoom_to_barranquitas,
+      events: {
+        on_click: function(feature, svg_path){
+          var town = feature.properties.NAME
+          // var svg_path = svg_path
+          window.location.href="\/town_info?town="+town
+        ;}
+      }
+    });
+  </script>
+  </div>
+</body>

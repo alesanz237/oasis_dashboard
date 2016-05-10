@@ -1,0 +1,280 @@
+# #!/usr/bin/env python
+# # -*- coding: utf-8 -*-
+
+from params import lat_lon_towns
+import pyowm # Python wrapper for OpenwWeatherMap
+import json
+import urllib2
+from config_twitter import api, place_id_towns, accounts
+import csv
+import sys  # Library needed for working with utf8 characters
+reload(sys)  # Reseting system
+sys.setdefaultencoding('utf8') # Setting the default encoding to utf8
+
+owm = pyowm.OWM('17e7fa6633e1d589da7ab67277d42774') # API Key for OpenWeatherMap API
+
+def getLatLonByTown(town_name):
+	""" Function that returns the coordinates of a town, given its name """
+	int_coords = []
+	for town in lat_lon_towns:
+		if town_name == town:
+			coordinates = lat_lon_towns[town_name].split(",",1)
+	for coor in coordinates:
+		int_coords.append(float(coor))
+	print int_coords, "\n\n"
+	return int_coords
+
+def getWeatherFromOWM(town):
+	""" Getting weather information by location from the Open Weather Map API """
+
+	coors = getLatLonByTown(town) # Getting town coordinates
+
+	# Getting weather data and storing it in a dictionary
+	weather = owm.weather_at_coords(coors[0],coors[1]).get_weather()
+	weather_data = {}
+	weather_data["cloud_coverage"] = "Cloud Coverage: " + str(weather.get_clouds()) + "%" # Cloud Coverage
+	weather_data["rain"]    	   = weather.get_rain()				   	   				  # Rain Volume
+	weather_data["wind"] 		   = weather.get_wind()		   			   			  	  # Wind degree and speed
+	weather_data["humidity"]  	   = "Humidity: " + str(weather.get_humidity()) + "%" 	  # Humidity percentage
+	# weather_data["pressure"] 	   = weather.get_pressure()				   				  # Get Atmospheric pressure
+	weather_data["temperature"]    = weather.get_temperature('fahrenheit') 				  # Get temperature
+	weather_data["status"] 		   = "Status: " + weather.get_detailed_status()           # Get weather status
+
+	# Parsing wind data
+	speed = "" # String contianing the speed of the weather
+	direction = "" # String containing the direction of the wind
+	for key,value in weather_data["wind"].iteritems():
+		if key == "speed":
+			speed = str(value) +  " m/s"
+		if key == "deg":
+			if value == 0 or value == 360:
+				direction = " north"
+			elif value > 0 and value <= 90:
+				direction = " northeast"
+			elif value == 90:
+				direction = " east"
+			elif value > 90 and value <= 180:
+				direction = " southeast"
+			elif value == 180:
+				direction = " south"
+			elif value > 180 and value <= 270:
+				direction = " southwest"
+			elif value == 270:
+				direction = " west"
+			else:
+				direction = " northwest"
+	weather_data["wind"] = "Wind: " + speed + direction
+
+	# Parsing temperature data:
+	weather_data["temperature"] = "Temperature: " + str(weather_data["temperature"]["temp"])
+
+	# Parsing rain data
+	weather_data["rain"] = "Rain volume in the last three hours: " + str(weather_data["rain"]['3h']) if weather_data["rain"] else "No rain activy in the last three hours"
+
+	return weather_data
+
+def getWeatherFromNOAA(town):
+	""" Getting weather information by location from NOAAA """
+
+	coors = getLatLonByTown(town) # Getting town coordinates
+
+	if coors == -1:
+		return "ERROR: Could not get weather data"
+
+	# Getting weather data and storing it in a json
+	url = "http://forecast.weather.gov/MapClick.php?lat=" + str(coors[0]) + "&lon=" + str(coors[1]) + "&FcstType=json"
+	# if town == "Aguadilla" or town == "Santa Isabel" or town == "Rincón" or town == "San Sebastián" or town == "Viewques":
+		# url = "http://marine.weather.gov/MapClick.php?lat=" + str(coors[0]) + "&lon=" + str(coors[1]) + "&FcstType=json"
+	print url
+	data = json.load(urllib2.urlopen(url))
+	weather_data = {} # Dictionary that will store the weather data
+	# i = 0 # Counter value for dictionary
+	for key,value in data.iteritems():
+		i = 0 # Counter value for dictionary
+		if key == "time":
+			for period in value["startPeriodName"]:
+				# Adding the day of the forecast to the weather data
+				weather_data[i] = []
+				weather_data[i].append(period)
+				i +=1
+			i = 0 # Reseting value of counter
+			for label in value["tempLabel"]:
+				# Adding the label of the forecast to the weather data
+				weather_data[i].append(label)
+				i +=1
+		if key == "data":
+			i = 0 # Reseting value of counter
+			for temperature in value["temperature"]:
+				weather_data[i].append(temperature)
+				i +=1
+			i = 0 # Reseting value of counter
+			for weather in value["weather"]:
+				weather_data[i].append(weather)
+				i +=1	
+			i = 0 # Reseting value of counter
+			for icon in value["iconLink"]:
+				weather_data[i].append(icon)
+				i +=1
+			i = 0 # Reseting value of counter
+			for text in value["text"]:
+				weather_data[i].append(text)
+				i +=1		
+		if key == "currentobservation":
+			# print value
+			current_observation = value
+	# print weather_data
+
+	return weather_data , current_observation
+
+def getPlaceidByTown(town_name):
+	""" Function that returns the place id of a town, given its name """
+	place_id = ""
+	for town in place_id_towns:
+		if town_name == town:
+			place_id = place_id_towns[town]
+	return place_id
+
+
+def getPRTweets(town):
+    """ Funtion that gathers tweets from Puerto Rico"""
+
+    # Getting the place id of the town
+    place_id = getPlaceidByTown(town)
+
+    array_of_tweets = []  # For storing tweets
+    tweet_dict = {}
+    # Searching for tweets by location
+    tweets = api.search(q="place:%s" % place_id)
+    # print tweets
+    for tweet in tweets:
+    	tweet_dict[tweet.id] = []
+    	tweet_dict[tweet.id].append(tweet.created_at)
+    	tweet_dict[tweet.id].append(tweet.text)
+    	tweet_dict[tweet.id].append(town)
+    return tweet_dict
+  #   for tweet in tweets:
+		# final_tweet[tweet.id] = town + " | " + str(tweet.created_at) + " | " + tweet.text 
+		# # print final_tweet
+		# array_of_tweets.append(final_tweet)
+  #   return array_of_tweets
+
+
+def getWeatherFromWUnderground(town):
+
+	# Replacing unicode characters to their ascii equivalent
+	
+	town = removeAccentCharacters(town)
+
+	url = "http://api.wunderground.com/api/c726e5a807dbc183/conditions/q/PR/"+town+".json"
+	f = urllib2.urlopen(url)
+	json_string = f.read()
+
+	parsed_json = json.loads(json_string)
+
+	current_observation = parsed_json["current_observation"]
+
+	# Storing weather information in a dictionary
+	weather_dict = {}
+	observation_time = current_observation['observation_time_rfc822']
+	weather_dict['observation_time'] = observation_time
+
+	# Parsing time
+	date_time_info = observation_time.split()
+	day = date_time_info[0] + date_time_info[1] + date_time_info[2] + date_time_info[3]
+	time = date_time_info[4]
+	
+	# weather[]
+
+	weather = current_observation['weather']
+	weather_dict['weather'] = weather
+
+	temperature_string = current_observation['temperature_string']
+	weather_dict['temperature_string'] = temperature_string
+
+	temp_f = current_observation['temp_f']
+	weather_dict['temp_f'] = temp_f
+
+	temp_c = current_observation['temp_c']
+	weather_dict['temp_c'] = temp_c
+
+	relative_humidity = current_observation['relative_humidity']
+	weather_dict['relative_humidity'] = relative_humidity
+
+	wind_string = current_observation['wind_string']
+	weather_dict['wind_string'] = wind_string
+
+	wind_mph = current_observation['wind_mph']
+	weather_dict['wind_mph'] = wind_mph
+
+	wind_gust_mph = current_observation['wind_gust_mph']
+	weather_dict['wind_gust_mph'] = wind_gust_mph
+
+	wind_kph = current_observation['wind_kph']
+	weather_dict['wind_kph'] = wind_kph
+
+	wind_gust_kph = current_observation['wind_gust_kph']
+	weather_dict['wind_gust_kph'] = wind_gust_kph
+
+	pressure_mb = current_observation['pressure_mb']
+	weather_dict['pressure_mb'] = pressure_mb
+
+	dewpoint_string = current_observation['dewpoint_string']
+	weather_dict['dewpoint_string'] = dewpoint_string
+
+	dewpoint_f = current_observation['dewpoint_f']
+	weather_dict['dewpoint_f'] = dewpoint_f
+
+	dewpoint_c = current_observation['dewpoint_c']
+	weather_dict['dewpoint_c'] = dewpoint_c
+
+	heat_index_string = current_observation['heat_index_string']
+	weather_dict['heat_index_string'] = heat_index_string
+
+	heat_index_f = current_observation['heat_index_f']
+	weather_dict['heat_index_f'] = heat_index_f
+
+	heat_index_c = current_observation['heat_index_c']
+	weather_dict['heat_index_c'] = heat_index_c
+
+	solarradiation = current_observation['solarradiation']
+	weather_dict['solarradiation'] = solarradiation
+
+	uv = current_observation['UV']
+	weather_dict['uv'] = uv
+
+	precip_1hr_in = current_observation['precip_1hr_in']
+	weather_dict['precip_1hr_in'] = precip_1hr_in
+
+	precip_today_in = current_observation['precip_today_in']
+	weather_dict['precip_today_in'] = precip_today_in
+
+	# print parsed_json
+
+	weather_data = json.dumps(weather_dict)
+
+	print weather_data
+
+	# print "Current temperature in %s is: %s" % (location, temp_f)
+
+	f.close()
+
+def removeAccentCharacters(string):
+	""" Function that converts unicode characters to their ascii equivalent """
+	if " " in string:
+		string = string.replace(" ","%20") 
+	if u"á" in string:
+		string = string.replace("á","a")
+	if u"é" in string:
+		string = string.replace("é","e")
+	if u"í" in string:
+		string = string.replace("í","i")
+	if u"ó" in string:
+		string = string.replace("ó","o")
+	if u"ü" or u"ú" in string:
+		string = string.replace("ü","u")
+		string = string.replace("ú","u")
+	return string
+
+getWeatherFromWUnderground("Mayagüez")
+
+# print getPRTweets("Aguas Buenas")
