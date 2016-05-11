@@ -32,13 +32,13 @@ def getWeatherFromOWM(town):
 	# Getting weather data and storing it in a dictionary
 	weather = owm.weather_at_coords(coors[0],coors[1]).get_weather()
 	weather_data = {}
-	weather_data["cloud_coverage"] = "Cloud Coverage: " + str(weather.get_clouds()) + "%" # Cloud Coverage
+	weather_data["cloud_coverage"] = str(weather.get_clouds()) + "%" # Cloud Coverage
 	weather_data["rain"]    	   = weather.get_rain()				   	   				  # Rain Volume
 	weather_data["wind"] 		   = weather.get_wind()		   			   			  	  # Wind degree and speed
-	weather_data["humidity"]  	   = "Humidity: " + str(weather.get_humidity()) + "%" 	  # Humidity percentage
+	weather_data["humidity"]  	   = str(weather.get_humidity()) + "%" 	  # Humidity percentage
 	# weather_data["pressure"] 	   = weather.get_pressure()				   				  # Get Atmospheric pressure
 	weather_data["temperature"]    = weather.get_temperature('fahrenheit') 				  # Get temperature
-	weather_data["status"] 		   = "Status: " + weather.get_detailed_status()           # Get weather status
+	weather_data["status"] 		   = weather.get_detailed_status()           # Get weather status
 
 	# Parsing wind data
 	speed = "" # String contianing the speed of the weather
@@ -63,13 +63,13 @@ def getWeatherFromOWM(town):
 				direction = " west"
 			else:
 				direction = " northwest"
-	weather_data["wind"] = "Wind: " + speed + direction
+	weather_data["wind"] = speed + direction
 
 	# Parsing temperature data:
-	weather_data["temperature"] = "Temperature: " + str(weather_data["temperature"]["temp"])
+	weather_data["temperature"] = str(weather_data["temperature"]["temp"])
 
 	# Parsing rain data
-	weather_data["rain"] = "Rain volume in the last three hours: " + str(weather_data["rain"]['3h']) if weather_data["rain"] else "No rain activy in the last three hours"
+	weather_data["rain"] = str(weather_data["rain"]['3h']) if weather_data["rain"] else "No rain activy in the last three hours"
 
 	return weather_data
 
@@ -137,26 +137,27 @@ def getPlaceidByTown(town_name):
 
 def getPRTweets(town):
     """ Funtion that gathers tweets from Puerto Rico"""
-
-    # Getting the place id of the town
+    pr_tweets = {}  # For storing tweets
+    # final_tweet = {}
+    # f = open('data/tweets.txt', 'a+')
     place_id = getPlaceidByTown(town)
-
-    array_of_tweets = []  # For storing tweets
-    tweet_dict = {}
-    # Searching for tweets by location
+    # Searching for tweets by municipality
     tweets = api.search(q="place:%s" % place_id)
-    # print tweets
     for tweet in tweets:
-    	tweet_dict[tweet.id] = []
-    	tweet_dict[tweet.id].append(tweet.created_at)
-    	tweet_dict[tweet.id].append(tweet.text)
-    	tweet_dict[tweet.id].append(town)
-    return tweet_dict
-  #   for tweet in tweets:
-		# final_tweet[tweet.id] = town + " | " + str(tweet.created_at) + " | " + tweet.text 
-		# # print final_tweet
-		# array_of_tweets.append(final_tweet)
-  #   return array_of_tweets
+    	id_ = tweet.id
+        text = tweet.text
+        text = text.replace("\"","")
+        text = text.replace("\n"," ")
+        # final_tweet[tweet.id] = town + " | " + str(tweet.created_at) + " | " + tweet.text 
+        json_string = "{\"coordinates\": \"" +  str(tweet.coordinates) + "\", \"created_at\": \"" + str(tweet.created_at) + "\", \"text\": \"" + text + "\"}" 
+        # print json_string
+        # array_of_tweets.append(json_string)
+        pr_tweets[id_] = json_string
+    # print pr_tweets
+    # for tweet in array_of_tweets:
+        # f.write(str(tweet) + "\n")
+    # f.close()
+    return pr_tweets
 
 
 def getWeatherFromWUnderground(town):
@@ -275,6 +276,8 @@ def removeAccentCharacters(string):
 		string = string.replace("ú","u")
 	return string
 
-getWeatherFromWUnderground("Mayagüez")
+print getPRTweets("Cayey")
+
+# getWeatherFromWUnderground("Mayagüez")
 
 # print getPRTweets("Aguas Buenas")

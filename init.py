@@ -1,6 +1,21 @@
-from flask import Flask, render_template, request
-from helper import getWeatherFromOWM, getWeatherFromNOAA
+from flask import Flask, jsonify, render_template, request
+from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets
 app = Flask(__name__)
+
+@app.route('/_weather_data')
+def get_weather():
+    town =  request.args['town']
+    # print town
+    weather_from_owm = []
+    # weather_from_owm.append(getWeatherFromOWM("Cayey"))
+    # print getWeatherFromOWM(town)
+    return jsonify(getWeatherFromOWM(town))
+
+@app.route('/_twitter_data')
+def get_twitterData():
+    town =  request.args['town']
+    pr_tweets = getPRTweets(town)
+    return jsonify(pr_tweets)
 
 @app.route("/")
 def init():

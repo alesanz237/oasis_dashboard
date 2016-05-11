@@ -86,37 +86,69 @@
                         <h1 class="page-header">
                             Dashboard <small>Puerto Rico Data</small>
                         </h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
-                            </li>
-                        </ol>
                     </div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="panel panel-default">
+                        <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Area Chart</h3>
+                                <h3 class="panel-title"><i class="fa fa-globe"></i> Puerto Rico</h3>
                             </div>
                             <div class="panel-body">
                                 <div id='map'></div>
+                                  <script type=text/javascript>
+                                      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+                                  </script>
                                   <script type = 'text/javascript'>
                                     var my_node = document.getElementById("map");
                                     new AtlasPR({
                                       node: my_node, 
-                                      size: "large", 
+                                      size: "medium", 
                                       tiles: ["pueblos"], 
-                                      zoom: true,
+                                      zoom: false,
                                       // on_ready: zoom_to_barranquitas,
                                       events: {
                                         on_click: function(feature, svg_path){
-                                          var town = feature.properties.NAME
-                                          // var svg_path = svg_path
-                                          window.location.href="\/town_info?town="+town
-                                        ;}
+                                          var town = feature.properties.NAME;
+                                          $('#town_name').text(town);
+                                          location.href = "#";
+                                          location.href = "#town_info";
+                                          $.getJSON('/_weather_data', 
+                                            { town: town},
+                                            function (weather_data) {
+                                              $("#status").text(weather_data.status);
+                                              $("#temperature").text(weather_data.temperature);
+                                              $("#rain").text(weather_data.rain);
+                                              $("#humidiy").text(weather_data.humidity);
+                                              $("#cloud").text(weather_data.cloud_coverage);
+                                              $("#wind").text(weather_data.wind);
+                                              // console.log(data)
+                                          });
+                                          $.get('/_twitter_data', 
+                                            { town: town},
+                                            function (twitter_data) {
+                                              console.log(twitter_data)
+                                              // console.log(twitter_data.text)
+                                              var i = 1
+                                              for (var key in twitter_data) {
+                                                // console.log(twitter_data.text)
+                                                var id = "#text" + i;
+
+                                                console.log(typeof(id));
+                                                // $(id).text(twitter_data.text);
+                                                  if (twitter_data.hasOwnProperty(key)) {
+                                                    var splitted_tweet = twitter_data[key].split('"')
+                                                    var text = splitted_tweet[11]
+                                                    console.log(key + " -> " + twitter_data[key]);
+                                                    $(id).text(text);
+                                                  }
+                                                i++;
+                                                }
+                                          });
+                                        }
+
                                       }
                                     });
                                   </script>
@@ -126,70 +158,88 @@
                 </div>
                 <!-- /.row -->
 
+                <div class="row" >
+                    <div class="col-lg-12">
+                        <h1 id="town_info">
+                            <span id="town_name">Town</span> <small> Data</small>
+                        </h1>
+                    </div>
+                </div>
+
                 <div class="row">
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
+                    <div class="col-lg-6">
+                        <div class="panel panel-warning">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Donut Chart</h3>
+                                <h3 class="panel-title"><i class="fa fa-cloud"></i> Current Weather</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="morris-donut-chart"></div>
-                                <div class="text-right">
-                                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
+                                <p><strong>Status</strong>: <span id="status">No town selected</span></p>
+                                <p><strong>Temperature</strong>: <span id="temperature">No town selected</span></p>
+                                <p><strong>Rain Activity</strong>: <span id="rain">No town selected</span></p>
+                                <p><strong>Humidiy</strong>: <span id="humidiy">No town selected</span></p>
+                                <p><strong>Cloud Coverage</strong>: <span id="cloud">No town selected</span></p>
+                                <p><strong>Wind</strong>: <span id="wind">No town selected</span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Tasks Panel</h3>
+                                <h3 class="panel-title"><i class="fa fa-twitter"></i> Tweets</h3>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-info">
                                 <div class="list-group">
                                     <a href="#" class="list-group-item">
                                         <span class="badge">just now</span>
-                                        <i class="fa fa-fw fa-calendar"></i> Calendar updated
+                                        <span id="text1">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
                                         <span class="badge">4 minutes ago</span>
-                                        <i class="fa fa-fw fa-comment"></i> Commented on a post
+                                        <span id="text2">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
                                         <span class="badge">23 minutes ago</span>
-                                        <i class="fa fa-fw fa-truck"></i> Order 392 shipped
+                                        <span id="text3">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
                                         <span class="badge">46 minutes ago</span>
-                                        <i class="fa fa-fw fa-money"></i> Invoice 653 has been paid
+                                        <span id="text4">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
                                         <span class="badge">1 hour ago</span>
-                                        <i class="fa fa-fw fa-user"></i> A new user has been added
+                                        <span id="text5">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
                                         <span class="badge">2 hours ago</span>
-                                        <i class="fa fa-fw fa-check"></i> Completed task: "pick up dry cleaning"
+                                        <span id="text6">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
-                                        <span class="badge">yesterday</span>
-                                        <i class="fa fa-fw fa-globe"></i> Saved the world
+                                        <span class="badge">3 hours ago</span>
+                                        <span id="text7">No town selected</span>
                                     </a>
                                     <a href="#" class="list-group-item">
-                                        <span class="badge">two days ago</span>
-                                        <i class="fa fa-fw fa-check"></i> Completed task: "fix error on sales page"
+                                        <span class="badge">one day ago</span>
+                                        <span id="text8">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">three days ago</span>
+                                        <span id="text9">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">one week ago</span>
+                                        <span id="text10">No town selected</span>
                                     </a>
                                 </div>
                                 <div class="text-right">
-                                    <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="\twitter">View all tweets from Puerto Rico <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="panel panel-default">
+                    <!-- <div class="col-lg-4">
+                        <div class="panel panel-danger">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Transactions Panel</h3>
+                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Energy Costs</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -255,11 +305,11 @@
                                     </table>
                                 </div>
                                 <div class="text-right">
-                                    <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="#">View more graphs <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- /.row -->
 
