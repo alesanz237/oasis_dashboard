@@ -276,7 +276,7 @@ def removeAccentCharacters(string):
 		string = string.replace("ú","u")
 	return string
 
-print getPRTweets("Cayey")
+# print getPRTweets("Cayey")
 
 # getWeatherFromWUnderground("Mayagüez")
 

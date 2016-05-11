@@ -84,46 +84,118 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Dashboard <small>Puerto Rico Data</small>
+                            Energy Graphs
                         </h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
-                            </li>
-                        </ol>
                     </div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="panel panel-default">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Area Chart</h3>
+                                <h3 class="panel-title"><i class="fa fa-area-chart fa-fw"></i> 
+                                    Energy Generation (Natural Year) in millions of kilowatts per hour (mkWh)
+                                </h3>
                             </div>
                             <div class="panel-body">
-                                <div id='map'></div>
-                                  <script type = 'text/javascript'>
-                                    var my_node = document.getElementById("map");
-                                    new AtlasPR({
-                                      node: my_node, 
-                                      size: "large", 
-                                      tiles: ["pueblos"], 
-                                      zoom: true,
-                                      // on_ready: zoom_to_barranquitas,
-                                      events: {
-                                        on_click: function(feature, svg_path){
-                                          var town = feature.properties.NAME
-                                          // var svg_path = svg_path
-                                          window.location.href="\/town_info?town="+town
-                                        ;}
-                                      }
-                                    });
-                                  </script>
+                                <div id="morris-area-chart"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <script src="../static/js/plugins/morris/morris.js"></script>
+                <script src="../static/js/plugins/morris/raphael.min.js"></script>
+                <script>
+                    Morris.Area({
+                        element: 'morris-area-chart',
+                        data: [{
+                            period: '2000',
+                            gross_generation: 21813.5,
+                            net_generation: 20728.9,
+                            // max_demand: 3202 
+                        }, {
+                            period: '2001',
+                            gross_generation: 22301.9,
+                            net_generation: 21203.2,
+                            // max_demand: 3297 
+                        }, {
+                            period: '2002',
+                            gross_generation: 23175.6,
+                            net_generation: 22086.1,
+                            // max_demand: 3376 
+                        }, {
+                            period: '2003',
+                            gross_generation: 23937.3,
+                            net_generation: 22884.4,
+                            // max_demand: 3499 
+                        }, {
+                            period: '2004',
+                            gross_generation: 24135.0,
+                            net_generation: 23004.9,
+                            // max_demand: 3560 
+                        }, {
+                            period: '2005',
+                            gross_generation: 24961.8,
+                            net_generation: 23846.6,
+                            // max_demand: 3685 
+                        }, {
+                            period: '2006',
+                            gross_generation: 24946.4,
+                            net_generation: 23839.8,
+                            // max_demand: 3604 
+                        }, {
+                            period: '2007',
+                            gross_generation: 24636.2,
+                            net_generation: 23720.2,
+                            // max_demand: 3546 
+                        }, {
+                            period: '2008',
+                            gross_generation: 23213.6,
+                            net_generation: 22337.2,
+                            // max_demand: 3351 
+                        }, {
+                            period: '2009',
+                            gross_generation: 22988.6,
+                            net_generation: 22022.4,
+                            // max_demand: 3404 
+                        }, {
+                            period: '2010',
+                            gross_generation: 23244.0,
+                            net_generation: 22216.1,
+                            // max_demand: 3406 
+                        }, {
+                            period: '2011',
+                            gross_generation: 22257.3,
+                            net_generation: 21283.6,
+                            // max_demand: 3303 
+                        }, {
+                            period: '2012',
+                            gross_generation: 22306.0,
+                            net_generation: 21296.3,
+                            // max_demand: 3265 
+                        }, {
+                            period: '2013',
+                            gross_generation: 21493.3,
+                            net_generation: 20620.9,
+                            // max_demand: 1791
+                        }, {
+                            period: '2014',
+                            gross_generation: 21066.8,
+                            net_generation: 20272.2,
+                            // max_demand: 2028
+                        }],
+                        xkey: 'period',
+                        // ykeys: ['gross_generation', 'net_generation', 'max_demand'],
+                        ykeys: ['gross_generation', 'net_generation'],
+                        labels: ['gross_generation', 'net_generation'],
+                        // labels: ['Gross Generation', 'Net Generation', 'Max Demand'],
+                        pointSize: 2,
+                        hideHover: 'auto',
+                        resize: true
+                    });
+
+                </script>
                 <!-- /.row -->
 
                 <div class="row">
@@ -279,9 +351,17 @@
     <script src="../static/js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="../static/js/plugins/morris/raphael.min.js"></script>
+    <!-- <script src="../static/js/plugins/morris/raphael.min.js"></script> -->
     <script src="../static/js/plugins/morris/morris.min.js"></script>
     <script src="../static/js/plugins/morris/morris-data.js"></script>
+
+    <!-- Flot Charts JavaScript -->
+    <!--[if lte IE 8]><script src="js/excanvas.min.js"></script><![endif]-->
+    <script src="../static/js/plugins/flot/jquery.flot.js"></script>
+    <script src="../static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="../static/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="../static/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="../static/js/plugins/flot/flot-data.js"></script>
 
 </body>
 

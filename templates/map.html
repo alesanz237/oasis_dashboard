@@ -135,7 +135,6 @@
                                               for (var key in twitter_data) {
                                                 // console.log(twitter_data.text)
                                                 var id = "#text" + i;
-
                                                 console.log(typeof(id));
                                                 // $(id).text(twitter_data.text);
                                                   if (twitter_data.hasOwnProperty(key)) {
@@ -143,6 +142,10 @@
                                                     var text = splitted_tweet[11]
                                                     console.log(key + " -> " + twitter_data[key]);
                                                     $(id).text(text);
+                                                    // $('.badge').css('diplay: none')
+                                                  }
+                                                  else{
+                                                    alert("hello");
                                                   }
                                                 i++;
                                                 }
