@@ -3,16 +3,11 @@
 // Flot Line Chart with Tooltips
 $(document).ready(function() {
     console.log("document ready");
-    var offset = 0;
+    // var offset = 0;
     plot();
 
     function plot() {
-        var sin = [],
-            cos = [];
-        for (var i = 0; i < 12; i += 0.2) {
-            sin.push([i, Math.sin(i + offset)]);
-            cos.push([i, Math.cos(i + offset)]);
-        }
+        var weather = [[0,97],[1,95],[2,90],[3,86],[4,82],[5,84],[6,85],[7,83]];
 
         var options = {
             series: {
@@ -26,23 +21,27 @@ $(document).ready(function() {
             grid: {
                 hoverable: true //IMPORTANT! this is needed for tooltip to work
             },
+            xaxis: {
+                ticks: [[0,"11:45 AM"],[1,"12:45 PM"],[2,"01:45 PM"],[3,"02:46 PM"],[4,"03:46 PM"],[5,"04:45 PM"],[6,"05:40 PM"],[7,"07:04 PM"]],
+                labelWidth: 50
+            },
             yaxis: {
-                min: -1.2,
-                max: 1.2
+                min: 70
+                // max: 1.2
             },
             tooltip: true,
             tooltipOpts: {
-                content: "'%s' of %x.1 is %y.4",
+                content: "%s is %y.4",
                 shifts: {
-                    x: -60,
+                    x: 60,
                     y: 25
                 }
             }
         };
 
         var plotObj = $.plot($("#flot-line-chart"), [{
-                data: sin,
-                label: "temp (f)"
+                data: weather,
+                label: "Temperature (F)"
             }],
             options);
     }
