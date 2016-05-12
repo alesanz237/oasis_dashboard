@@ -102,7 +102,7 @@ $(function() {
     //     resize: true
     // });
 
-    Line Chart
+    // Line Chart
     Morris.Line({
         // ID of the element in which to draw the chart.
         element: 'morris-line-chart',

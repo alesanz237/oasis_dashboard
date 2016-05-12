@@ -7,7 +7,7 @@ $(document).ready(function() {
     plot();
 
     function plot() {
-        var weather = [[0,97],[1,95],[2,90],[3,86],[4,82],[5,84],[6,85],[7,83]];
+        var weather = [[0,87.7],[1,87.8],[2,84.5],[3,81.1],[4,78.8],[5,79.9],[6,80.5],[7,79.4],[8,74.0],[9,73.7],[10,72.6]];
 
         var options = {
             series: {
@@ -22,7 +22,7 @@ $(document).ready(function() {
                 hoverable: true //IMPORTANT! this is needed for tooltip to work
             },
             xaxis: {
-                ticks: [[0,"11:45 AM"],[1,"12:45 PM"],[2,"01:45 PM"],[3,"02:46 PM"],[4,"03:46 PM"],[5,"04:45 PM"],[6,"05:40 PM"],[7,"07:04 PM"]],
+                ticks: [[0,"11:45 AM"],[1,"12:45 PM"],[2,"01:45 PM"],[3,"02:46 PM"],[4,"03:46 PM"],[5,"04:45 PM"],[6,"05:40 PM"],[7,"07:04 PM"],[8,"09:56 PM"],[9,"10:36 PM"],[10,"11:35 PM"]],
                 labelWidth: 50
             },
             yaxis: {
