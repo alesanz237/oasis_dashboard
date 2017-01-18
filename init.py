@@ -1,5 +1,8 @@
+# #!/usr/bin/env python
+# # -*- coding: utf-8 -*-
+
 from flask import Flask, jsonify, render_template, request
-from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets
+from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets, getKey1, getKey2, getAEEData, getStockSymbols, getMarketHistory
 app = Flask(__name__)
 
 @app.route('/_weather_data')
@@ -19,6 +22,10 @@ def get_twitterData():
 
 @app.route("/")
 def init():
+    return render_template("index.html")
+
+@app.route("/dashboard")
+def init1():
     return render_template("index.html")
 
 @app.route('/town_info',methods=["Get"])
@@ -48,6 +55,33 @@ def townInfo():
 @app.route("/energy")
 def getEnergy():
     return render_template("energy.html")
+
+@app.route("/market")
+def getMarket():
+    keys = sorted(getKey1())
+    symbols = getStockSymbols()
+    print symbols
+    return render_template("market.html",keys=keys, symbols=symbols)
+
+@app.route('/_getAEEDATA')
+def get_AEEData():
+    key_1 =  request.args['key_1']
+    aee_data = getAEEData(key_1)
+    return jsonify(result=aee_data)
+
+@app.route('/_getMarketHistoryData')
+def get_MarketHistoryData():
+    print "Hello"
+    symbol =  str(request.args['symbol'])
+    dType =  str(request.args['type'])
+    startDate = str(request.args['startDate'])
+
+    print symbol
+    print dType
+    print startDate
+    market_history = getMarketHistory(symbol,dType,startDate)
+    print market_history
+    return jsonify(result=market_history)
 
 @app.route("/twitter")
 def getTwitter():

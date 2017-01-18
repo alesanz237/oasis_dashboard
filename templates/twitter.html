@@ -57,19 +57,22 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="\"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="\"><i class="fa fa-fw fa-dashboard"></i> Home</a>
                     </li>
                     <li >
-                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Comsumption</a>
                     </li>
                     <li class="active">
-                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Twitter Data</a>
+                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
                     </li>
                     <li>
                         <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
                     </li>
                     <li>
-                        <a href="\map"><i class="fa fa-fw fa-globe"></i> Puerto Rico Map</a>
+                        <a href="\map"><i class="fa fa-fw fa-globe"></i> Town Specific Data</a>
+                    </li>
+                    <li >
+                        <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
                     </li>
                 </ul>
             </div>
@@ -84,7 +87,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Dashboard <small>Twitter Data</small>
+                            Social Data
                         </h1>
                     </div>
                 </div>
@@ -104,6 +107,50 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    $(function() {
+
+                        var data = [{
+                            label: "Positive Tweets",
+                            data: 400,
+                            color: '#337AB8'
+                        }, {
+                            label: "Negative Tweets",
+                            data: 62,
+                            color: '#ff0000'
+                        }
+                        // }, {
+                        //     label: "Series 2",
+                        //     data: 9
+                        // }, {
+                        //     label: "Series 3",
+                        //     data: 20
+                        // }];
+                        ];
+
+                        var plotObj = $.plot($("#flot-pie-chart"), data, {
+                            series: {
+                                pie: {
+                                    show: true
+                                }
+                            },
+                            grid: {
+                                hoverable: true,
+                            },
+                            tooltip: true,
+                            tooltipOpts: {
+                                content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                                shifts: {
+                                    x: 20,
+                                    y: 0
+                                },
+                                defaultTheme: false
+                            }
+                        });
+
+                    });
+
+                </script>
                 
                 <div class="row" style="display:none;">
                     <div class="col-lg-12">
