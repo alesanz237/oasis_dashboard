@@ -65,27 +65,27 @@ $(function() {
     // });
 
     // Donut Chart
-    Morris.Donut({
-        element: 'positive-tweets',
-        data: [{
-            label: "bien",
-            value: 75
-        }, {
-            label: "energía",
-            value: 60
-        }, {
-            label: "mejor",
-            value: 32
-        }, {
-            label: "energética",
-            value: 24
-        },
-        {
-            label: "fortaleza",
-            value: 43
-        }],
-        resize: true
-    });
+    // Morris.Donut({
+    //     element: 'positive-tweets',
+    //     data: [{
+    //         label: "bien",
+    //         value: 75
+    //     }, {
+    //         label: "energía",
+    //         value: 60
+    //     }, {
+    //         label: "mejor",
+    //         value: 32
+    //     }, {
+    //         label: "energética",
+    //         value: 24
+    //     },
+    //     {
+    //         label: "fortaleza",
+    //         value: 43
+    //     }],
+    //     resize: true
+    // });
 
     // Morris.Donut({
     //     element: 'negative-tweets',

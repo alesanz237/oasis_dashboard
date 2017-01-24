@@ -28,39 +28,53 @@
     <script src="../static/js/atlaspr.js"></script>
     <script src="../static/js/jquery.js"></script>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- NVD3 Twitter Charts -->
+    <!-- <script src="../static/js/twitterCharts.js"></script> -->
+
+    <!-- CSS for spinner -->
+    <link href="../static/css/spinner.css" rel="stylesheet" type="text/css">
 
 </head>
 
-<body>
-
-    <div id="wrapper">
+<body class='with-3d-shadow with-transitions'>
+<div id="wrapper">
 
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+            <div class="navbar-header" style="height:50px;">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="\">Oasis Dashboard</a>
+                <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
+                <img src="./static/img/avatar.jpg" style="    border-radius: 50%; width: 50px; margin-left: 900px;">
+                <button class="btn dropdown-toggle" style="background:none"; type="button" data-toggle="dropdown">
+                    <span class="caret" style="color:white;"></span>
+                </button>    
+                <ul class="dropdown-menu" style="left: 1090px;" aria-labelledby="dropdownMenuDivider">
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">View My Profile</button>
+                    </li>
+                    <li>
+                        <button data-toggle="modal" data-target="#customizeDashboard" style="background:none; border:none">Customize Dashboard</button>
+                    </li>
+                    <li role="separator" class="divider">Test</li>
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">Return to Oasis</button>
+                    </li>
+                </ul>
             </div>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <div class="collapse navbar-collapse navbar-ex1-collapse" >
                 <ul class="nav navbar-nav side-nav">
                     <li>
                         <a href="\"><i class="fa fa-fw fa-dashboard"></i> Home</a>
                     </li>
-                    <li >
-                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Comsumption</a>
+                    <li>
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
                     </li>
                     <li class="active">
                         <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
@@ -79,7 +93,7 @@
             <!-- /.navbar-collapse -->
         </nav>
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" style="margin-top: -40px;">
 
             <div class="container-fluid">
 
@@ -101,80 +115,22 @@
                             </div>
                             <div class="panel-body">
                                 <div class="flot-chart">
+                                    <!-- <div id="loader"></div> -->
                                     <div class="flot-chart-content" id="flot-pie-chart"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <script>
-                    $(function() {
-
-                        var data = [{
-                            label: "Positive Tweets",
-                            data: 400,
-                            color: '#337AB8'
-                        }, {
-                            label: "Negative Tweets",
-                            data: 62,
-                            color: '#ff0000'
-                        }
-                        // }, {
-                        //     label: "Series 2",
-                        //     data: 9
-                        // }, {
-                        //     label: "Series 3",
-                        //     data: 20
-                        // }];
-                        ];
-
-                        var plotObj = $.plot($("#flot-pie-chart"), data, {
-                            series: {
-                                pie: {
-                                    show: true
-                                }
-                            },
-                            grid: {
-                                hoverable: true,
-                            },
-                            tooltip: true,
-                            tooltipOpts: {
-                                content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
-                                shifts: {
-                                    x: 20,
-                                    y: 0
-                                },
-                                defaultTheme: false
-                            }
-                        });
-
-                    });
-
-                </script>
-                
-                <div class="row" style="display:none;">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Twitter Sentiment Analysis</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="flot-chart">
-                                    <div class="flot-chart-content" id="flot-line-chart"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
 
                <div class="row">
                     <div class="col-lg-6" >
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Words in Positive Tweets</h3>
+                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Energy Related Words in Positive Tweets</h3>
                             </div>
                             <div class="panel-body">
+                                <div id="loader" class="loader_positive" ></div>
                                 <div id="positive-tweets"></div>
                                 <!-- <div class="text-right">
                                     <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
@@ -185,49 +141,140 @@
                     <div class="col-lg-6" >
                         <div class="panel panel-red">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Words in Negative Tweets</h3>
+                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Energy Related Words in Negative Tweets</h3>
                             </div>
                             <div class="panel-body">
+                                <div id="loader" class="loader_negative"></div>
                                 <div id="negative-tweets"></div>
-                                <!-- <div class="text-right">
-                                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
-                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div> 
+
+                <div class="row" >
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Twitter Stream</h3>
+                            </div>
+                            <div class="panel-body">
+                                    <div id="loader" class="loader_stream"></div>
+                                    <div  id="twitter_stream"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
                     // Donut Chart
                     $(function() {
-                        Morris.Donut({
-                            element: 'negative-tweets',
-                            data: [{
-                                label: "mal",
-                                value: 16
-                            }, {
-                                label: "fatal",
-                                value: 10
-                            }, {
-                                label: "odio",
-                                value: 7
-                            }, {
-                                label: "lento",
-                                value: 4
-                            },
-                            {
-                                label: "aumentar",
-                                value: 4
-                            }],
-                            resize: true,
-                            colors: [
-                                '#ff0000',
-                                '#e50000',
-                                '#cc0000',
-                                '#b20000',
-                                '#990000',
-                                
-                            ],
-                        });
+
+                        $.get('/_getTweetsCount', 
+                            function (tweets_count) {
+                                var data = [{
+                                    label: "Positive Tweets",
+                                    data: tweets_count.result[0],
+                                    color: '#337AB8'
+                                }, {
+                                    label: "Negative Tweets",
+                                    data: tweets_count.result[1],
+                                    color: '#ff0000'
+                                }];
+
+                                var plotObj = $.plot($("#flot-pie-chart"), data, {
+                                    series: {
+                                        pie: {
+                                            show: true
+                                        }
+                                    },
+                                    grid: {
+                                        hoverable: true,
+                                    },
+                                    tooltip: true,
+                                    tooltipOpts: {
+                                        content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                                        shifts: {
+                                            x: 20,
+                                            y: 0
+                                        },
+                                        defaultTheme: true
+                                    }
+                                });
+                            });
+
+                        $.get('/_getPositiveWords', 
+                            function (positive_words) {
+                                $(".loader_positive").hide();
+                                Morris.Donut({
+                                    element: 'positive-tweets',
+                                    data: positive_words.result,
+                                    resize: true,
+                                    colors: [
+                                        '#0000ff',
+                                        '#0000e5',
+                                        '#1919ff',
+                                        '#3232ff',
+                                        '#0000cc',
+                                        '#0000b2',
+                                        '#4c4cff',
+                                        '#6666ff',
+                                        '#7f7fff',
+                                        '#9999ff',     
+                                    ],
+                                });
+                            });
+
+                        $.get('/_getNegativeWords', 
+                            function (negative_words) {
+                                $(".loader_negative").hide();
+                                Morris.Donut({
+                                    element: 'negative-tweets',
+                                    data: negative_words.result,
+                                    resize: true,
+                                    colors: [
+                                        '#ff0000',
+                                        '#e50000',
+                                        '#ff1919',
+                                        '#cc0000',
+                                        '#ff3232',
+                                        '#b20000',
+                                        '#990000',
+                                        '#7f0000',
+                                        '#7f0000',
+                                        '#4c0000',    
+                                    ],
+                                });
+                            });
+
+                        window.setInterval(function(){
+                            $.get('_getTweets',
+                                function(data){
+                                    $(".loader_stream").hide();
+                                    all_tweets = data.result;
+                                    document.getElementById("twitter_stream").innerHTML = "<p id=\"text\"></p>";
+                                    tags = [];
+                                    for (var i = 0; i < 10; i++){
+                                        tweet = all_tweets[i];
+                                        polarity = tweet.split("\t")[1]
+                                        tweet = tweet.split("\t")[0]
+                                        
+                                        if (polarity[0] == "n"){
+                                            var span_tag = "<span id=\"neg_text\" style=\"color:#ff0000;\">"+ tweet +"</span><br>";
+                                            tags.push(span_tag);
+                                        }
+                                        else{
+                                            var span_tag = "<span id=\"pos_text\" style=\"color:#0000ff;\">"+ tweet +"</span><br>";
+                                            tags.push(span_tag);
+                                        }
+                                        var t = "";
+                                        console.log(tags);
+                                        document.getElementById("text").innerHTML = tags;
+                                        
+                                    }
+                                }
+                            );
+                        },10000);
+
                     });
                 </script>
 
@@ -250,7 +297,7 @@
     <!-- Morris Charts JavaScript -->
     <script src="../static/js/plugins/morris/raphael.min.js"></script>
     <script src="../static/js/plugins/morris/morris.min.js"></script>
-    <script src="../static/js/plugins/morris/morris-data.js"></script>
+    <!-- <script src="../static/js/plugins/morris/morris-data.js"></script> -->
 
     <!-- Flot Charts JavaScript -->
     <!--[if lte IE 8]><script src="js/excanvas.min.js"></script><![endif]-->

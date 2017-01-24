@@ -3,6 +3,8 @@
 
 from flask import Flask, jsonify, render_template, request
 from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets, getKey1, getKey2, getAEEData, getStockSymbols, getMarketHistory
+from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
+import subprocess
 app = Flask(__name__)
 
 @app.route('/_weather_data')
@@ -71,21 +73,35 @@ def get_AEEData():
 
 @app.route('/_getMarketHistoryData')
 def get_MarketHistoryData():
-    print "Hello"
     symbol =  str(request.args['symbol'])
     dType =  str(request.args['type'])
     startDate = str(request.args['startDate'])
-
-    print symbol
-    print dType
-    print startDate
     market_history = getMarketHistory(symbol,dType,startDate)
-    print market_history
     return jsonify(result=market_history)
 
 @app.route("/twitter")
 def getTwitter():
     return render_template("twitter.html")
+
+@app.route('/_getTweetsCount')
+def get_TweetsCount():
+    tweets_len = []
+    for length in getTweetsLen():
+        tweets_len.append(length)
+    print tweets_len
+    return jsonify(result=tweets_len)
+
+@app.route('/_getPositiveWords')
+def get_PositiveWords():
+    return jsonify(result=getPositiveWords())
+
+@app.route('/_getNegativeWords')
+def get_NegativeWords():
+    return jsonify(result=getNegativeWords())
+
+@app.route('/_getTweets')
+def get_Tweets():
+    return jsonify(result=getTweets())
 
 @app.route("/weather")
 def getWeather():
@@ -96,4 +112,5 @@ def getMap():
     return render_template("map.html")
 
 if __name__ == "__main__":
-	app.run()
+    subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    app.run()
