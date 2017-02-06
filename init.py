@@ -4,6 +4,7 @@
 from flask import Flask, jsonify, render_template, request
 from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets, getKey1, getKey2, getAEEData, getStockSymbols, getMarketHistory
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
+from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather
 import subprocess
 app = Flask(__name__)
 
@@ -106,6 +107,21 @@ def get_Tweets():
 @app.route("/weather")
 def getWeather():
     return render_template("weather.html")
+
+@app.route("/_getWeatherData")
+def getWeatherData():
+    temp = str(request.args['temp'])
+    town = unicode(request.args['town'])
+    weather = {}
+    # print type(town)
+    todaysForecast = getTodaysWeather(town, temp)
+    hourlyForecast = getHourlyWeather(town, temp)
+    dailyForecast  = getDailyWeather(town, temp)
+    weather["todaysForecast"] = todaysForecast
+    weather["hourlyForecast"] = hourlyForecast
+    weather["dailyForecast"] = dailyForecast
+    print weather 
+    return jsonify(result=weather)
 
 @app.route("/map")
 def getMap():

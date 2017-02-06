@@ -3,7 +3,7 @@
 
 import nltk
 from generateTrainingSet import getTrainingSet
-from twitterCleaner import getTweets, getPositiveTweets, getNegativeTweets
+from twitterCleaner import retrieveTweets, getPositiveTweets, getNegativeTweets
 import sys
 import time
 import random
@@ -68,7 +68,7 @@ def storeClassifiedTweets():
 	# Classifying tweets
 	# for tweet 
 	for i in range(1,11):
-		all_tweets = getTweets("data/tweets/"+str(i)+".txt")
+		all_tweets = retrieveTweets("data/tweets/"+str(i)+".txt")
 		for tweet in all_tweets:
 			sentence = tweet["text"]
 			try:

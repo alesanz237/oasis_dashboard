@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 #Reading Tweets
 
-def getTweets(file):
+def retrieveTweets(file):
 	""" Reading tweets file, cleaning tweets and storing them in a new file """
 	tweets_data = []
 	tweet = {}
