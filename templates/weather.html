@@ -29,6 +29,9 @@
     <script src="../static/js/atlaspr.js"></script>
     <script src="../static/js/jquery.js"></script>
 
+    <!-- CSS for spinner -->
+    <link href="../static/css/spinner.css" rel="stylesheet" type="text/css">
+
 
     <style>
         table {
@@ -152,12 +155,12 @@
                     <br>
                     </div>
                     <div id="search" style="float:left;margin-top: -15px;">
-                        <form class="navbar-form navbar-left" >
+                        <!-- <form class="navbar-form navbar-left" > -->
                             <div class="form-group">
-                                <input id="input_town" type="text" class="form-control" placeholder="Search by town or zipcode..." style="width:205px; border-radius:0px;">
+                                <input id="input_town" type="text" class="form-control" placeholder="Search by town or zipcode..." style="width:205px; border-radius:0px; margin-top: 10px; margin-left:10px;">
                             </div>
-                            <button class="btn btn-default" style="margin-left:-10px; background-color: #ccc; border-radius:0px;"><i class="fa fa-search" aria-hidden="true" onclick="getWeather()"></i></button>
-                        </form>
+                            <button class="btn btn-default" style="margin-top: -86px; margin-left:215px; background-color: #ccc; border-radius:0px;"><i class="fa fa-search" aria-hidden="true" onclick="getWeather()"></i></button>
+                        <!-- </form> -->
                     </div>
                 </div>
 
@@ -175,15 +178,16 @@
                         }
                         
                         var c_temp = $('input[id=c_checkbox]:checked').val();
+                        $("#loader").show();
                         if (c_temp == "c")
-                            getForecastInC();
+                            getForecastInC();  
                         else
                             getForecastInF();
                     }
 
                     function getWeather(){
+                        $("#loader").show();
                         var town = $('#input_town').val();
-                        console.log(town);
                         var c_temp = $('input[id=c_checkbox]:checked').val();
                         if (c_temp == "c")
                             getForecastInC();
@@ -192,6 +196,7 @@
                     }
 
                     $(function() {
+                        $("#loader").show();
                         getForecastInF();
                     });
 
@@ -201,6 +206,7 @@
                               town: ($('#input_town').val().length > 4) ? $('#input_town').val() : "mayaguez"},
                             function (weather_data) {
                                 // For todays forecast
+                                $("#loader").hide();
                                 console.log(weather_data.result);
                                 var todays_forecast = weather_data.result.todaysForecast;
                                 var skycons = new Skycons({"color": "black"});
@@ -315,6 +321,7 @@
                               town: ($('#input_town').val().length > 4) ? $('#input_town').val() : "mayaguez"},
                             function (weather_data) {
                                 // For todays forecast
+                                $("#loader").hide();
                                 var todays_forecast = weather_data.result.todaysForecast;
                                 var skycons = new Skycons({"color": "black"});
                                 insertForecastIcon(todays_forecast.icon,"current_condition");
@@ -491,7 +498,7 @@
                         </div>
                     </div>
                 </div>
-                
+                <div id="loader"å></div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
@@ -588,13 +595,6 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../static/js/bootstrap.min.js"></script>
-
-    <script>
-      // var skycons = new Skycons({"color": "black"});
-      // skycons.add("current_condition", Skycons.PARTLY_CLOUDY_DAY);
-      // // start animation!
-      // skycons.play();
-    </script>
 
 </body>
 

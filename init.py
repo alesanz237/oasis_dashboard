@@ -128,5 +128,5 @@ def getMap():
     return render_template("map.html")
 
 if __name__ == "__main__":
-    subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
     app.run()
