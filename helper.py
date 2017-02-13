@@ -322,12 +322,12 @@ def getAEEData(key_1):
 		
 def getMarketHistory(symbol, data_type, date):
 	# data_type can be daily, monthly & yearly
-	print "Hello from getMarketHistory"
+	# print "Hello from getMarketHistory"
 	day = date.split("-")[2]
 	month = date.split("-")[1]
 	year = str(int(date.split("-")[0])-1)
 	new_date = year+month+day
-	print new_date
+	# print new_date
 	final_result=[]
 	results = {}
 	results["values"] = []
@@ -338,7 +338,7 @@ def getMarketHistory(symbol, data_type, date):
 	url += data_type
 	url += "&startDate="
 	url += new_date
-	print url
+	# print url
 	market_data = json.load(urllib2.urlopen(url))
 	for data in market_data["results"]:
 		result["open"]   = data["open"]
@@ -388,5 +388,5 @@ def getMultipleSymbolHistory(symbols, data_type, date):
 
 
 
-pprint(getMultipleSymbolHistory(["QQQ","FB","NFLX","GOOGL"],"daily","2016-11-14"))
+# pprint(getMultipleSymbolHistory(["QQQ","FB","NFLX","GOOGL"],"daily","2016-11-14"))
 

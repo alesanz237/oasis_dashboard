@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
 
+<!DOCTYPE html>
+<html>
 <head>
 
     <meta charset="utf-8">
@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Oasis Dashboard</title>
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
+    <title>Oasis Dashboard - Energy Data</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -17,28 +19,21 @@
     <!-- Custom CSS -->
     <link href="../static/css/sb-admin.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="../static/css/plugins/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <script src="../static/js/d3.js"></script>
-    <script src="../static/js/klass.js"></script>
-    <script src="../static/js/atlaspr.js"></script>
+    <!-- jQuery -->
     <script src="../static/js/jquery.js"></script>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+    <!-- NVD3 Market Charts -->
+    <script src="../static/js/marketCharts.js"></script>
 
 </head>
 
-<body>
-
+<body class='with-3d-shadow with-transitions'>
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -87,7 +82,7 @@
                     <li>
                         <a href="\map"><i class="fa fa-fw fa-globe"></i> Town Specific Data</a>
                     </li>
-                    <li >
+                    <li>
                         <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
                     </li>
                 </ul>
@@ -95,338 +90,121 @@
             <!-- /.navbar-collapse -->
         </nav>
 
+        <script type="text/javascript">
+            
+        var counter = 0;
+
+            function generateContainer(counter,title){
+                var graphId = "graph"+counter;
+                var chartId = "chart"+counter;
+                var head =  d3.select("body").select("#wrapper")
+                                .select("#page-wrapper")
+                                .select("#container-fluid")
+                                .append("div")
+                                .attr("class","row")
+                                .attr("id",graphId)
+                                .append("div")
+                                .attr("class","col-lg-12")
+                                .append("div")
+                                .attr("class","panel panel-default")
+                                .style("height","550px")             
+                    var heading = head.append("div")
+                                .attr("class","panel-heading")
+                                .append("h3")
+                                .attr("id",graphId+"-title")
+                                .attr("class","panel-title")
+                                .text(title)
+                                .append("small")
+                                .text(" 2000-2015")
+
+                    var body = head.append("div")
+                                .attr("class","panel-body")
+                                .append("svg")
+                                .style("display","inline-block")
+                                .style("position","relative")
+                                .style("width","100%")
+                                .style("padding-bottom","600px")
+                                .style("vertical-align","top")
+                                .style("overflow","hidden")
+                                .attr("id",chartId)
+            }
+
+            function generateAeeGraph(data_set){
+                $.get('/_getAEEDATA', 
+                { key_1: data_set},
+                function (energy_data) {
+                    console.log(energy_data.result)
+                    // console.log(counter)
+                    $("#no_graphs").empty();
+                    $("#no_graphs").remove();
+                    generateContainer(counter,data_set)
+                    var chartId = '#chart'+counter
+                    counter+=1;
+                    var colors = d3.scale.category20();
+                    var chart;
+                    nv.addGraph(function() {
+                        chart = nv.models.stackedAreaChart()
+                            .useInteractiveGuideline(true)
+                            .x(function(d) { return d[0] })
+                            .y(function(d) { return d[1] })
+                            .controlLabels({stacked: "Stacked"})
+                            .width(965)
+                            .height(500)
+                            .duration(300);
+                        chart.xAxis.tickFormat(function(d) { return d });
+                        chart.yAxis.tickFormat(d3.format(',.2f'));
+                        chart.legend.vers('furious');
+                        d3.select(chartId)
+                            .datum(energy_data.result)
+                            .transition().duration(1000)
+                            .call(chart)
+                            .each('start', function() {
+                                setTimeout(function() {
+                                    d3.selectAll(chartId+' *').each(function() {
+                                        if(this.__transition__)
+                                            this.__transition__.duration = 1;
+                                    })
+                                }, 0)
+                            });
+                        d3.selectAll("g.nv-series")
+                          
+
+                        nv.utils.windowResize(chart.update);
+                        return chart;
+                    });
+                });
+            }
+
+            // console.log("hello");
+            generateAeeGraph("Active Customers by Service Class");
+            counter +=1;
+            generateAeeGraph("Basic Income (M$)");
+            counter +=1;
+            generateAeeGraph("Consumption by Service Class (In millions of kWh (mkWh))");
+            counter +=1;
+            generateAeeGraph("Demand and Generation(*millions of kilowatts per hour(mkWh))");
+            counter +=1;
+            generateAeeGraph("Income Derived from Purchased Energy(M$)");
+            counter +=1;
+            generateAeeGraph("Income from Fuel Adjustment (M$)");
+            counter +=1;
+
+        </script>
+
         <div id="page-wrapper" style="margin-top: -40px;">
 
-            <div class="container-fluid">
+            <div id="container-fluid" class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Energy Data
-                        </h1>
+                        <h1 class="page-header">Energy Data</h1>
                     </div>
                 </div>
                 <!-- /.row -->
-
-                
-                
-                </script>
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-area-chart fa-fw"></i> 
-                                    Energy Generation (Natural Year) in millions of kilowatts per hour (mkWh)
-                                    <small>2000-2014</small>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-area-chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <script src="../static/js/plugins/morris/morris.js"></script>
-                <script src="../static/js/plugins/morris/raphael.min.js"></script>
-                <script>
-                    Morris.Area({
-                        element: 'morris-area-chart',
-                        data: [{
-                            period: '2000',
-                            gross_generation: 21813.5,
-                            net_generation: 20728.9,
-                            // max_demand: 3202 
-                        }, {
-                            period: '2001',
-                            gross_generation: 22301.9,
-                            net_generation: 21203.2,
-                            // max_demand: 3297 
-                        }, {
-                            period: '2002',
-                            gross_generation: 23175.6,
-                            net_generation: 22086.1,
-                            // max_demand: 3376 
-                        }, {
-                            period: '2003',
-                            gross_generation: 23937.3,
-                            net_generation: 22884.4,
-                            // max_demand: 3499 
-                        }, {
-                            period: '2004',
-                            gross_generation: 24135.0,
-                            net_generation: 23004.9,
-                            // max_demand: 3560 
-                        }, {
-                            period: '2005',
-                            gross_generation: 24961.8,
-                            net_generation: 23846.6,
-                            // max_demand: 3685 
-                        }, {
-                            period: '2006',
-                            gross_generation: 24946.4,
-                            net_generation: 23839.8,
-                            // max_demand: 3604 
-                        }, {
-                            period: '2007',
-                            gross_generation: 24636.2,
-                            net_generation: 23720.2,
-                            // max_demand: 3546 
-                        }, {
-                            period: '2008',
-                            gross_generation: 23213.6,
-                            net_generation: 22337.2,
-                            // max_demand: 3351 
-                        }, {
-                            period: '2009',
-                            gross_generation: 22988.6,
-                            net_generation: 22022.4,
-                            // max_demand: 3404 
-                        }, {
-                            period: '2010',
-                            gross_generation: 23244.0,
-                            net_generation: 22216.1,
-                            // max_demand: 3406 
-                        }, {
-                            period: '2011',
-                            gross_generation: 22257.3,
-                            net_generation: 21283.6,
-                            // max_demand: 3303 
-                        }, {
-                            period: '2012',
-                            gross_generation: 22306.0,
-                            net_generation: 21296.3,
-                            // max_demand: 3265 
-                        }, {
-                            period: '2013',
-                            gross_generation: 21493.3,
-                            net_generation: 20620.9,
-                            // max_demand: 1791
-                        }, {
-                            period: '2014',
-                            gross_generation: 21066.8,
-                            net_generation: 20272.2,
-                            // max_demand: 2028
-                        }],
-                        xkey: 'period',
-                        // ykeys: ['gross_generation', 'net_generation', 'max_demand'],
-                        ykeys: ['gross_generation', 'net_generation'],
-                        labels: ['gross_generation', 'net_generation'],
-                        // labels: ['Gross Generation', 'Net Generation', 'Max Demand'],
-                        pointSize: 2,
-                        hideHover: 'auto',
-                        resize: true
-                    });
-
-                </script>
-                <!-- /.row -->
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-line-chart"></i> 
-                                    Average Cost of kWh: Basic vs Fuel vs Bought Energy  (Natural Year)
-                                    <small>2000-2014</small>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="flot-chart">
-                                    <div class="flot-chart-content" id="flot-multiple-axes-chart"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <script>
-                        // Flot Line Charts - Multiple Axes - With Data
-                        $(function() {
-                            var basic = [
-                                [2000, 4.89],
-                                [2001, 4.86],
-                                [2002, 4.85],
-                                [2003, 4.74],
-                                [2004, 4.82],
-                                [2005, 4.82],
-                                [2006, 4.83],
-                                [2007, 4.89],
-                                [2008, 4.83],
-                                [2009, 4.87],
-                                [2010, 5.01],
-                                [2011, 5.14],
-                                [2012, 5.04],
-                                [2013, 5.36],
-                                [2014, 5.55]
-                            ];
-                            var fuel = [
-                                [2000, 5.43],
-                                [2001, 4.99],
-                                [2002, 4.49],
-                                [2003, 5.10],
-                                [2004, 5.38],
-                                [2005, 8.80],
-                                [2006, 9.16],
-                                [2007, 10.47],
-                                [2008, 15.22],
-                                [2009, 10.33],
-                                [2010, 12.86],
-                                [2011, 17.08],
-                                [2012, 15.58],
-                                [2013, 15.48],
-                                [2014, 15.24]
-                            ];
-                            var bought_energy = [
-                                [2000, 0.87 ],
-                                [2001, 1.29 ],
-                                [2002, 1.59 ],
-                                [2003, 2.32 ],
-                                [2004, 2.71 ],
-                                [2005, 2.99 ],
-                                [2006, 3.68 ],
-                                [2007, 3.79 ],
-                                [2008, 4.26 ],
-                                [2009, 4.48 ],
-                                [2010, 3.93 ],
-                                [2011, 4.32 ],
-                                [2012, 4.34 ],
-                                [2013, 5.00 ],
-                                [2014, 5.53 ]
-                            ];
-
-                            function usdFormatter(v, axis) {
-                                return v.toFixed(axis.tickDecimals) + " ¢/kWh";
-                            }
-
-                            function doPlot(position) {
-                                $.plot($("#flot-multiple-axes-chart"), [{
-                                    data: basic,
-                                    label: "Average Cost: Basic ",
-                                    yaxis: 2
-                                }, {
-                                    data: fuel,
-                                    label: "Average Cost: Fuel ",
-                                    yaxis: 2
-                                }, 
-                                {
-                                    data: bought_energy,
-                                    label: "Average Cost: Bought Energy ",
-                                    yaxis: 2
-                                }
-                                ], {
-                                    xaxes: [{
-                                        // mode: 'time'
-                                    }],
-                                    yaxes: [{
-                                        // min: 0
-                                    }, {
-                                        // align if we are to the right
-                                        alignTicksWithAxis: position == "right" ? 1 : null,
-                                        position: position,
-                                        tickFormatter: usdFormatter
-                                    }],
-                                    legend: {
-                                        position: 'nw',
-                                        // show: false
-                                    },
-                                    grid: {
-                                        hoverable: true //IMPORTANT! this is needed for tooltip to work
-                                    },
-                                    tooltip: true,
-                                    tooltipOpts: {
-                                        content: "%s for %x was %y ",
-                                        // xDateFormat: "%y-%0m-%0d",
-
-                                        onHover: function(flotItem, $tooltipEl) {
-                                            // console.log(flotItem, $tooltipEl);
-                                        }
-                                    }
-
-                                });
-                            }
-
-                            doPlot("left");
-
-                            $("button").click(function() {
-                                doPlot($(this).text());
-                            });
-                        });
-                    </script>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart"></i> 
-                                    Energy Consumption by Service Class <small>2000-2014</small>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-bar-chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                    Morris.Bar({
-                        element: 'morris-bar-chart',
-                        data: [{
-                            class: 'Residential',
-                            consumption: 102749.3 
-                        }, {
-                            class: 'Commercial',
-                            consumption: 118513.8 
-                        }, {
-                            class: 'Industrial',
-                            consumption: 52485.5 
-                        }, {
-                            class: 'Street Lighting',
-                            consumption: 4197.5 
-                        }, {
-                            class: 'Agriculture',
-                            consumption: 497.5 
-                        }, {
-                            class: 'Other Public Authorities',
-                            consumption: 1392.2 
-                        }],
-                        xkey: 'class',
-                        ykeys: ['consumption'],
-                        labels: ['mkWH'],
-                        barRatio: 0.4,
-                        xLabelAngle: 0,
-                        hideHover: 'auto',
-                        resize: true
-                    });
-                    </script>
-                </div>
-                <!-- /.row -->
-
             </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- /#page-wrapper -->
-
+        </div>    
     </div>
-    <!-- /#wrapper -->
-
-    <!-- jQuery -->
-    <script src="../static/js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="../static/js/bootstrap.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <!-- <script src="../static/js/plugins/morris/raphael.min.js"></script> -->
-    <script src="../static/js/plugins/morris/morris.min.js"></script>
-    <script src="../static/js/plugins/morris/morris-data.js"></script>
-
-    <!-- Flot Charts JavaScript -->
-    <!--[if lte IE 8]><script src="js/excanvas.min.js"></script><![endif]-->
-    <script src="../static/js/plugins/flot/jquery.flot.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.resize.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.pie.js"></script>
-    <script src="../static/js/plugins/flot/flot-data.js"></script>
 
 </body>
-
 </html>
