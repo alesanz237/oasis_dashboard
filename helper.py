@@ -1,5 +1,5 @@
-# #!/usr/bin/env python
-# # -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from params import lat_lon_towns
 import pyowm # Python wrapper for OpenwWeatherMap
