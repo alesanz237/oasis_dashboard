@@ -5,6 +5,7 @@ from flask import Flask, jsonify, render_template, request
 from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets, getKey1, getKey2, getAEEData, getStockSymbols, getMarketHistory
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather
+from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
 import subprocess
 app = Flask(__name__)
 
@@ -80,6 +81,21 @@ def get_MarketHistoryData():
     market_history = getMarketHistory(symbol,dType,startDate)
     return jsonify(result=market_history)
 
+@app.route('/_getLBMPData')
+def get_LBMPData():
+    lbmpData = getDataForLBMPZonalComparison()
+    return jsonify(result=lbmpData)
+
+@app.route('/_getLoadData')
+def get_LoadData():
+    load_data = getDataForLoadComparisons()
+    return jsonify(result=load_data)
+
+@app.route('/_getLBMPvsLoadData')
+def get_LBMPvsLoadData():
+    lbmp_vs_load_data = getDataForLBMPvsLoadComparisons()
+    return jsonify(result=lbmp_vs_load_data)
+
 @app.route("/twitter")
 def getTwitter():
     return render_template("twitter.html")
@@ -123,9 +139,9 @@ def getWeatherData():
     print weather 
     return jsonify(result=weather)
 
-@app.route("/map")
-def getMap():
-    return render_template("map.html")
+# @app.route("/map")
+# def getMap():
+#     return render_template("map.html")
 
 if __name__ == "__main__":
     # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
