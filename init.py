@@ -2,7 +2,6 @@
 # # -*- coding: utf-8 -*-
 
 from flask import Flask, jsonify, render_template, request
-from helper import getWeatherFromOWM, getWeatherFromNOAA, getPRTweets, getKey1, getKey2, getAEEData, getStockSymbols, getMarketHistory
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
