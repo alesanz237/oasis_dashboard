@@ -3,7 +3,6 @@
 from forecastiopy import *
 from params import lat_lon_towns, town_zipcodes, darksky
 from unidecode import unidecode
-from geopy.geocoders import Nominatim
 import datetime
 import time
 
