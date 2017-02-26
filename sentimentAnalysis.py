@@ -5,6 +5,9 @@ import nltk
 from generateTrainingSet import getTrainingSet
 from twitterCleaner import retrieveTweets, getPositiveTweets, getNegativeTweets
 import random
+import csv
+import time
+
 
 energy_words = ["absorb","AC","accumulator","alternating current","anthracite coal","appliance","battery","biodiesel","biofuel","biomass","bituminous coal","blackout","boiler","British thermal unit","Btu","capacity","carbon","carbon footprint","carbon tax","charcoal","chemical energy","clean energy","climate change","coal","coke","combustion","conservation","crude oil","current","dam","DC","diesel","direct current","drill","dynamo","efficiency","efficient","electric","electrical","electrical grid","electromagnetic energy","electron","energy","engine","engineer","entropy","environment","erg","ethanol","fossil fuel","flexible fuel","flywheel","fuel","fuel cell","furnace","gas","gasoline","gas-turbine","generate","generation","generator","geothermal","global warming","green","green energy","greenhouse effect","greenhouse gas","grid","heat","heat exchange","high-voltage","horsepower","human-powered","hybrid","hydrocarbon","hydroelectric","hydrogen","hydrothermal","industry","internal combustion engine","inverter","jet fuel","joule","Kelvin scale","kilowatt","kilowatt-hour","kinetic energy","light","liquefied petroleum gas","magnetic energy","megawatt","methane","methanol","mining","motor","natural gas","nuclear","nuclear energy","nuclear power","nuclear reactor","nucleus","off-the-grid","oil","oil rig","peak oil","peat","petroleum","photon","photovoltaic","photovoltaic panel","pollution","potential energy","power","power grid","power lines","power plant","power station","power transmission","propane","public utility","radiant","radiate","reactor","reciprocating engine","reflect","renewable","reservoir","shale","solar panel","solar power","static electricity","steam","steam engine","steam turbine","sun","sunlight","sunshine","sustainable","temperature","therm","thermal energy","thermodynamics","tidal power","transmission lines","transmit","turbine","utilities","volt","waste","watt","wattage","wave power","wind","wind farm","windmill","wind power","wind turbine","work","absorber","acumulador","corriente alterna",u"carbón","aparato",u"batería","Biodiesel","Biocombustible","Biomasa",u"carbón bituminoso",u"apagón","caldera",u"Unidad Térmica Británica","BTU","capacidad",u"carbón","Huella de carbono","impuesto sobre el carbono",u"carbón",u"energía química",u"energia limpia",u"energía",u"cambio climático",u"carbón","coca",u"combustión",u"conservación",u"petróleo crudo","corriente","presa","corriente continua","diesel","corriente continua","perforar","dinamo","eficiencia","eficiente",u"eléctrico",u"eléctrico",u"red eléctrica",u"energía electromagnética",u"electrón",u"energía","motor","ingeniero",u"Entropía","ambiente","ergio","etanol","combustible fosil","Combustible flexible","volante","gasolina","pila de combustible","horno","gas","gasolina","turbina de gas","generar","Generacion","generador",u"Geotérmica","calentamiento global","verde",u"energía verde","efecto invernadero","gases de efecto invernadero",u"cuadrícula","calor","de intercambio de calor","Alto voltaje","caballo de fuerza"]
 #Example positive tweets
@@ -62,20 +65,24 @@ def storeClassifiedTweets():
 
 	# Training our classifier
 	classifier = nltk.NaiveBayesClassifier.train(training_set)
-
+	stored_tweets = {}
 	# Classifying tweets
 	# for tweet 
 	for i in range(1,11):
 		all_tweets = retrieveTweets("data/tweets/"+str(i)+".txt")
 		for tweet in all_tweets:
 			sentence = tweet["text"]
+			created_at 	 = tweet["created_at"]
 			try:
 				polarity = classifier.classify(extract_features(sentence.split()))
 				if polarity == "positive":
 					f = open('data/tweets/positive.txt', 'a')
 				else:
 					f = open('data/tweets/negative.txt', 'a')
-				f.write(sentence.replace("\n"," ").replace("\t"," ")+"\t"+polarity)
+				stored_tweets["text"] = tweet["text"]
+				stored_tweets["polarity"] = polarity
+				stored_tweets["created_at"] = created_at
+				f.write(str(stored_tweets))
 				f.write("\n")
 				f.close()
 			except:
@@ -151,20 +158,130 @@ def getTweets():
 	try:
 		with open('data/tweets/positive.txt') as tweet:
 			for t in tweet:
+				tweets.append(eval(t))
+		with open('data/tweets/negative.txt') as tweet:
+			for t in tweet:
+				tweets.append(eval(t))
+	except:
+		pass
+	finally:
+		with open('data/tweets/positive_backup.txt') as tweet:
+			for t in tweet:
+				tweets.append(eval(t))
+		with open('data/tweets/negative_backup.txt') as tweet:
+			for t in tweet:
+				tweets.append(eval(t))
+	tweets = scrambled(tweets)
+	return tweets
+
+def getPositiveTweetsFromTo(_from,to):
+	""" Getting positive tweets from a given time frame"""
+	tweets = []
+	try:
+		with open('data/tweets/positive.txt') as tweet:
+			for t in tweet:
+				t = eval(t)
+				date  = t['created_at'].split(" ")
+				day   = int(date[2])
+				month = date[1]
+				hour  = int(date[3].split(":")[0])
+				year  = int(date[5])
+				if hour >= _from and hour <= to:
+					tweets.append(t)
+	except:
+		pass
+	finally:
+		with open('data/tweets/positive_backup.txt') as tweet:
+			for t in tweet:
+				t = eval(t)
+				date  = t['created_at'].split(" ")
+				day   = int(date[2])
+				month = date[1]
+				hour  = int(date[3].split(":")[0])
+				year  = int(date[5])
+				if hour >= _from and hour <= to:
+					tweets.append(t)
+	return tweets
+
+def getNegativeTweetsFromTo(_from,to):
+	""" Getting negative tweets from a given time frame"""
+	tweets = []
+	try:
+		with open('data/tweets/negative.txt') as tweet:
+			for t in tweet:
+				t = eval(t)
+				date  = t['created_at'].split(" ")
+				day   = int(date[2])
+				month = date[1]
+				hour  = int(date[3].split(":")[0])
+				year  = int(date[5])
+				if hour >= _from and hour <= to:
+					tweets.append(t)
+	except:
+		pass
+	finally:
+		with open('data/tweets/negative_backup.txt') as tweet:
+			for t in tweet:
+				t = eval(t)
+				date  = t['created_at'].split(" ")
+				day   = int(date[2])
+				month = date[1]
+				hour  = int(date[3].split(":")[0])
+				year  = int(date[5])
+				if hour >= _from and hour <= to:
+					tweets.append(t)
+	return tweets
+
+def convertTweetsToCSV():
+	""" Getting tweets from a given time frame"""
+	# Gathering positive and negative tweets
+	tweets = []
+	try:
+		with open('data/tweets/positive.txt') as tweet:
+			for t in tweet:
+				t = eval(t)
 				tweets.append(t)
 		with open('data/tweets/negative.txt') as tweet:
 			for t in tweet:
+				t = eval(t)
 				tweets.append(t)
 	except:
 		pass
 	finally:
 		with open('data/tweets/positive_backup.txt') as tweet:
 			for t in tweet:
+				t = eval(t)
 				tweets.append(t)
 		with open('data/tweets/negative_backup.txt') as tweet:
 			for t in tweet:
+				t = eval(t)
 				tweets.append(t)
-	tweets = scrambled(tweets)
+
+	# Converting positive and negative tweets to csv
+	date = time.strftime("%d-%m-%Y")
+	filename = "tweets_"+date
+	f = csv.writer(open(filename, "wb+"))
+	f.writerow(["created_at", "text", "polarity"])
+	for tweet in tweets:
+		try:
+			f.writerow([tweet['created_at'],tweet['text'],tweet['polarity']])
+		except:
+			pass
+
+def getCSVTweets(file):
+	""" Getting CSV tweets """
+	# tweets = csv.reader("test.csv")
+	tweets = []
+	# for tweet in tweets:
+		# print tweet
+	with open(file) as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			tweet = {}
+			tweet['created_at'] = row['created_at']
+			tweet['text']		 = row['text']
+			tweet['polarity']   = row['polarity']
+			tweets.append(tweet)
 	return tweets
 
 def scrambled(orig):
@@ -173,6 +290,8 @@ def scrambled(orig):
 	random.shuffle(dest)
 	return dest
 
-if __name__ == '__main__':
-	storeClassifiedTweets()
+# if __name__ == '__main__':
+	# getCSVTweets("test.csv")
+	# storeClassifiedTweets()
+	# print convertTweetsToCSV()
 	
