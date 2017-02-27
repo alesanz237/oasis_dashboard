@@ -13,8 +13,6 @@ import sys  # Library needed for working with utf8 characters
 reload(sys)  # Reseting system
 sys.setdefaultencoding('utf8') # Setting the default encoding to utf8
 
-owm = pyowm.OWM('17e7fa6633e1d589da7ab67277d42774') # API Key for OpenWeatherMap API
-
 def getLatLonByTown(town_name):
 	""" Function that returns the coordinates of a town, given its name """
 	int_coords = []
