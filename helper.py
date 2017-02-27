@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from params import lat_lon_towns
-import pyowm # Python wrapper for OpenwWeatherMap
 import json
 from pprint import pprint
-import pandas as pd
 import time
 import urllib2
 import datetime

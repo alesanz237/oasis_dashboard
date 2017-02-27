@@ -10,14 +10,14 @@ import subprocess
 import time
 app = Flask(__name__)
 
-@app.route('/_weather_data')
-def get_weather():
-    town =  request.args['town']
-    # print town
-    weather_from_owm = []
-    # weather_from_owm.append(getWeatherFromOWM("Cayey"))
-    # print getWeatherFromOWM(town)
-    return jsonify(getWeatherFromOWM(town))
+# @app.route('/_weather_data')
+# def get_weather():
+#     town =  request.args['town']
+#     # print town
+#     weather_from_owm = []
+#     # weather_from_owm.append(getWeatherFromOWM("Cayey"))
+#     # print getWeatherFromOWM(town)
+#     return jsonify(getWeatherFromOWM(town))
 
 @app.route('/_twitter_data')
 def get_twitterData():
