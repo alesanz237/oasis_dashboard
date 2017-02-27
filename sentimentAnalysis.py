@@ -222,8 +222,8 @@ def getTweetsFromRange(filename,_from,to):
 					month = 12
 				hour  = date[3].split(":")[0]
 				year  = date[5]
-				date_time = day+"."+month+"."+year+" "hour
-				pattern = '%d.%m.%Y %H'
+				date_time = day+"."+month+"."+year+" "+hour+":00"
+				pattern = '%d.%m.%Y %H:%M'
 				epoch = int(time.mktime(time.strptime(date_time, pattern)))
 				# Getting how much hours do I have to store for array
 				hours = to - _from
