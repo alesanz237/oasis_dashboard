@@ -144,4 +144,4 @@ def getWeatherData():
 
 if __name__ == "__main__":
     # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
-    app.run()
+    app.run(host='0.0.0.0')
