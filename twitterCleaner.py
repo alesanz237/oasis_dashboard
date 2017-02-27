@@ -79,5 +79,5 @@ def getNegativeTweets():
 				classified_sentences.append(classified_sentence)
 	return classified_sentences
 
-if __name__ == '__main__':
-	print getPositiveTweets()
+# if __name__ == '__main__':
+	# print getPositiveTweets()

@@ -1,12 +1,13 @@
 # #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from helper import getPRTweets, getKey1, getKey2, getAEEData
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
 import subprocess
+import time
 app = Flask(__name__)
 
 @app.route('/_weather_data')
@@ -140,6 +141,12 @@ def getWeatherData():
 # def getMap():
 #     return render_template("map.html")
 
+@app.route('/returnTweets')
+def return_tweets():
+    date = time.strftime("%d-%m-%Y")
+    filename = "tweets_"+date+".csv"
+    return send_from_directory(directory='data/tweets',filename=filename, as_attachment=True)
+
 if __name__ == "__main__":
-    subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
     app.run()
