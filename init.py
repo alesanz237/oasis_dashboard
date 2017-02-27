@@ -2,6 +2,7 @@
 # # -*- coding: utf-8 -*-
 
 from flask import Flask, jsonify, render_template, request
+from helper import getPRTweets, getKey1, getKey2, getAEEData
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
@@ -61,10 +62,7 @@ def getEnergy():
 
 @app.route("/market")
 def getMarket():
-    keys = sorted(getKey1())
-    symbols = getStockSymbols()
-    print symbols
-    return render_template("market.html",keys=keys, symbols=symbols)
+    return render_template("market.html")
 
 @app.route('/_getAEEDATA')
 def get_AEEData():
@@ -145,3 +143,4 @@ def getWeatherData():
 if __name__ == "__main__":
     # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
     app.run(host='0.0.0.0')
+    app.run()

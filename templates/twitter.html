@@ -249,20 +249,20 @@
                         window.setInterval(function(){
                             $.get('_getTweets',
                                 function(data){
+                                    console.log(data.result);
                                     $(".loader_stream").hide();
                                     all_tweets = data.result;
                                     document.getElementById("twitter_stream").innerHTML = "<p id=\"text\"></p>";
                                     tags = [];
                                     for (var i = 0; i < 10; i++){
                                         tweet = all_tweets[i];
-                                        polarity = tweet.split("\t")[1]
-                                        tweet = tweet.split("\t")[0]
-                                        
-                                        if (polarity[0] == "n"){
+                                        polarity = tweet.polarity
+                                        tweet = tweet.text
+                                        if (polarity == "negative"){
                                             var span_tag = "<span id=\"neg_text\" style=\"color:#ff0000;\">"+ tweet +"</span><br>";
                                             tags.push(span_tag);
                                         }
-                                        else{
+                                        else if (polarity == "positive"){
                                             var span_tag = "<span id=\"pos_text\" style=\"color:#0000ff;\">"+ tweet +"</span><br>";
                                             tags.push(span_tag);
                                         }

@@ -17,7 +17,7 @@ def retrieveTweets(file):
 			tweet["id"] = tweets["user"]["id"]
 			tweet["created_at"] = tweets["created_at"]
 			tweet["text"] = tweets["text"]
-			tweets["location"] = tweets["user"]["location"]
+			tweet["location"] = tweets["user"]["location"]
 			# print tweet
 			tweets_data.append(tweet)
 			tweet = {}
@@ -31,13 +31,12 @@ def getPositiveTweets():
 		with open("data/tweets/positive.txt") as f:
 			# classified_sentence = ()
 			content = f.readlines()
+			# print content
 			for data in content:
-				sentence = data.split("\t")[0]
-				if len(data.split("\t")) > 1:
-					clase = data.split("\t")[1].rstrip("\n")
-				else:
-					clase = "negative"
-				classified_sentence= (sentence,clase)
+				tweet = eval(data)
+				sentence = tweet['text']
+				polarity    = tweet['polarity']
+				classified_sentence = (sentence,polarity)
 				classified_sentences.append(classified_sentence)
 	except:
 		pass
@@ -46,12 +45,10 @@ def getPositiveTweets():
 			# classified_sentence = ()
 			content = f.readlines()
 			for data in content:
-				sentence = data.split("\t")[0]
-				if len(data.split("\t")) > 1:
-					clase = data.split("\t")[1].rstrip("\n")
-				else:
-					clase = "negative"
-				classified_sentence= (sentence,clase)
+				tweet = eval(data)
+				sentence = tweet['text']
+				polarity    = tweet['polarity']
+				classified_sentence = (sentence,polarity)
 				classified_sentences.append(classified_sentence)
 	return classified_sentences
 
@@ -61,13 +58,12 @@ def getNegativeTweets():
 		with open("data/tweets/negative.txt") as f:
 			# classified_sentence = ()
 			content = f.readlines()
+			# print content
 			for data in content:
-				sentence = data.split("\t")[0]
-				if len(data.split("\t")) > 1:
-					clase = data.split("\t")[1].rstrip("\n")
-				else:
-					clase = "negative"
-				classified_sentence= (sentence,clase)
+				tweet = eval(data)
+				sentence = tweet['text']
+				polarity    = tweet['polarity']
+				classified_sentence = (sentence,polarity)
 				classified_sentences.append(classified_sentence)
 	except:
 		pass
@@ -76,11 +72,12 @@ def getNegativeTweets():
 			# classified_sentence = ()
 			content = f.readlines()
 			for data in content:
-				sentence = data.split("\t")[0]
-				if len(data.split("\t")) > 1:
-					clase = data.split("\t")[1].rstrip("\n")
-				else:
-					clase = "negative"
-				classified_sentence= (sentence,clase)
+				tweet = eval(data)
+				sentence = tweet['text']
+				polarity    = tweet['polarity']
+				classified_sentence = (sentence,polarity)
 				classified_sentences.append(classified_sentence)
 	return classified_sentences
+
+if __name__ == '__main__':
+	print getPositiveTweets()
