@@ -188,6 +188,8 @@
                             getForecastInC();  
                         else
                             getForecastInF();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
                     }
 
                     function getWeather(){
@@ -198,6 +200,8 @@
                             getForecastInC();
                         else
                             getForecastInF();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
                     }
 
                     function getTemperature(){

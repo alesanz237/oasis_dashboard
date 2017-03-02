@@ -71,10 +71,11 @@ def storeClassifiedTweets():
 	tweets_per_day   = {}
 	tweets_per_hour  = {}
 	tweets_len       = [0,0]
-	# current_year     = time.strftime("%Y")
-	# current_month    = time.strftime("%m")
-	# current_day      = time.strftime("%d")
-	# current_hour	 = time.strftime("%H")
+	current_year     = time.strftime("%Y")
+	current_month    = time.strftime("%m")
+	current_day      = time.strftime("%d")
+	current_date     = current_year + current_month + current_day
+	current_hour	 = time.strftime("%H")
 	i                = 0
 	# Classifying tweets 
 	all_tweets = retrieveTweets("data/tweets/tweets.txt")
@@ -95,38 +96,21 @@ def storeClassifiedTweets():
 					tweets_per_hour[hour][1] += 1
 			else:
 				tweets_per_hour[hour] = [0,0]
-			if i == 0:
-				# current_hour  = hour
-				current_day   = day
-				current_month = month
-				current_year  = year
-				i+=i
-			if day >= current_day:
-				tweets_per_day[day] = tweets_per_hour
-				tweets_per_hour     = {}
-				current_month      += 1
-			if month >= current_month:
-				tweets_per_month[month] = tweets_per_day
-				tweets_per_hour         = {}
-				current_year           += 1
-			if year >= current_year:
-				tweets_per_year[year] = tweets_per_year
-				tweets_per_hour         = {}
-				current_year           += 1
-			# if polarity == "positive":
-			# 	f = open('data/tweets/positive.txt', 'a')
-			# else:
-			# 	f = open('data/tweets/negative.txt', 'a')
-			# stored_tweets["text"] = tweet["text"]
-			# stored_tweets["polarity"] = polarity
-			# stored_tweets["created_at"] = created_at
-			# f.write(str(stored_tweets))
-			# f.write("\n")
-			# f.close()
+			if polarity == "positive":
+				f = open('data/tweets/positive.txt', 'a')
+			else:
+				f = open('data/tweets/negative.txt', 'a')
+			stored_tweets["text"] = tweet["text"]
+			stored_tweets["polarity"] = polarity
+			stored_tweets["created_at"] = created_at
+			f.write(str(stored_tweets))
+			f.write("\n")
+			f.close()
 
 		except:
 			continue
 	print tweets_per_hour
+
 	# convertTweetsToCSV()
 	# storeTweetsLenPerDate()
 
