@@ -66,17 +66,17 @@ def storeClassifiedTweets():
 	classifier = nltk.NaiveBayesClassifier.train(training_set)
 	stored_tweets = {}
 
-	tweets_per_year  = {}
-	tweets_per_month = {}
-	tweets_per_day   = {}
-	tweets_per_hour  = {}
-	tweets_len       = [0,0]
-	current_year     = time.strftime("%Y")
-	current_month    = time.strftime("%m")
-	current_day      = time.strftime("%d")
-	current_date     = current_year + current_month + current_day
-	current_hour	 = time.strftime("%H")
-	i                = 0
+	# tweets_per_year  = {}
+	# tweets_per_month = {}
+	# tweets_per_day   = {}
+	# tweets_per_hour  = {}
+	# tweets_len       = [0,0]
+	# current_year     = time.strftime("%Y")
+	# current_month    = time.strftime("%m")
+	# current_day      = time.strftime("%d")
+	# current_date     = current_year + current_month + current_day
+	# current_hour	 = time.strftime("%H")
+	# i                = 0
 	# Classifying tweets 
 	all_tweets = retrieveTweets("data/tweets/tweets.txt")
 	for tweet in all_tweets:
@@ -89,13 +89,13 @@ def storeClassifiedTweets():
 		year  = date[5]		
 		try:
 			polarity = classifier.classify(extract_features(sentence.split()))
-			if hour in tweets_per_hour:
-				if polarity == "positive":
-					tweets_per_hour[hour][0] += 1
-				else:
-					tweets_per_hour[hour][1] += 1
-			else:
-				tweets_per_hour[hour] = [0,0]
+			# if hour in tweets_per_hour:
+			# 	if polarity == "positive":
+			# 		tweets_per_hour[hour][0] += 1
+			# 	else:
+			# 		tweets_per_hour[hour][1] += 1
+			# else:
+			# 	tweets_per_hour[hour] = [0,0]
 			if polarity == "positive":
 				f = open('data/tweets/positive.txt', 'a')
 			else:

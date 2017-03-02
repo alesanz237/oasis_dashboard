@@ -399,6 +399,9 @@ def readWeatherInCSV(file):
 
 	return weather
 
+# def getWeatherAttributeForComparison(weather):
+
+
 # if __name__ == '__main__':
 	# getHourlyWeatherInCSV(u"00680","c")
 	# print getTodaysWeather(u"cayey","f")

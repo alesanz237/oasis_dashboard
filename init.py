@@ -4,7 +4,7 @@
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from helper import getPRTweets, getKey1, getKey2, getAEEData
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
-from dark_sky import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
+from weather import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
 import subprocess
 import time
@@ -114,6 +114,6 @@ def return_loads():
     return send_file('/var/www/PythonProgramming/PythonProgramming/static/images/python.jpg', attachment_filename='python.jpg')
 
 if __name__ == "__main__":
-    # subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
-    app.run(host='0.0.0.0')
+    subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    app.run(host='0.0.0.0',port=80)
     app.run()
