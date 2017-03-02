@@ -3,8 +3,10 @@
 from forecastiopy import *
 from params import lat_lon_towns, town_zipcodes, darksky
 from unidecode import unidecode
+from pprint import pprint
 import datetime
 import time
+import csv
 
 def getLatLonByTown(town_name):
 	""" Function that returns the coordinates of a town, given its name """
@@ -138,6 +140,84 @@ def getHourlyWeather(keyword, temp):
 	else:
 		return coords
 	return conditions
+
+def getHourlyWeatherInCSV(keyword, temp):
+	coords = getCoords(keyword)
+	conditions = []
+	weather = {}
+	if not isinstance(coords,str):
+		if temp == "c":
+			fio = ForecastIO.ForecastIO(darksky,
+		                            units=ForecastIO.ForecastIO.UNITS_SI,
+		                            lang=ForecastIO.ForecastIO.LANG_ENGLISH,
+		                            latitude=coords[0], longitude=coords[1])
+		else:
+			fio = ForecastIO.ForecastIO(darksky,
+		                            lang=ForecastIO.ForecastIO.LANG_ENGLISH,
+		                            latitude=coords[0], longitude=coords[1])
+		if fio.has_hourly() is True:
+			hourly = FIOHourly.FIOHourly(fio)
+			for hour in xrange(0, 24):
+				for item in hourly.get_hour(hour).keys():
+					if item == "icon":
+						weather[item] = unicode(hourly.get_hour(hour)[item])
+					if item == "summary":
+						weather[item] = unicode(hourly.get_hour(hour)[item])
+					if item == "temperature":
+						if temp == "f":
+							weather[item] = str(hourly.get_hour(hour)[item]).split(".")[0] + " F"
+						else:
+							weather[item] = str(hourly.get_hour(hour)[item]).split(".")[0] + " C"
+					if item == "humidity":
+						weather[item] = str(hourly.get_hour(hour)[item] * 100).split(".")[0] + "%"
+					if item == "time":
+						time = hourly.get_hour(hour)[item] 
+						hours = datetime.datetime.fromtimestamp(time).strftime('%H:%M')
+						date = datetime.datetime.fromtimestamp(time).strftime('%a %d, %b %Y')
+						hour = int(hours.split(":")[0])
+						minutes = hours.split(":")[1]
+						if hour % 24 > 11:
+							pm_or_am = " PM"
+						else:
+							pm_or_am = " AM"
+						modded_hour = hour % 12
+						if modded_hour == 0:
+							modded_hour = 12
+						weather[item] = date + " " + str(modded_hour) + ":" + minutes + pm_or_am
+					if item == "precipProbability":
+						weather[item] = str(hourly.get_hour(hour)[item] * 100).split(".")[0] + "%"
+					if item == "windSpeed":
+						windSpeed = unicode(hourly.get_hour(hour)[item])
+					if item == "windBearing":
+						windBearing = unicode(hourly.get_hour(hour)[item])
+						windBearing = convertWindBearing(windBearing)
+						weather["wind"] = windBearing + " " + windSpeed + " mph"
+				conditions.append(weather)
+				weather = {}
+		else:
+			return 'No Hourly data'
+	else:
+		return coords
+	if keyword[0] == "0":
+		keyword = convertZipcodeToTown(keyword)
+	keyword = getCorrectTownName(keyword)
+	if temp == 'f':
+		filename = "data/weather/"+keyword+"_f.csv"
+	else:
+		filename = "data/weather/"+keyword+"_c.csv"
+	f = csv.writer(open(filename, "wb+"))
+	f.writerow(["date", "description", "precipitation", "temperature", "humidity", "wind", "icon"])
+	for condition in conditions:
+		try:
+			f.writerow([condition['time'],
+				condition['summary'],
+				condition['precipProbability'],
+				condition['temperature'],
+				condition['humidity'],
+				condition['wind'],
+				condition['icon']])
+		except:
+			pass
 
 def getTodaysWeather(keyword, temp):
 	""" Function that returns today's weather given a towns name or zipcode """
@@ -301,32 +381,27 @@ def getCorrectTownName(town):
 		town = town.title()
 	return town 
 
-# def getHourlyForecastInCelsius(keyword):
-# 	""" Function that returns the hourly forecast in Celsius for a given town """
-# 	return getHourlyWeather(keyword,"c")
+def readWeatherInCSV(file):
+	""" Function that reads data from a csv file and converts it to json """
+	weather = []
+	with open(file) as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			attributes = {}
+			attributes['date'] = row['date']
+			attributes['description']		 = row['description']
+			attributes['precipitation']   = row['precipitation']
+			attributes['humidity'] = row['humidity']
+			attributes['temperature']		 = row['temperature']
+			attributes['wind']   = row['wind']
+			attributes['icon']   = row['icon']
+			weather.append(attributes)
 
-# def getHourlyForecastInFahrenheit(keyword):
-# 	""" Function that returns the hourly forecast in Fahrenheit for a given town """
-# 	return getHourlyWeather(keyword,"f")
-
-# def getTodaysForecastInCelsius(keyword):
-# 	""" Function that returns todays forecast in Celsius for a given town """
-# 	return getTodaysWeather(keyword,"c")
-
-# def getTodaysForecastInFahrenheit(keyword):
-# 	""" Function that returns todays forecast in Fahrenheit for a given town """
-# 	return getTodaysWeather(keyword,"f")
-
-# def getDailyForecastInCelsius(keyword):
-# 	""" Function that returns the daily forecast for a town in Celsius"""
-# 	return getDailyWeather(keyword,"c")
-
-# def getDailyForecastInFahrenheit(keyword):
-# 	""" Function that returns the daily forecast for a town in Fahrenheit"""
-# 	return getDailyWeather(keyword,"f")
+	return weather
 
 # if __name__ == '__main__':
-	# print getHourlyForecastInCelsius(u"00925")
-	# print getHourlyForecastInFahrenheit(u"Mayagüez")
+	# getHourlyWeatherInCSV(u"00680","c")
 	# print getTodaysWeather(u"cayey","f")
 	# print getDailyWeather(u"00680","f")
+	# pprint(getHourlyWeather(u"00680","f"))
+	# pprint(readWeatherInCSV("data/weather/Mayagüez_f.csv"))

@@ -160,6 +160,11 @@
                                 <input id="input_town" type="text" class="form-control" placeholder="Search by town or zipcode..." style="width:205px; border-radius:0px; margin-top: 10px; margin-left:10px;">
                             </div>
                             <button class="btn btn-default" style="margin-top: -86px; margin-left:215px; background-color: #ccc; border-radius:0px;"><i class="fa fa-search" aria-hidden="true" onclick="getWeather()"></i></button>
+                            <form method="get" action="/returnWeather" style="margin-top: -65px;margin-left: 270px;">
+                                <input type="hidden" name="temp" id="temp" value="">
+                                <input type="hidden" name="town" id="town" value="">
+                                <button type="submit">Download weather data</button>
+                            </form>
                         <!-- </form> -->
                     </div>
                 </div>
@@ -195,8 +200,22 @@
                             getForecastInF();
                     }
 
+                    function getTemperature(){
+                        var c_temp = $('input[id=c_checkbox]:checked').val();
+                        if (c_temp == "c")
+                            return 'c';
+                        else
+                            return 'f';
+                    }
+
+                    function getTown(){
+                        return $('#input_town').val() != "" ? $('#input_town').val() : "mayaguez" ;
+                    }
+
                     $(function() {
                         $("#loader").show();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
                         getForecastInF();
                     });
 
