@@ -45,7 +45,8 @@ def getDayAheadMarketLBMPZonal():
 	## dd/mm/yyyy format
 	current_date = time.strftime("%Y%m%d")
 	current_day = int(time.strftime("%d"))-1
-	yesterday = time.strftime("%Y%m") + str(current_day)
+	current_year = int(time.strftime("%Y"))
+	current_month = time.strftime("%m")
 	if current_day == 0:
 		current_year = int(time.strftime("%Y"))
 		current_month = int(time.strftime("%m")) -1
@@ -61,8 +62,12 @@ def getDayAheadMarketLBMPZonal():
 		if current_month == 0:
 			current_month = 31
 			current_year = int(time.strftime("%Y")) - 1
-		yesterday = str(current_year)+str(current_month)+str(current_day)
+		# yesterday = str(current_year)+str(current_month)
+	if len(str(current_day)) == 1:
+		current_day = "0" + str(current_day)
+	yesterday = str(current_year)+str(current_month)+str(current_day)
 
+	print yesterday
 
 	url = 'http://mis.nyiso.com/public/csv/damlbmp/'+yesterday+'damlbmp_zone.csv'
 	response = urllib2.urlopen(url)

@@ -62,32 +62,57 @@ def extract_features(document):
 def storeClassifiedTweets():
 	# Variable that contains the labeled datasets
 	training_set = nltk.classify.apply_features(extract_features, tweets)
-
 	# Training our classifier
 	classifier = nltk.NaiveBayesClassifier.train(training_set)
 	stored_tweets = {}
-	# Classifying tweets
-	# for tweet 
-	for i in range(1,11):
-		all_tweets = retrieveTweets("data/tweets/"+str(i)+".txt")
-		for tweet in all_tweets:
-			sentence = tweet["text"]
-			created_at 	 = tweet["created_at"]
-			try:
-				polarity = classifier.classify(extract_features(sentence.split()))
-				if polarity == "positive":
-					f = open('data/tweets/positive.txt', 'a')
-				else:
-					f = open('data/tweets/negative.txt', 'a')
-				stored_tweets["text"] = tweet["text"]
-				stored_tweets["polarity"] = polarity
-				stored_tweets["created_at"] = created_at
-				f.write(str(stored_tweets))
-				f.write("\n")
-				f.close()
-			except:
-				continue
-	convertTweetsToCSV()
+
+	# tweets_per_year  = {}
+	# tweets_per_month = {}
+	# tweets_per_day   = {}
+	# tweets_per_hour  = {}
+	# tweets_len       = [0,0]
+	# current_year     = time.strftime("%Y")
+	# current_month    = time.strftime("%m")
+	# current_day      = time.strftime("%d")
+	# current_date     = current_year + current_month + current_day
+	# current_hour	 = time.strftime("%H")
+	# i                = 0
+	# Classifying tweets 
+	all_tweets = retrieveTweets("data/tweets/tweets.txt")
+	for tweet in all_tweets:
+		sentence = tweet["text"]
+		created_at 	 = tweet["created_at"]
+		date  = created_at.split(" ")
+		day   = date[2]
+		month = date[1]
+		hour  = date[3].split(":")[0]
+		year  = date[5]		
+		try:
+			polarity = classifier.classify(extract_features(sentence.split()))
+			# if hour in tweets_per_hour:
+			# 	if polarity == "positive":
+			# 		tweets_per_hour[hour][0] += 1
+			# 	else:
+			# 		tweets_per_hour[hour][1] += 1
+			# else:
+			# 	tweets_per_hour[hour] = [0,0]
+			if polarity == "positive":
+				f = open('data/tweets/positive.txt', 'a')
+			else:
+				f = open('data/tweets/negative.txt', 'a')
+			stored_tweets["text"] = tweet["text"]
+			stored_tweets["polarity"] = polarity
+			stored_tweets["created_at"] = created_at
+			f.write(str(stored_tweets))
+			f.write("\n")
+			f.close()
+
+		except:
+			continue
+	print tweets_per_hour
+
+	# convertTweetsToCSV()
+	# storeTweetsLenPerDate()
 
 def getPositiveWords():
 	tweets = []
@@ -187,89 +212,62 @@ def getPositiveTweetsFromTo(_from,to):
 		tweets = getTweetsFromRange('data/tweets/positive_backup.txt',_from,to)
 	return tweets
 
-def getTweetsFromRange(filename,_from,to):
-	tweets = []
-	tweet_dict = {}
-	with open(filename) as tweet:
-			for t in tweet:
-				t = eval(t)
-				date  = t['created_at'].split(" ")
-				day   = date[2]
-				month = date[1]
-				if month == "Jan":
-					month = "01"
-				elif month == "Feb":
-					month = "02"
-				elif month == "Mar":
-					month = "03"
-				elif month == "Apr":
-					month = "04"
-				elif month == "May":
-					month = "05"
-				elif month == "Jun":
-					month = "06"
-				elif month == "Jul":
-					month = "07"
-				elif month == "Aug":
-					month = "08"
-				elif month == "Sep":
-					month = "09"
-				elif month == "Oct":
-					month = "10"
-				elif month == "Nov":
-					month = "11"
-				elif month == "Dec":
-					month = 12
-				hour  = date[3].split(":")[0]
-				year  = date[5]
-				date_time = day+"."+month+"."+year+" "+hour+":00"
-				pattern = '%d.%m.%Y %H:%M'
-				epoch = int(time.mktime(time.strptime(date_time, pattern)))
-				# Getting how much hours do I have to store for array
-				hours = to - _from
-				hours_array = []
-				updated_from = _from
-				tweet_dict['x'] = epoch
-				tweet_dict['y'] = 0
-				print 'hours',hours
-				for i in range(0,hours):
-					if int(hour) == updated_from:
-						tweet_dict['y'] += 1
-						print tweet_dict
-					if int(hour) > _from:
-						tweets.append(tweet_dict)
-						tweet_dict = {}
-						hour +=1
-					updated_from+=1	
-	return tweets
-
 def getNegativeTweetsFromTo(_from,to):
 	""" Getting negative tweets from a given time frame"""
 	tweets = []
+	tweet_dict = {}
 	try:
-		with open('data/tweets/negative.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				date  = t['created_at'].split(" ")
-				day   = int(date[2])
-				month = date[1]
-				hour  = int(date[3].split(":")[0])
-				year  = int(date[5])
-				if hour >= _from and hour <= to:
-					tweets.append(t)
+		tweets = getTweetsFromRange('data/tweets/negative.txt',_from,to)
 	except:
 		pass
 	finally:
-		with open('data/tweets/negative_backup.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				date  = t['created_at'].split(" ")
-				day   = int(date[2])
-				month = date[1]
-				hour  = int(date[3].split(":")[0])
-				year  = int(date[5])
-				if hour >= _from and hour <= to:
-					tweets.append(t)
+		tweets = getTweetsFromRange('data/tweets/negative_backup.txt',_from,to)
+	return tweets
+
+def getTweetsFromRange(filename,_from,to):
+	tweets = []
+	tweet_dict = {}
+	dict_of_tweets = {}
+	counter = 1
+	tweet_dict['y'] = 0
+	updated_from = _from
+	with open(filename) as tweet:
+		for t in tweet:
+			t = eval(t)
+			date  = t['created_at'].split(" ")
+			day   = date[2]
+			month = date[1]
+			hour  = date[3].split(":")[0]
+			year  = date[5]
+			date_time = day+"."+month+"."+year+" "+hour+":00"
+			hour = int(hour)
+			pattern = '%d.%b.%Y %H:%M'
+			epoch = int(time.mktime(time.strptime(date_time, pattern)))
+			# Getting how much hours do I have to store for array
+			hours = to - _from
+			
+			tweet_dict['x'] = epoch
+			# print 'hours',hours
+			
+			for i in range(0,hours):
+				dict_of_tweets[updated_from] = 0
+				print 'updated_from',updated_from
+				if hour == updated_from:
+					dict_of_tweets[updated_from] += counter
+					counter+=1
+			# if hour > updated_from:
+			# 	updated_from +=1
+					# tweet_dict['y'] += 1
+			# 		# print tweet_dict
+			# 	updated_from 
+			# print "hour",hour
+			# if hour >= updated_from:
+			# 	tweets.append(tweet_dict)
+			# 	tweet_dict = {}
+			# 	tweet_dict['y'] = 0
+			# 	updated_from+=1	
+	# print tweet_dict
+	print dict_of_tweets
 	return tweets
 
 def convertTweetsToCSV():
@@ -333,7 +331,9 @@ def scrambled(orig):
 
 if __name__ == '__main__':
 	# print getCSVTweets("data/tweets/tweets_26-02-2017.csv")
-	# storeClassifiedTweets()
+	# storeTweetsPerDate()
+	storeClassifiedTweets()
 	# print convertTweetsToCSV()
-	print getPositiveTweetsFromTo(12,13)
+	# print getTweetsLen()
+	# print getPositiveTweetsFromTo(12,13)
 	

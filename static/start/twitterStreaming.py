@@ -29,7 +29,7 @@ class StdOutListener(StreamListener):
 
 	def on_data(self, data):
 		# if (time.time() - self.start_time) < self.limit:
-		if self.num_tweets < 5000:
+		if self.num_tweets < 100000:
 			print data
 			self.num_tweets+=1
 			return True
