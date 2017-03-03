@@ -8,6 +8,7 @@ from helper import getKey1, getKey2, getAEEData
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from weather import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
+from params import towns
 
 app = Flask("__OasisDashboard__")
 
@@ -101,6 +102,8 @@ def return_tweets():
 def return_weather():
     temp = str(request.args['temp'])
     town = unicode(request.args['town'])
+    if town not in towns:
+        town = "mayaguez"
     print temp, town
     getHourlyWeatherInCSV(town, temp)
     if town[0] == "0":

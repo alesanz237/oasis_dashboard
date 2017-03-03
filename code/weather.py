@@ -25,7 +25,8 @@ def getLatLonByTown(town_name):
 	int_coords.append(getCorrectTownName(town_name))
 	# print int_coords, "\n\n"
 	# print len(int_coords)
-	return int_coords if len(int_coords) > 1 else "ERROR: Invalid input given!"
+	return int_coords if len(int_coords) > 1 else [18.2019615, -67.1686406, u'Mayagüez']
+
 
 def convertZipcodeToTown(zipcode):
 	""" Function that returns the the name of a town, given its zipcode """
@@ -404,7 +405,7 @@ def readWeatherInCSV(file):
 
 # if __name__ == '__main__':
 	# getHourlyWeatherInCSV(u"00680","c")
-	# print getTodaysWeather(u"cayey","f")
+	# print getTodaysWeather(u"adasdjahs","f")
 	# print getDailyWeather(u"00680","f")
 	# pprint(getHourlyWeather(u"00680","f"))
 	# pprint(readWeatherInCSV("data/weather/Mayagüez_f.csv"))
