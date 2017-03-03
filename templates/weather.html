@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Oasis Dashboard</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../static/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="../static/js/skycons.js"></script>
+
+    <script src="../static/js/d3.js"></script>
+    <script src="../static/js/klass.js"></script>
+    <script src="../static/js/atlaspr.js"></script>
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- CSS for spinner -->
+    <link href="../static/css/spinner.css" rel="stylesheet" type="text/css">
+
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover{background-color:#f5f5f5}
+
+        canvas {
+            display: block;
+            float: left;
+            margin-left: 8px;
+            margin-top: 8px;
+          }
+    </style>
+
+</head>
+
+<body class='with-3d-shadow with-transitions'>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="height:50px;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
+                <img src="./static/img/avatar.jpg" style="    border-radius: 50%; width: 50px; margin-left: 900px;">
+                <button class="btn dropdown-toggle" style="background:none"; type="button" data-toggle="dropdown">
+                    <span class="caret" style="color:white;"></span>
+                </button>    
+                <ul class="dropdown-menu" style="left: 1090px;" aria-labelledby="dropdownMenuDivider">
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">View My Profile</button>
+                    </li>
+                    <li>
+                        <button data-toggle="modal" data-target="#customizeDashboard" style="background:none; border:none">Customize Dashboard</button>
+                    </li>
+                    <li role="separator" class="divider">Test</li>
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">Return to Oasis</button>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse" >
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="\"><i class="fa fa-fw fa-dashboard"></i> Home</a>
+                    </li>
+                    <li>
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
+                    </li>
+                    <li>
+                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
+                    </li>
+                    <li class="active">
+                        <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
+                    </li>
+                    <!-- <li>
+                        <a href="\map"><i class="fa fa-fw fa-globe"></i> Town Specific Data</a>
+                    </li> -->
+                    <li>
+                        <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper" style="margin-top: -40px;">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Weather Data
+                            <small style="font-size: 16px;"></small>
+                        </h1>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    var objToday = new Date(),
+                    weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
+                    dayOfWeek = weekday[objToday.getDay()],
+                    domEnder = function() { var a = objToday; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }(),
+                    dayOfMonth = today + ( objToday.getDate() < 10) ? '0' + objToday.getDate() + domEnder : objToday.getDate() + domEnder,
+                    months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                    curMonth = months[objToday.getMonth()],
+                    curYear = objToday.getFullYear(),
+                    curHour = objToday.getHours() > 12 ? objToday.getHours() - 12 : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours()),
+                    curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes(),
+                    curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds(),
+                    curMeridiem = objToday.getHours() > 12 ? "PM" : "AM";
+                    var today = curMonth + " / " + dayOfWeek + " " + dayOfMonth + " / " + curYear;
+                    document.getElementsByTagName('small')[0].textContent = today;
+                </script>
+
+
+                <!-- /.row -->
+                <div class="row">
+                    <div id="units" style="margin-left: 15px; float:left;">
+                        Units:
+                      <input id="f_checkbox" type="radio" name="temperature" value="f" checked="checked" onclick="changeTemp('f')"> Fahrenheit
+                      <input id="c_checkbox" type="radio" name="temperature" value="c" onclick="changeTemp('c')"> Celsius
+                    <br>
+                    </div>
+                    <div id="search" style="float:left;margin-top: -15px;">
+                        <!-- <form class="navbar-form navbar-left" > -->
+                            <div class="form-group">
+                                <input id="input_town" type="text" class="form-control" placeholder="Search by town or zipcode..." style="width:205px; border-radius:0px; margin-top: 10px; margin-left:10px;">
+                            </div>
+                            <button class="btn btn-default" style="margin-top: -86px; margin-left:215px; background-color: #ccc; border-radius:0px;"><i class="fa fa-search" aria-hidden="true" onclick="getWeather()"></i></button>
+                            <form method="get" action="/returnWeather" style="margin-top: -65px;margin-left: 270px;">
+                                <input type="hidden" name="temp" id="temp" value="">
+                                <input type="hidden" name="town" id="town" value="">
+                                <button type="submit">Download weather data</button>
+                            </form>
+                        <!-- </form> -->
+                    </div>
+                </div>
+
+                <script>
+
+                    function changeTemp(temp) {
+                        // body...
+                        if (temp == 'c'){
+                            $('#c_checkbox').attr('checked', true); 
+                            $('#f_checkbox').attr('checked', false); 
+                        } 
+                        else {
+                            $('#c_checkbox').attr('checked', false); 
+                            $('#f_checkbox').attr('checked', true); 
+                        }
+                        
+                        var c_temp = $('input[id=c_checkbox]:checked').val();
+                        $("#loader").show();
+                        if (c_temp == "c")
+                            getForecastInC();  
+                        else
+                            getForecastInF();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
+                    }
+
+                    function getWeather(){
+                        $("#loader").show();
+                        var town = $('#input_town').val();
+                        var c_temp = $('input[id=c_checkbox]:checked').val();
+                        if (c_temp == "c")
+                            getForecastInC();
+                        else
+                            getForecastInF();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
+                    }
+
+                    function getTemperature(){
+                        var c_temp = $('input[id=c_checkbox]:checked').val();
+                        if (c_temp == "c")
+                            return 'c';
+                        else
+                            return 'f';
+                    }
+
+                    function getTown(){
+                        return $('#input_town').val() != "" ? $('#input_town').val() : "mayaguez" ;
+                    }
+
+                    $(function() {
+                        $("#loader").show();
+                        document.getElementById('town').value = getTown();
+                        document.getElementById('temp').value = getTemperature();
+                        getForecastInF();
+                    });
+
+                    function getForecastInF(){
+                        $.get('/_getWeatherData', 
+                            { temp: "f",
+                              town: ($('#input_town').val().length > 4) ? $('#input_town').val() : "mayaguez"},
+                            function (weather_data) {
+                                // For todays forecast
+                                $("#loader").hide();
+                                console.log(weather_data.result);
+                                var todays_forecast = weather_data.result.todaysForecast;
+                                var skycons = new Skycons({"color": "black"});
+                                insertForecastIcon(todays_forecast.icon,"current_condition");
+                                current_weather = todays_forecast.current + ", " + todays_forecast.temperature + "° F";
+                                document.getElementById("current_weather").innerHTML      = current_weather;
+                                document.getElementById("todays_forecast").innerHTML      = todays_forecast.summary;
+                                document.getElementById("todays_wind").innerHTML          = todays_forecast.wind;
+                                document.getElementById("todays_precipitation").innerHTML = todays_forecast.precipProbability
+
+                                document.getElementById("todays_sunrise").innerHTML       = todays_forecast.sunriseTime;
+                                document.getElementById("todays_sunset").innerHTML        = todays_forecast.sunsetTime;
+                                document.getElementById("todays_maxTemp").innerHTML       = todays_forecast.temperatureMax + "° F";
+                                document.getElementById("todays_minTemp").innerHTML       = todays_forecast.temperatureMin + "° F";
+                                elements = document.getElementsByClassName("town")
+                                for(var i=0; i<elements.length; i++) {
+                                    elements[i].innerHTML = todays_forecast.town;
+                                }
+
+                                // For hourly forecast
+                                var hourly_forecast = weather_data.result.hourlyForecast;
+                                var table = document.getElementById("hourly_forecast");
+                                try{
+                                    document.getElementById("hourly_forecast").deleteRow(12);
+                                    document.getElementById("hourly_forecast").deleteRow(11);
+                                    document.getElementById("hourly_forecast").deleteRow(10);
+                                    document.getElementById("hourly_forecast").deleteRow(9);
+                                    document.getElementById("hourly_forecast").deleteRow(8);
+                                    document.getElementById("hourly_forecast").deleteRow(7);
+                                    document.getElementById("hourly_forecast").deleteRow(6);
+                                    document.getElementById("hourly_forecast").deleteRow(5);
+                                    document.getElementById("hourly_forecast").deleteRow(4);
+                                    document.getElementById("hourly_forecast").deleteRow(3);
+                                    document.getElementById("hourly_forecast").deleteRow(2);
+                                    document.getElementById("hourly_forecast").deleteRow(1);
+                                }
+                                catch(err) {
+                                    console.log(err.message);
+                                }
+                                for (var i = 0; i < hourly_forecast.length; i++){
+                                    var tr = document.createElement('tr');
+                                    tr.setAttribute("id","daily_table");
+                                    for (var j = 0; j < 6; j++){
+                                        var td = document.createElement('td');
+                                        if (j == 0)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].time));
+                                        if (j == 1){
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].summary));
+                                            // var canvas = document.createElement('canvas');
+                                            // canvas.setAttribute("id", "hour_icon" + i);
+                                            // canvas.setAttribute("width",25);
+                                            // canvas.setAttribute("height",25);
+                                            // insertForecastIcon(hourly_forecast[i].icon,"hour_icon" + i);
+                                            // td.appendChild(canvas);
+                                        }
+                                        if (j == 2)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].precipProbability));
+                                        if (j == 3)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].temperature));
+                                        if (j == 4)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].humidity));
+                                        if (j == 5)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].wind));
+                                        tr.appendChild(td);
+                                    }
+                                    table.appendChild(tr);
+                                }
+
+                                // For daily forecast
+                                var daily_forecast = weather_data.result.dailyForecast;
+                                console.log(daily_forecast);
+                                for (var i = 0; i < daily_forecast.length; i++){
+                                    if (i == 0){
+                                        document.getElementById("date1").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day1_condition");
+                                        document.getElementById("day1_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day1_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° F </span><br>";
+                                        document.getElementById("day1_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° F </span><br>";
+                                        document.getElementById("day1_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 1){
+                                        document.getElementById("date2").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day2_condition");
+                                        document.getElementById("day2_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day2_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° F </span><br>";
+                                        document.getElementById("day2_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° F </span><br>";
+                                        document.getElementById("day2_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 2){
+                                        document.getElementById("date3").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day3_condition");
+                                        document.getElementById("day3_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day3_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° F </span><br>";
+                                        document.getElementById("day3_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° F </span><br>";
+                                        document.getElementById("day3_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 3){
+                                        document.getElementById("date4").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day4_condition");
+                                        document.getElementById("day4_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day4_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° F </span><br>";
+                                        document.getElementById("day4_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° F </span><br>";
+                                        document.getElementById("day4_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                }
+                            });
+                    }
+
+                    function getForecastInC(){
+                        $.get('/_getWeatherData', 
+                            { temp: "c",
+                              town: ($('#input_town').val().length > 4) ? $('#input_town').val() : "mayaguez"},
+                            function (weather_data) {
+                                // For todays forecast
+                                $("#loader").hide();
+                                var todays_forecast = weather_data.result.todaysForecast;
+                                var skycons = new Skycons({"color": "black"});
+                                insertForecastIcon(todays_forecast.icon,"current_condition");
+                                current_weather = todays_forecast.current + ", " + todays_forecast.temperature + "° C";
+                                document.getElementById("current_weather").innerHTML      = current_weather;
+                                document.getElementById("todays_forecast").innerHTML      = todays_forecast.summary;
+                                document.getElementById("todays_wind").innerHTML          = todays_forecast.wind;
+                                document.getElementById("todays_precipitation").innerHTML = todays_forecast.precipProbability
+
+                                document.getElementById("todays_sunrise").innerHTML       = todays_forecast.sunriseTime;
+                                document.getElementById("todays_sunset").innerHTML        = todays_forecast.sunsetTime;
+                                document.getElementById("todays_maxTemp").innerHTML       = todays_forecast.temperatureMax + "° C";
+                                document.getElementById("todays_minTemp").innerHTML       = todays_forecast.temperatureMin + "° C";
+                                elements = document.getElementsByClassName("town")
+                                for(var i=0; i<elements.length; i++) {
+                                    elements[i].innerHTML = todays_forecast.town;
+                                }
+                                // For hourly forecast
+                                var hourly_forecast = weather_data.result.hourlyForecast;
+                                var table = document.getElementById("hourly_forecast");
+                                try{
+                                    document.getElementById("hourly_forecast").deleteRow(12);
+                                    document.getElementById("hourly_forecast").deleteRow(11);
+                                    document.getElementById("hourly_forecast").deleteRow(10);
+                                    document.getElementById("hourly_forecast").deleteRow(9);
+                                    document.getElementById("hourly_forecast").deleteRow(8);
+                                    document.getElementById("hourly_forecast").deleteRow(7);
+                                    document.getElementById("hourly_forecast").deleteRow(6);
+                                    document.getElementById("hourly_forecast").deleteRow(5);
+                                    document.getElementById("hourly_forecast").deleteRow(4);
+                                    document.getElementById("hourly_forecast").deleteRow(3);
+                                    document.getElementById("hourly_forecast").deleteRow(2);
+                                    document.getElementById("hourly_forecast").deleteRow(1);
+                                }
+                                catch(err) {
+                                    console.log(err.message);
+                                }
+                                for (var i = 0; i < hourly_forecast.length; i++){
+                                    var tr = document.createElement('tr');
+                                    for (var j = 0; j < 6; j++){
+                                        var td = document.createElement('td');
+                                        if (j == 0)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].time));
+                                        if (j == 1){
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].summary));
+                                            // var canvas = document.createElement('canvas');
+                                            // canvas.setAttribute("id", "hour_icon" + i);
+                                            // canvas.setAttribute("width",25);
+                                            // canvas.setAttribute("height",25);
+                                            // insertForecastIcon(hourly_forecast[i].icon,"hour_icon" + i);
+                                            // td.appendChild(canvas);
+                                        }
+                                        if (j == 2)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].precipProbability));
+                                        if (j == 3)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].temperature));
+                                        if (j == 4)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].humidity));
+                                        if (j == 5)
+                                            td.appendChild(document.createTextNode(hourly_forecast[i].wind));
+                                        tr.appendChild(td);
+                                    }
+                                    table.appendChild(tr);
+                                }
+
+                                // For daily forecast
+                                var daily_forecast = weather_data.result.dailyForecast;
+                                console.log(daily_forecast);
+                                for (var i = 0; i < daily_forecast.length; i++){
+                                    if (i == 0){
+                                        document.getElementById("date1").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day1_condition");
+                                        document.getElementById("day1_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day1_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° C </span><br>";
+                                        document.getElementById("day1_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° C </span><br>";
+                                        document.getElementById("day1_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 1){
+                                        document.getElementById("date2").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day2_condition");
+                                        document.getElementById("day2_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day2_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° C </span><br>";
+                                        document.getElementById("day2_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° C </span><br>";
+                                        document.getElementById("day2_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 2){
+                                        document.getElementById("date3").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day3_condition");
+                                        document.getElementById("day3_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day3_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° C </span><br>";
+                                        document.getElementById("day3_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° C </span><br>";
+                                        document.getElementById("day3_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                    if (i == 3){
+                                        document.getElementById("date4").innerHTML = daily_forecast[i].time;
+                                        insertForecastIcon(daily_forecast[i].icon,"day4_condition");
+                                        document.getElementById("day4_forecast").innerHTML = daily_forecast[i].summary + "<br>"
+                                        document.getElementById("day4_maxTemp").innerHTML = "<strong>Max Temperature: </strong> <span style=\"color:#DC470C;\">" + daily_forecast[i].temperatureMax + "° C </span><br>";
+                                        document.getElementById("day4_minTemp").innerHTML = "<strong>Min Temperature: </strong> <span style=\"color:#2A6496;\">" + daily_forecast[i].temperatureMin + "° C </span><br>";
+                                        document.getElementById("day4_precip").innerHTML = "<strong> Precipitation: </strong>" + daily_forecast[i].precipProbability;
+                                    }
+                                }
+                            });
+                    }
+
+                    function insertForecastIcon(icon,id) {
+                        var skycons = new Skycons({"color": "black"});
+                        // console.log(icon);
+                        // console.log(id);
+                        if (icon == "clear-day"){
+                            skycons.add(id, Skycons.CLEAR_DAY);
+                        }
+                        else if (icon == "clear-night"){
+                            skycons.add(id, Skycons.CLEAR_NIGHT);
+                        }
+                        else if (icon == "partly-cloudy-day"){
+                            console.log("ENTRE");
+                            skycons.add(id, Skycons.PARTLY_CLOUDY_DAY);
+                        }
+                        else if (icon == "partly-cloudy-night"){
+                            skycons.add(id, Skycons.PARTLY_CLOUDY_NIGHT);
+                        }
+                        else if (icon == "cloudy"){
+                            skycons.add(id, Skycons.CLOUDY);
+                        }
+                        else if (icon == "rain"){
+                            skycons.add(id, Skycons.RAIN);
+                        }
+                        else if (icon == "sleet"){
+                            skycons.add(id, Skycons.SLEET);
+                        }
+                        else if (icon == "snow"){
+                            skycons.add(id, Skycons.SNOW);
+                        }
+                        else if (icon == "wind"){
+                            skycons.add(id, Skycons.WIND);
+                        }
+                        else if (icon == "fog"){
+                            skycons.add(id, Skycons.FOG);
+                        }
+                        skycons.play();
+                    }
+
+                </script>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-5">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-cloud"></i> Current weather for <span class="town"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="loccanvaswrapper">
+                                    <canvas style="margin-top: -3px;" id="current_condition" width="50" height="50"></canvas>
+                                    <h2 id="current_weather"></h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-cloud"></i> Today's Forecast for <span class="town"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <strong>Forecast for Today: </strong><span id="todays_forecast"></span><br>
+                                <strong>Wind: </strong><span id="todays_wind"></span><br>
+                                <strong>Precipitation: </strong><span id="todays_precipitation"></span><br>
+                                <strong>Sunrise: </strong><span id="todays_sunrise"></span><br>
+                                <strong>Sunset: </strong><span id="todays_sunset"></span><br>
+                                <strong>Max Temperature: </strong><span id="todays_maxTemp" style="color:#DC470C;"></span><br>
+                                <strong>Min Temperature: </strong><span id="todays_minTemp" style="color:#2A6496;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="loader"å></div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-cloud"></i> 12-Hour Forecast for <span class="town"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <table id="hourly_forecast">
+                                  <tr>
+                                    <th>Date / Time
+                                    </th>
+                                    <th>Description</th>
+                                    <th>Precipitation</th>
+                                    <th>Temp</th>
+                                    <th>Humidity</th>
+                                    <th>Wind</th>
+                                  </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"></i><span id="date1"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div style="margin-left: 37px;" id="day1_forecast"></div>
+                                <div id="day1_minTemp"></div>
+                                <div id="day1_maxTemp"></div>
+                                <div id="day1_precip"></div>
+                                <canvas style="margin-top:-90px; margin-left: 0px;"  id="day1_condition" width="25" height="25">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span id="date2"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div style="margin-left: 37px;" id="day2_forecast"></div>
+                                <div id="day2_minTemp"></div>
+                                <div id="day2_maxTemp"></div>
+                                <div id="day2_precip"></div>
+                                <canvas style="margin-top:-90px; margin-left: 0px;"  id="day2_condition" width="25" height="25">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span id="date3"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div style="margin-left: 37px;" id="day3_forecast"></div>
+                                <div id="day3_minTemp"></div>
+                                <div id="day3_maxTemp"></div>
+                                <div id="day3_precip"></div>
+                                <canvas style="margin-top:-90px; margin-left: 0px;"  id="day3_condition" width="25" height="25">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span id="date4"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div style="margin-left: 37px;" id="day4_forecast"></div>
+                                <div id="day4_minTemp"></div>
+                                <div id="day4_maxTemp"></div>
+                                <div id="day4_precip"></div>
+                                <canvas style="margin-top:-90px; margin-left: 0px;"  id="day4_condition" width="25" height="25">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <iframe width='100%' frameBorder='0' style='height: 50vh; margin: 25px 0;' src='https://maps.darksky.net/@radar,18.227,-66.429,9?embed=true&timeControl=true&fieldControl=true&defaultField=radar'></iframe>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

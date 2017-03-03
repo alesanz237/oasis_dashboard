@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Oasis Dashboard</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../static/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="../static/js/skycons.js"></script>
+
+    <script src="../static/js/d3.js"></script>
+    <script src="../static/js/klass.js"></script>
+    <script src="../static/js/atlaspr.js"></script>
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- <style>
+        svg {
+            display: block;
+        }
+        #chart1, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+    </style> -->
+
+
+    <!-- <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover{background-color:#f5f5f5}
+
+        canvas {
+            display: block;
+            float: left;
+            margin-left: 8px;
+            margin-top: 8px;
+          }
+    </style> -->
+
+</head>
+
+<body class='with-3d-shadow with-transitions'>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="height:50px;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
+                <img src="./static/img/avatar.jpg" style="    border-radius: 50%; width: 50px; margin-left: 900px;">
+                <button class="btn dropdown-toggle" style="background:none"; type="button" data-toggle="dropdown">
+                    <span class="caret" style="color:white;"></span>
+                </button>    
+                <ul class="dropdown-menu" style="left: 1090px;" aria-labelledby="dropdownMenuDivider">
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">View My Profile</button>
+                    </li>
+                    <li>
+                        <button data-toggle="modal" data-target="#customizeDashboard" style="background:none; border:none">Customize Dashboard</button>
+                    </li>
+                    <li role="separator" class="divider">Test</li>
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">Return to Oasis</button>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse" >
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="\"><i class="fa fa-fw fa-dashboard"></i> Home</a>
+                    </li>
+                    <li>
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
+                    </li>
+                    <li>
+                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
+                    </li>
+                    <li>
+                        <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
+                    </li>
+                    <li class="active">
+                        <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper" style="margin-top: -40px;">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Market Data 
+                            <small id="date" style="font-size: 16px;"></small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+                <script type="text/javascript">
+                    var objToday = new Date(),
+                    weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
+                    dayOfWeek = weekday[objToday.getDay()],
+                    domEnder = function() { var a = objToday; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }(),
+                    dayOfMonth = today + ( objToday.getDate() < 10) ? '0' + objToday.getDate() + domEnder : objToday.getDate() + domEnder,
+                    months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                    curMonth = months[objToday.getMonth()],
+                    curYear = objToday.getFullYear(),
+                    curHour = objToday.getHours() > 12 ? objToday.getHours() - 12 : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours()),
+                    curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes(),
+                    curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds(),
+                    curMeridiem = objToday.getHours() > 12 ? "PM" : "AM";
+                    var today = curMonth + ", " + dayOfWeek + " " + dayOfMonth + ", " + curYear;
+                    document.getElementById("date").innerHTML = today;
+                </script>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary" style="height:580px;">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart" aria-hidden="true"></i> CAPITL Loads per hour</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="loads_chart" >
+                                    <svg style="width:975px;height: 550px;"></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary" style="height:580px;">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i></i> Zonal LBMP</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="lbmp_chart">
+                                    <svg style="width:975px;height: 550px;"></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary" style="height:580px;">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart" aria-hidden="true"></i> CAPITAL loads vs Zonal LBMP</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="loads_vs_lbmp_chart">
+                                    <svg style="width:975px;height: 550px;"></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+
+    <script>
+
+        $.get('/_getLoadData', 
+            function (load_data) {
+                nv.addGraph(function() {
+                var chart = nv.models.discreteBarChart()
+                    .width(965)
+                    .height(500)
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .staggerLabels(true)
+                    .duration(250)
+                    
+                    ;
+                chart.yAxis.axisLabel("Loads per Hour (kWh)")
+                chart.xAxis.axisLabel("Hours")
+                chart.yAxis.tickFormat(d3.format(''));
+                d3.select('#loads_chart svg')
+                    .datum(load_data.result)
+                    .call(chart);
+                nv.utils.windowResize(chart.update);
+                return chart;
+            });
+        });
+
+        $.get('/_getLBMPData',
+            function (lbmp_data) {
+                console.log(lbmp_data.result)
+                var chart;
+                var data = lbmp_data.result;
+                var legendPosition = "top";
+                nv.addGraph(function() {
+                    chart = nv.models.lineChart()
+                        .options({
+                            duration: 300,
+                            useInteractiveGuideline: true
+                        })
+                        .width(965)
+                        .height(500)
+                    ;
+                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+                    chart.xAxis
+                        .axisLabel("Time (Hour)")
+                        .tickFormat(function(d){
+                            // var formatTime = d3.timeFormat("%/H:%M %p");
+                            var myDate = new Date(d *1000).toGMTString();
+                            myDate = myDate.split(" ")[4];
+                            hour = parseInt(myDate.split(":")[0]);
+                            minute = parseInt(myDate.split(":")[1])
+                            var pm_or_am = " AM";
+                            if (hour >= 12){
+                                hour = hour % 12;
+                                pm_or_am = " PM";
+                            }
+                            if (hour == 0)
+                                hour = 12
+                            if (hour < 10)
+                                hour = "0" + String(hour);
+                            if (minute < 10)
+                                minute = "0" + String(minute);
+                            hour = String(hour) + ":" + String(minute) + pm_or_am
+                            return (hour);
+                        })
+                        .staggerLabels(true)
+                    ;
+
+                    chart.yAxis
+                        .axisLabel('LBMP ($/MWHr)')
+                        .tickFormat(function(d) {
+                            if (d == null) {
+                                return 'N/A';
+                            }
+                            return d3.format(',.2f')(d);
+                        })
+                    ;
+                    data = data;
+                    d3.select('#lbmp_chart svg')
+                        .datum(data)
+                        .call(chart);
+                    nv.utils.windowResize(chart.update);
+                    return chart;
+                });
+            });
+
+        $.get('/_getLBMPvsLoadData',
+            function (lbmpvsLoadData) {
+                console.log(lbmpvsLoadData.result)
+                data = lbmpvsLoadData.result.map(function(series) {
+                    series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
+                    console.log(series)
+                    return series;
+                });
+                var chart;
+                nv.addGraph(function() {
+                    chart = nv.models.linePlusBarChart()
+                        .margin({top: 50, right: 80, bottom: 30, left: 80})
+                        // .legendRightAxisHint(' (right axis)')
+                        .color(d3.scale.category10().range())
+                        .width(965)
+                        .height(500);
+                    chart.xAxis.tickFormat(function(d) {
+                        var myDate = new Date(d *1000).toGMTString();
+                        myDate = myDate.split(" ")[4];
+                        hour = parseInt(myDate.split(":")[0]);
+                        minute = parseInt(myDate.split(":")[1])
+                        var pm_or_am = " AM";
+                        if (hour >= 12){
+                            hour = hour % 12;
+                            pm_or_am = " PM";
+                        }
+                        if (hour == 0)
+                            hour = 12
+                        if (hour < 10)
+                            hour = "0" + String(hour);
+                        if (minute < 10)
+                            minute = "0" + String(minute);
+                        hour = String(hour) + ":" + String(minute) + pm_or_am
+                        return (hour);
+                    }).showMaxMin(false);
+                    chart.y2Axis.tickFormat(function(d) { return "$" + d });
+                    chart.bars.forceY([0]).padData(false);
+                    chart.x2Axis.tickFormat(function(d) {
+                        var myDate = new Date(d *1000).toGMTString();
+                        myDate = myDate.split(" ")[4];
+                        hour = parseInt(myDate.split(":")[0]);
+                        minute = parseInt(myDate.split(":")[1])
+                        var pm_or_am = " AM";
+                        if (hour >= 12){
+                            hour = hour % 12;
+                            pm_or_am = " PM";
+                        }
+                        if (hour == 0)
+                            hour = 12
+                        if (hour < 10)
+                            hour = "0" + String(hour);
+                        if (minute < 10)
+                            minute = "0" + String(minute);
+                        hour = String(hour) + ":" + String(minute) + pm_or_am
+                        return (hour);
+                    }).showMaxMin(false);
+                    chart.focusEnable(false);
+                    d3.select('#loads_vs_lbmp_chart svg')
+                        .datum(data)
+                        .transition().duration(500).call(chart);
+                    nv.utils.windowResize(chart.update);
+                    chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+                    return chart;
+            });
+    });
+
+
+    </script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

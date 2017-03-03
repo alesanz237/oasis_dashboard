@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
+    <title>Oasis Dashboard - Data by Town</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <script src="../static/js/klass.js"></script>
+    <script src="../static/js/atlaspr.js"></script>
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+       /* input[type=text] {
+            width: 130px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url('searchicon.png');
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 40px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }*/
+
+    </style>
+</head>
+
+<body class='with-3d-shadow with-transitions'>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="height:50px;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
+                <img src="./static/img/avatar.jpg" style="    border-radius: 50%; width: 50px; margin-left: 900px;">
+                <button class="btn dropdown-toggle" style="background:none"; type="button" data-toggle="dropdown">
+                    <span class="caret" style="color:white;"></span>
+                </button>    
+                <ul class="dropdown-menu" style="left: 1090px;" aria-labelledby="dropdownMenuDivider">
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">View My Profile</button>
+                    </li>
+                    <li>
+                        <button data-toggle="modal" data-target="#customizeDashboard" style="background:none; border:none">Customize Dashboard</button>
+                    </li>
+                    <li role="separator" class="divider">Test</li>
+                    <li>
+                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">Return to Oasis</button>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse" >
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="\"><i class="fa fa-fw fa-dashboard"></i> Home</a>
+                    </li>
+                    <li>
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
+                    </li>
+                    <li>
+                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
+                    </li>
+                    <li>
+                        <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
+                    </li>
+                    <li class="active">
+                        <a href="\map"><i class="fa fa-fw fa-globe"></i> Town Specific Data</a>
+                    </li>
+                    <li>
+                        <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper" style="margin-top: -40px;">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Data by Town
+                            <button data-toggle="modal" data-target="#AddGraphTownDashboard" style="background:none; border:none; margin-left: 479px;">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <small style="font-size: 40%;">Add graph</small>
+                            </button> 
+                            <button data-toggle="modal" data-target="#EditGraphTownDashboard" style="color: black; border:none; background:none; margin-left: 35px;">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <small style="font-size: 40%;">Edit graphs</small>
+                            </button> 
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <!-- Customize Dashboard Modal -->
+                <div class="modal fade" id="customizeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Customize Dashboard</h3>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <div class="container">
+                                  <ul class="nav nav-pills">
+                                    <li class="active"><a data-toggle="pill" href="#general">General</a></li>
+                                    <li><a data-toggle="pill" href="#home">Home</a></li>
+                                    <li><a data-toggle="pill" href="#energy">Energy data</a></li>
+                                    <li><a data-toggle="pill" href="#social">Social data</a></li>
+                                    <li><a data-toggle="pill" href="#weather">Weather data</a></li>
+                                    <li><a data-toggle="pill" href="#town">Data by town</a></li>
+                                    <li><a data-toggle="pill" href="#market">Market data</a></li>
+                                  </ul>
+                                  
+                                  <div class="tab-content">
+                                    <div id="general" class="tab-pane fade in active">
+                                      <h3>General</h3>
+                                      <p>Grab data from [Poner lista de available datasets]</p>
+                                    </div>
+                                    <div id="home" class="tab-pane fade">
+                                      <h3>Home</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                    <div id="energy" class="tab-pane fade">
+                                      <h3>Energy Data</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                    <div id="social" class="tab-pane fade">
+                                      <h3>Social Data</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                    <div id="weather" class="tab-pane fade">
+                                      <h3>Weather Data</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                    <div id="town" class="tab-pane fade">
+                                      <h3>Data by town</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                    <div id="market" class="tab-pane fade">
+                                      <h3>Market Data</h3>
+                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Save Settings</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add dataModal -->
+                <div class="modal fade" id="AddGraphTownDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add Graph to Data by Town Dashboard</h3>
+                            </div>
+                            <div class="modal-body">
+                                
+                                Select dataset
+                                <select id="key_1">
+                                <!-- <option selected="selected" oncli value=""></option> -->
+                                    {% for key in keys %}
+                                        <option value="{{key}}">{{key}}</option>
+                                    {% endfor %}    
+                                </select>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button id="button" type="button" class="btn btn-success" onclick="gerenerateAeeGraph()" data-dismiss="modal">Generate Graph</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Dashboard Modal -->
+                <div class="modal fade" id="EditGraphTownDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Edit Graphs in Data by Town Dashboard</h3>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <p>This should show a list of the graphs in this dashboard and should let you move them, set size or delete them</p>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Save Settings</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-globe"></i> Puerto Rico
+                                    <!-- <input type="text" name="search" placeholder="Search.."> -->
+                                </h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div id='map'></div>
+                                  <script type=text/javascript>
+                                      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+                                  </script>
+                                  <script type = 'text/javascript'>
+                                    var my_node = document.getElementById("map");
+                                    new AtlasPR({
+                                      node: my_node, 
+                                      size: "medium", 
+                                      tiles: ["pueblos"], 
+                                      zoom: false,
+                                      // on_ready: zoom_to_barranquitas,
+                                      events: {
+                                        on_click: function(feature, svg_path){
+                                          var town = feature.properties.NAME;
+                                          $('#town_name').text(town);
+                                          location.href = "#";
+                                          location.href = "#town_info";
+                                          $.getJSON('/_weather_data', 
+                                            { town: town},
+                                            function (weather_data) {
+                                              $("#status").text(weather_data.status);
+                                              $("#temperature").text(weather_data.temperature);
+                                              $("#rain").text(weather_data.rain);
+                                              $("#humidiy").text(weather_data.humidity);
+                                              $("#cloud").text(weather_data.cloud_coverage);
+                                              $("#wind").text(weather_data.wind);
+                                              // console.log(data)
+                                          });
+                                          $.get('/_twitter_data', 
+                                            { town: town},
+                                            function (twitter_data) {
+                                              console.log(twitter_data)
+                                              // console.log(twitter_data.text)
+                                              var i = 1
+                                              for (var key in twitter_data) {
+                                                // console.log(twitter_data.text)
+                                                var id = "#text" + i;
+                                                console.log(typeof(id));
+                                                // $(id).text(twitter_data.text);
+                                                  if (twitter_data.hasOwnProperty(key)) {
+                                                    var splitted_tweet = twitter_data[key].split('"')
+                                                    var text = splitted_tweet[11]
+                                                    console.log(key + " -> " + twitter_data[key]);
+                                                    $(id).text(text);
+                                                    // $('.badge').css('diplay: none')
+                                                  }
+                                                  else{
+                                                    alert("hello");
+                                                  }
+                                                i++;
+                                                }
+                                          });
+                                        }
+
+                                      }
+                                    });
+                                  </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row" >
+                    <div class="col-lg-12">
+                        <h1 id="town_info">
+                            <span id="town_name">Town</span> <small> Data</small>
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-cloud"></i> Current Weather</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p><strong>Status</strong>: <span id="status">No town selected</span></p>
+                                <p><strong>Temperature</strong>: <span id="temperature">No town selected</span></p>
+                                <p><strong>Rain Activity</strong>: <span id="rain">No town selected</span></p>
+                                <p><strong>Humidiy</strong>: <span id="humidiy">No town selected</span></p>
+                                <p><strong>Cloud Coverage</strong>: <span id="cloud">No town selected</span></p>
+                                <p><strong>Wind</strong>: <span id="wind">No town selected</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-twitter"></i> Tweets</h3>
+                            </div>
+                            <div class="panel-info">
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">just now</span>
+                                        <span id="text1">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">4 minutes ago</span>
+                                        <span id="text2">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">23 minutes ago</span>
+                                        <span id="text3">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">46 minutes ago</span>
+                                        <span id="text4">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">1 hour ago</span>
+                                        <span id="text5">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">2 hours ago</span>
+                                        <span id="text6">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">3 hours ago</span>
+                                        <span id="text7">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">one day ago</span>
+                                        <span id="text8">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">three days ago</span>
+                                        <span id="text9">No town selected</span>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <span class="badge">one week ago</span>
+                                        <span id="text10">No town selected</span>
+                                    </a>
+                                </div>
+                                <div class="text-right">
+                                    <a href="\twitter">View statistics about energy related tweets in Puerto Rico <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="../static/js/plugins/morris/raphael.min.js"></script>
+    <script src="../static/js/plugins/morris/morris.min.js"></script>
+    <script src="../static/js/plugins/morris/morris-data.js"></script>
+
+</body>
+
+</html>
