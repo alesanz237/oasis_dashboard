@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import csv
-import urllib2
+import csv, urllib2, operator, calendar, time
 from pprint import pprint
-import operator
-import calendar
-import time
 from random import randint
+from params import lat_lon_towns
 
 def getLoadData():
 	url = 'http://mis.nyiso.com/public/dss/nyiso_loads.csv'
@@ -212,31 +209,7 @@ def getDataForLBMPvsLoadComparisons():
 	final_data.append(load_dict)
 	return final_data
 
-# def getLoadDataAsCSV()
-# 	url = 'http://mis.nyiso.com/public/dss/nyiso_loads.csv'
-# 	response = urllib2.urlopen(url)
-# 	load_data = csv.reader(response)
-# 	filename = "data/market/load"+date+".csv"
-# 	hourly_loads = []
-# 	f = csv.writer(open(filename, "wb+"))
-# 	f.writerow(["Year", "Month", "Day", "Hr1", "Hr2", "Hr3", "Hr4", "Hr5", "Hr6", "Hr7",
-# 		        "Hr8", "Hr9", "Hr10", "Hr11", "Hr12", "Hr13", "Hr14", "Hr15", "Hr16", "Hr17",
-# 				"Hr18", "Hr19", "Hr20", "Hr21", "Hr22","Hr23", "Hr24"])
-# 	for row in load_data:
-# 		try:
-# 			f.writerow([tweet['created_at'],tweet['location'],tweet['text'],tweet['polarity']])
-# 			if row[1] != "Month" and row[2] != "Day" and row[3] != 'Hr1':
-# 			for i in range(3,27):
-# 				try:
-# 					f.writerow(row[i])
-# 					hourly_loads.append(int(row[i]))
-# 				except ValueError:
-# 					pass
-# 					hourly_loads.append((randint(15000,25000)))
-# 			for i in range(0,len(hourly_loads)):
-				
-# 		except:
-# 			pass
+
 
 # if __name__ == '__main__':
 	# pprint(getLoadData())

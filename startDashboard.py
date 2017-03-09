@@ -4,13 +4,15 @@
 from flask import Flask, jsonify, render_template, request, send_from_directory
 import os.path, sys, subprocess, time, csv
 sys.path.insert(0, "./code")
-from helper import getKey1, getKey2, getAEEData
+from dataGathering import DataGathering
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from weather import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
 from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
 from params import towns
 
 app = Flask("__OasisDashboard__")
+# Class that returns data that will be displayed in the dashboard
+data = DataGathering()
 
 @app.route("/")
 def init():
@@ -30,8 +32,10 @@ def getMarket():
 
 @app.route('/_getAEEDATA')
 def get_AEEData():
-    key_1 =  request.args['key_1']
-    aee_data = getAEEData(key_1)
+    key =  request.args['key_1']
+    # aee_data = getAEEData(key_1)
+    aee_data = data.getAEEData(key)
+    print aee_data
     return jsonify(result=aee_data)
 
 @app.route('/_getLBMPData')
