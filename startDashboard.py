@@ -2,7 +2,7 @@
 # # -*- coding: utf-8 -*-
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
-import os.path, sys, subprocess, time
+import os.path, sys, subprocess, time, csv
 sys.path.insert(0, "./code")
 from helper import getKey1, getKey2, getAEEData
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
@@ -115,7 +115,10 @@ def return_weather():
 
 @app.route('/returnLoads')
 def return_loads():
-    return send_file('/var/www/PythonProgramming/PythonProgramming/static/images/python.jpg', attachment_filename='python.jpg')
+    url = 'http://mis.nyiso.com/public/dss/nyiso_loads.csv'
+    response = urllib2.urlopen(url)
+    load_data = csv.reader(response)
+    return send_file(load_data, attachment_filename='nyiso_loads.csv')
 
 if __name__ == "__main__":
     process = subprocess.Popen('static/start/twitterStreamer.sh',shell=True)

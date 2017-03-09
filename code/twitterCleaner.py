@@ -18,7 +18,7 @@ def retrieveTweets(file):
 			tweet["created_at"] = tweets["created_at"]
 			tweet["text"] = tweets["text"]
 			tweet["location"] = tweets["user"]["location"]
-			# print tweet
+			# print tweet["location"]
 			tweets_data.append(tweet)
 			tweet = {}
 		except:

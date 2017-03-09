@@ -1,6 +1,4 @@
 while true; do
-	rm data/tweets/positive.txt
-	rm data/tweets/negative.txt
 	python code/twitterStreaming.py e > data/tweets/tweets.txt 
 	python code/sentimentAnalysis.py
 	sleep 360

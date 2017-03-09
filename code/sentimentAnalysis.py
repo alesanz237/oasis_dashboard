@@ -63,53 +63,30 @@ def storeClassifiedTweets():
 	# Training our classifier
 	classifier = nltk.NaiveBayesClassifier.train(training_set)
 	stored_tweets = {}
-
-	# tweets_per_year  = {}
-	# tweets_per_month = {}
-	# tweets_per_day   = {}
-	# tweets_per_hour  = {}
-	# tweets_len       = [0,0]
-	# current_year     = time.strftime("%Y")
-	# current_month    = time.strftime("%m")
-	# current_day      = time.strftime("%d")
-	# current_date     = current_year + current_month + current_day
-	# current_hour	 = time.strftime("%H")
-	# i                = 0
 	# Classifying tweets 
 	all_tweets = retrieveTweets("data/tweets/tweets.txt")
 	for tweet in all_tweets:
-		sentence = tweet["text"]
-		created_at 	 = tweet["created_at"]
-		date  = created_at.split(" ")
-		day   = date[2]
-		month = date[1]
-		hour  = date[3].split(":")[0]
-		year  = date[5]		
+		sentence    = tweet["text"]
+		created_at 	= tweet["created_at"]
+		location    = tweet["location"]
 		try:
 			polarity = classifier.classify(extract_features(sentence.split()))
-			# if hour in tweets_per_hour:
-			# 	if polarity == "positive":
-			# 		tweets_per_hour[hour][0] += 1
-			# 	else:
-			# 		tweets_per_hour[hour][1] += 1
-			# else:
-			# 	tweets_per_hour[hour] = [0,0]
-			if polarity == "positive":
-				f = open('data/tweets/positive.txt', 'a')
-			else:
-				f = open('data/tweets/negative.txt', 'a')
-			stored_tweets["text"] = tweet["text"]
-			stored_tweets["polarity"] = polarity
-			stored_tweets["created_at"] = created_at
-			f.write(str(stored_tweets))
-			f.write("\n")
-			f.close()
-
+			if "puerto rico" in location.lower():
+				if polarity == "positive":
+					f = open('data/tweets/positive.txt', 'a')
+				else:
+					f = open('data/tweets/negative.txt', 'a')	
+				stored_tweets["text"]       = sentence
+				stored_tweets["polarity"]   = polarity
+				stored_tweets["created_at"] = created_at
+				stored_tweets["location"]   = location
+				f.write(str(stored_tweets))
+				f.write("\n")
+				f.close()
 		except:
 			continue
-	# print tweets_per_hour
 
-	# convertTweetsToCSV()
+	convertTweetsToCSV()
 	# storeTweetsLenPerDate()
 
 def getPositiveWords():
@@ -297,10 +274,10 @@ def convertTweetsToCSV():
 	date = time.strftime("%d-%m-%Y")
 	filename = "data/tweets/tweets_"+date+".csv"
 	f = csv.writer(open(filename, "wb+"))
-	f.writerow(["created_at", "text", "polarity"])
+	f.writerow(["created_at","location","text","polarity"])
 	for tweet in tweets:
 		try:
-			f.writerow([tweet['created_at'],tweet['text'],tweet['polarity']])
+			f.writerow([tweet['created_at'],tweet['location'],tweet['text'],tweet['polarity']])
 		except:
 			pass
 
