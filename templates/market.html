@@ -157,13 +157,18 @@
                     document.getElementById("date").innerHTML = today;
 
                     // For dowloading lbmp data
-                    if (dayOfMonth.toString().length == 1)
+                    console.log(dayOfMonth);
+                    console.log(dayOfMonth.toString().length)
+                    if (dayOfMonth.toString().length == 1){
                         dayOfMonth = dayOfMonth - 1
-                        day = "0" + dayOfMonth.toString();
-                    if (objToday.getMonth().toString().length == 1)
+                        dayOfMonth = "0" + dayOfMonth.toString();
+                        console.log(day);
+                    }
+                    if (objToday.getMonth().toString().length == 1){
                         month = objToday.getMonth() + 1;
                         month = "0" + month;
-                    yesterday = curYear.toString() + month + day
+                    }
+                    yesterday = curYear.toString() + month + dayOfMonth
                     document.getElementById("lbmp_data").href = "http://mis.nyiso.com/public/csv/damlbmp/"+yesterday+"damlbmp_zone.csv"
                 </script>
 

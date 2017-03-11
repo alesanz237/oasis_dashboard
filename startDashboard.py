@@ -7,7 +7,6 @@ sys.path.insert(0, "./code")
 from dataGathering import DataGathering
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from weather import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
-from market import getDataForLBMPZonalComparison, getDataForLoadComparisons, getDataForLBMPvsLoadComparisons
 from params import towns
 
 app = Flask("__OasisDashboard__")
