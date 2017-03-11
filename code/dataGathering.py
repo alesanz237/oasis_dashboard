@@ -1,5 +1,9 @@
-import json
 from pprint import pprint
+from helper import Helper
+import json
+import csv
+import urllib2
+import operator 
 
 class DataGathering:
 	""" Class that gathers data from various data sources 
@@ -7,12 +11,8 @@ class DataGathering:
 		
 	"""
 
-	# def __init__(self):
-		# self.twitter_data = False
-		# self.select2 = False 
-		# self.select3 = False
-		# self.select4 = False
-		# self.data    = []
+	def __init__(self):
+		self.helper = Helper()
 
 	def getAEEData(self, key_1):
 		""" 
@@ -44,25 +44,237 @@ class DataGathering:
 
 			# Iterating through the file and storing the result
 			for key_2 in energy_data[key_1]:
+
 				for year in energy_data[key_1][key_2]:
+
 					for month in energy_data[key_1][key_2][year]:
-						suma +=energy_data[key_1][key_2][year][month]
+						suma += energy_data[key_1][key_2][year][month]
+
 					fiscal_year.append(year)
 					fiscal_year.append(suma/12)
 					values.append(fiscal_year)
-					fiscal_year = []
-					suma = 0
-				result["key"] = key_2
+					fiscal_year  = []
+					suma         = 0
+
+				result["key"]    = key_2
 				result["values"] = sorted(values)
-				values = []
+				values           = []
 				final_result.append(result)
-				result = {}
+				result           = {}
+
 		except Exception as e:
 			raise e
 		finally:
 			return final_result
 
+	def getLoadData(self):
+
+		""" 
+			Function that reads load data in a csv file provided by 
+			the NYISO. This data is then converted into a dictionary 
+			and is returned.
+
+			Returns: 
+				dictionary: Contains a dictionary per month, day and a 
+				list of the loads per hour in a given day.
+		"""
+
+		# Variables
+		url           = 'http://mis.nyiso.com/public/dss/nyiso_loads.csv' # Url with the data
+		response      = urllib2.urlopen(url)                              # Reading url
+		load_data     = csv.reader(response)                              # Convering data to csv format
+		year          = self.helper.getYear()                             # Current Year
+		hourly_loads  = []                  # Stores the loads per hour
+		daily_loads   = {}                  # Stores the loads per hour of a given day
+		monthly_loads = {}                  # Stores the loads per day of a given month
+		yearly_loads  = {}                  # Stores the monthly loads in a year
+
+		# Converting data from csv to dictionary
+		for row in load_data:
+
+			# Ignoring first row
+			if row[1] != "Month" and row[2] != "Day" and row[3] != 'Hr1':
+				month = int(row[1])
+				day   = int(row[2])
+
+				# Getting hourly loads
+				for i in range(3,27):
+					try:
+						hourly_loads.append(int(row[i]))
+					# If there is an error reading the load then generate a 
+					# random load value between 15000 and 25000
+					except ValueError:
+						pass
+						hourly_loads.append((randint(15000,25000)))
+				daily_loads[day]     = hourly_loads
+				hourly_loads         = []
+				monthly_loads[month] = daily_loads
+				if self.helper.isEndOfMonth(month, day):
+					daily_loads = {}
+
+		yearly_loads[year] = monthly_loads
+
+		return yearly_loads
+
+	def getDataForLoadComparisons(self):
+		""" 
+			Function that reads a dictionary of load data and converts
+			it into a format that is readable by NVD3.
+
+			Returns: 
+				dictionary: Dictionary of load data that will be visualized
+				using NVD3
+		"""
+
+		# Variables
+		load_data  = self.getLoadData() 
+		values     = [] 
+		inner_dict = {}
+		outer_dict = {}
+		final_data = []
+		yesterday  = self.helper.getYesterday()
+		key   = yesterday[0] + yesterday[1] + yesterday[2] + "-loadData"
+		data  = load_data[yesterday[0]][int(yesterday[1])][int(yesterday[2])]
+		dates = (['12:00 AM','1:00 AM','2:00 AM','3:00 AM','4:00 AM','5:00 AM',
+			'6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM',
+			'12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM',
+			'6:00 PM','7:00 PM','8:00 PM','9:00 PM','10:00 PM','11:00 PM'])
+
+		# Populating values array
+		for i in range(0,len(data)):
+			inner_dict['label'] = dates[i]
+			inner_dict['value'] = data[i]
+			values.append(inner_dict)
+			inner_dict = {}
+
+		# Populating the final_data array and returning it
+		outer_dict['key'] = key
+		outer_dict['values'] = values
+		final_data.append(outer_dict)
+
+		return final_data
+
+	def getDayAheadMarketLBMPZonal(self):
+		""" 
+			Function that lbmp data in a csv file provided by 
+			the NYISO. This data is then converted into a dictionary 
+			and is returned.
+
+			Returns: 
+				dictionary of LBMP per New York zones.
+		"""
+
+		# Variables
+		yesterday   = self.helper.getYesterday()[0] + self.helper.getYesterday()[1] + self.helper.getYesterday()[2]
+		url         = 'http://mis.nyiso.com/public/csv/damlbmp/'+yesterday+'damlbmp_zone.csv' 
+		response    = urllib2.urlopen(url)
+		market_data = sorted(csv.reader(response), key=operator.itemgetter(1)) # Converting data to python csv
+		counter     = 0 # Counter used for determining which hour we are curretly on
+		lbmpZonal   = {}
+		timestamp   = {}
+		timestamps  = []
+		market_info = {}
+
+		# Converting csv data to market data and returning it
+		for row in market_data:
+			# Ignoring the first row
+			if row[0] != 'Time Stamp':
+				market_info['LBMP ($/MWHr)']                     = float(row[3])
+				market_info['Marginal Cost Losses ($/MWHr)']     = float(row[4])
+				market_info['Marginal Cost Congestion ($/MWHr)'] = float(row[5])
+				row[0]            = self.helper.getDateInEpoch(row[0])
+				timestamp[row[0]] = market_info
+				market_info       = {}
+				timestamps.append(timestamp)
+				timestamp         = {}
+				counter           +=1
+				if counter == 24:
+					lbmpZonal[row[1]] = timestamps
+					timestamps        = []
+					counter           = 0		
+		return lbmpZonal
+
+	def getDataForLBMPZonalComparison(self):
+		""" 
+			Function that reads a dictionary of LBMP zonal data 
+			and converts it into a format that is readable by NVD3.
+
+			Returns: 
+				dictionary: Dictionary of LBMP zonal data that 
+				will be visualized using NVD3
+		"""
+
+		# Variables
+		zonal_data       = self.getDayAheadMarketLBMPZonal()
+		keys             = zonal_data.keys()
+		final_data       = []
+		values           = []
+		outer_dictionary = {}
+		inner_dictionary = {}
+
+		# Populating final data array and returning it
+		for key in keys:
+			for data in zonal_data[key]:
+				inner_dictionary['x'] = data.keys()[0]
+				inner_dictionary['y'] = data[data.keys()[0]]['LBMP ($/MWHr)']
+				values.append(inner_dictionary)
+				inner_dictionary = {}
+			outer_dictionary['values'] = values
+			values = []
+			outer_dictionary['key']    = key
+			final_data.append(outer_dictionary)
+			outer_dictionary = {}
+
+		return final_data
+
+	def getDataForLBMPvsLoadComparisons(self):
+		""" 
+			Function that reads a dictionary of load data and
+			another dictionary of  LBMP zonal data and converts 
+			it into a format that is readable by NVD3.
+
+			Returns: 
+				dictionary: Dictionary of load and
+				LBMP zonal data that will be visualized using NVD3
+		"""
+
+		# Variables
+		lbmp_data    = self.getDataForLBMPZonalComparison()[14] # Getting CAPITL zone
+		load_data    = self.getLoadData()
+		final_data   = []
+		lbmp_dict    = {}
+		load_dict    = {}
+		load_values  = []
+		dates        = []
+		price_values = []
+
+		# Getting needed lbmp_data
+		key = "LBMP ($/MWHr) in " + lbmp_data['key']
+		for value in lbmp_data['values']:
+			dates_and_prices = []
+			dates_and_prices.append(value['x'])
+			dates.append(value['x'])
+			dates_and_prices.append(value['y'])
+			price_values.append(dates_and_prices)
+		lbmp_dict['key'] = key
+		lbmp_dict['values'] = price_values
+		final_data.append(lbmp_dict)
+		data_dict = {}
+
+		# Getting needed load data
+		yesterday = self.helper.getYesterday()
+		loads = load_data[yesterday[0]][int(yesterday[1])][int(yesterday[2])]
+		for i in range(0,len(loads)):
+			dates_and_loads = []
+			dates_and_loads.append(dates[i])
+			dates_and_loads.append(loads[i])
+			load_values.append(dates_and_loads)
+		load_dict['key'] = lbmp_data['key'] + " Area Loads"
+		load_dict['values'] = load_values
+		load_dict['bar'] = 'True'
+		final_data.append(load_dict)
+		return final_data
 
 # if __name__ == '__main__':
 # 	data = DataGathering()
-# 	pprint(data.getAEEData("Active Customers by Service Class"))
+# 	pprint(data.getDataForLBMPvsLoadComparisons())

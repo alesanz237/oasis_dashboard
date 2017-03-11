@@ -40,17 +40,17 @@ def get_AEEData():
 
 @app.route('/_getLBMPData')
 def get_LBMPData():
-    lbmpData = getDataForLBMPZonalComparison()
+    lbmpData = data.getDataForLBMPZonalComparison()
     return jsonify(result=lbmpData)
 
 @app.route('/_getLoadData')
 def get_LoadData():
-    load_data = getDataForLoadComparisons()
+    load_data = data.getDataForLoadComparisons()
     return jsonify(result=load_data)
 
 @app.route('/_getLBMPvsLoadData')
 def get_LBMPvsLoadData():
-    lbmp_vs_load_data = getDataForLBMPvsLoadComparisons()
+    lbmp_vs_load_data = data.getDataForLBMPvsLoadComparisons()
     return jsonify(result=lbmp_vs_load_data)
 
 @app.route("/twitter")
