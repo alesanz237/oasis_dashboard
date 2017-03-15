@@ -1,12 +1,14 @@
 # !/usr/bin/env python
 #  -*- coding: utf-8 -*-
 from dataGathering import DataGathering
+from helper import Helper
 
 class DataForComparison:
 	""" class that generates a graph based on user selected comparisons """
 
 	def __init__(self):
 		self.data    = DataGathering()
+		self.helper  = Helper()
 		# self.select1 = False
 		# self.select2 = False 
 		# self.select3 = False
@@ -70,9 +72,9 @@ class DataForComparison:
 		# Getting precipitation dataset
 		if identifier == "precip":
 			town = dataset[1]
-			data["key"] = identifier + "_" + town
-			precip_data = self.data.getHourlyWeather(town,"f")
-			print precip_data
+			data["key"] = identifier + "_" + self.helper.getCoords(town)[2]
+			data["values"] = self.data.getHourlyPrecip(town)
+			print data
 			
 		# Getting humidity dataset
 		elif identifier == "humidity":
@@ -102,7 +104,7 @@ class DataForComparison:
 		# # Getting negative tweets dataset
 		# elif identifier == "neg":
 
-		
+		return data
 
 	# def getSelectStatus(self):
 	# 	""" 
