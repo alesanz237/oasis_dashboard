@@ -414,7 +414,7 @@ class DataGathering:
 					y: the float value of the humidity
 		"""
 
-		weather_data  = self.getHourlyWeather(keyword, "f", 25)
+		weather_data    = self.getHourlyWeather(keyword, "f", 25)
 		humidity_values = [] # Array that will contain all the humidity data
 		humidity_data   = {} # Dictionary of humidity data
 
@@ -426,6 +426,56 @@ class DataGathering:
 			humidity_data = {}
 
 		return humidity_values
+
+	def getHourlyWind(self, keyword):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly wind.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the wind
+		"""
+
+		weather_data = self.getHourlyWeather(keyword, "f", 25)
+		wind_values  = [] # Array that will contain all the wind data
+		wind_data    = {} # Dictionary of wind data
+
+		# Getting humidity data
+		for data in weather_data:
+			wind_data["x"] = self.helper.getDateInEpoch(data["time"])
+			wind_data["y"] = float(data["wind"].split(" ")[1])
+			wind_values.append(wind_data)
+			wind_data = {}
+
+		return wind_values
+
+	def getHourlyTemp(self, keyword, deg):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly temperature based on degree (C or F).
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the temperature in C or F
+		"""
+
+		weather_data = self.getHourlyWeather(keyword, deg, 25)
+		temp_values  = [] # Array that will contain all the wind data
+		temp_data    = {} # Dictionary of temperature data
+
+		# Getting temperature data
+		for data in weather_data:
+			temp_data["x"] = self.helper.getDateInEpoch(data["time"])
+			temp_data["y"] = float(data["temperature"].split("°")[0])
+			temp_values.append(temp_data)
+			temp_data      = {}
+
+		return temp_values
 
 	def getTodaysWeather(self, keyword, temp):
 		""" 
@@ -542,4 +592,4 @@ class DataGathering:
 if __name__ == '__main__':
 	data = DataGathering()
 	# pprint(data.getDayAheadMarketLBMPZonal())
-	pprint(data.getHourlyHumidity(u"mayaguez"))
+	pprint(data.getHourlyTemp(u"mayaguez","f"))

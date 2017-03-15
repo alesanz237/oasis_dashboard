@@ -71,25 +71,28 @@ class DataForComparison:
 
 		# Getting precipitation dataset
 		if identifier == "precip":
-			town = dataset[1]
-			data["key"] = identifier + "_" + self.helper.getCoords(town)[2]
+			town           = dataset[1]
+			data["key"]    = identifier + "_" + self.helper.getCoords(town)[2]
 			data["values"] = self.data.getHourlyPrecip(town)
 			
 		# Getting humidity dataset
 		elif identifier == "humidity":
-			town = dataset[1]
-			data["key"] = identifier + "_" + self.helper.getCoords(town)[2]
+			town           = dataset[1]
+			data["key"]    = identifier + "_" + self.helper.getCoords(town)[2]
 			data["values"] = self.data.getHourlyHumidity(town)
 
 		# Getting wind dataset
 		elif identifier == "wind":
-			town = dataset[1]
-			data["key"] = identifier + "_" + town
+			town           = dataset[1]
+			data["key"]    = identifier + "_" + self.helper.getCoords(town)[2]
+			data["values"] = self.data.getHourlyWind(town)
 
 		# Getting temperature dataset
 		elif identifier == "temp":
-			town = dataset[1]
-			deg  = dateset[2]
+			town           = dataset[1]
+			deg            = dataset[2]
+			data["key"]    = identifier + "_" + self.helper.getCoords(town)[2] + "_" + deg
+			data["values"] = self.data.getHourlyTemp(town,deg)
 
 		# Getting load based marginal pricing dataset
 		elif identifier == "lbmp":
@@ -104,6 +107,7 @@ class DataForComparison:
 		# # Getting negative tweets dataset
 		# elif identifier == "neg":
 
+		print data
 		return data
 
 	# def getSelectStatus(self):
@@ -127,4 +131,4 @@ class DataForComparison:
 
 if __name__ == '__main__':
 	comparator = DataForComparison()
-	comparator.addData([u"humidity_mayaguez"])
+	comparator.addData([u"temp_mayaguez_f"])
