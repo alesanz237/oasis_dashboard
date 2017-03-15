@@ -97,9 +97,12 @@ class DataForComparison:
 		# Getting load based marginal pricing dataset
 		elif identifier == "lbmp":
 			zone = dataset[1]
+			# data["key"] = identifier
 
 		# # Getting load dataset
-		# elif identifier == "load":
+		elif identifier == "load":
+			data["key"]    = identifier
+			data["values"] = self.data.getHourlyLoads()
 
 		# # Getting positive tweets dataset
 		# elif identifier == "pos":
@@ -131,4 +134,4 @@ class DataForComparison:
 
 if __name__ == '__main__':
 	comparator = DataForComparison()
-	comparator.addData([u"temp_mayaguez_f"])
+	comparator.addData([u"load"])

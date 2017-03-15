@@ -465,7 +465,7 @@ class DataGathering:
 		"""
 
 		weather_data = self.getHourlyWeather(keyword, deg, 25)
-		temp_values  = [] # Array that will contain all the wind data
+		temp_values  = [] # Array that will contain all the temperature data
 		temp_data    = {} # Dictionary of temperature data
 
 		# Getting temperature data
@@ -588,8 +588,34 @@ class DataGathering:
 			return 'No Daily data'
 		return daily_weather
 
+	def getHourlyLoads(self):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly loads on NYISO.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the load
+		"""
+
+		loads_data = self.getDataForLoadComparisons()
+		load_values  = [] # Array that will contain all the load data
+		load_data    = {} # Dictionary of load data
+
+		# Parsing load data
+		today = self.helper.getYear() + self.helper.getMonth() + self.helper.getDay()
+		for data in loads_data[0]['values']:
+			load_data["x"] = self.helper.getDateInEpoch(today + " " + data["label"])
+			load_data["y"] = float(data["value"])
+			load_values.append(load_data)
+			load_data      = {}
+
+		return load_values
 
 if __name__ == '__main__':
 	data = DataGathering()
 	# pprint(data.getDayAheadMarketLBMPZonal())
-	pprint(data.getHourlyTemp(u"mayaguez","f"))
+	pprint(data.getHourlyLoads())
+	# pprint(data.getHourlyTemp(u"mayaguez","f"))

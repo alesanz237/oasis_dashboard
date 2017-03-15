@@ -85,8 +85,10 @@ class Helper():
 		""" Returns the current time in epoch """
 		if "/" in timestamp:
 			return calendar.timegm(time.strptime(timestamp,'%m/%d/%Y %H:%M'))
-		else:
+		elif "," in timestamp:
 			return calendar.timegm(time.strptime(timestamp,'%a %d, %b %Y %H:%M %p'))
+		else:
+			return calendar.timegm(time.strptime(timestamp,'%Y%m%d %H:%M %p'))
 
 	def getLatLonByTown(self, town_name):
 		""" 
