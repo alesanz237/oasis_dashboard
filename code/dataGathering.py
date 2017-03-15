@@ -391,7 +391,7 @@ class DataGathering:
 
 		weather_data  = self.getHourlyWeather(keyword, "f", 25)
 		precip_values = [] # Array that will contain all the precipitation data
-		precip_data   = {} # Dictinary of precipitation data
+		precip_data   = {} # Dictionary of precipitation data
 
 		# Getting precipiation data
 		for data in weather_data:
@@ -402,7 +402,30 @@ class DataGathering:
 
 		return precip_values
 
-			
+	def getHourlyHumidity(self, keyword):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly humidity.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the humidity
+		"""
+
+		weather_data  = self.getHourlyWeather(keyword, "f", 25)
+		humidity_values = [] # Array that will contain all the humidity data
+		humidity_data   = {} # Dictionary of humidity data
+
+		# Getting humidity data
+		for data in weather_data:
+			humidity_data["x"] = self.helper.getDateInEpoch(data["time"])
+			humidity_data["y"] = float(data["humidity"][:-1])/100
+			humidity_values.append(humidity_data)
+			humidity_data = {}
+
+		return humidity_values
 
 	def getTodaysWeather(self, keyword, temp):
 		""" 
@@ -519,4 +542,4 @@ class DataGathering:
 if __name__ == '__main__':
 	data = DataGathering()
 	# pprint(data.getDayAheadMarketLBMPZonal())
-	pprint(data.getHourlyPrecip(u"mayaguez"))
+	pprint(data.getHourlyHumidity(u"mayaguez"))

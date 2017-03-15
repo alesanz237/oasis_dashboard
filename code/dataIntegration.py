@@ -74,12 +74,12 @@ class DataForComparison:
 			town = dataset[1]
 			data["key"] = identifier + "_" + self.helper.getCoords(town)[2]
 			data["values"] = self.data.getHourlyPrecip(town)
-			print data
 			
 		# Getting humidity dataset
 		elif identifier == "humidity":
 			town = dataset[1]
-			data["key"] = identifier + "_" + town
+			data["key"] = identifier + "_" + self.helper.getCoords(town)[2]
+			data["values"] = self.data.getHourlyHumidity(town)
 
 		# Getting wind dataset
 		elif identifier == "wind":
@@ -127,4 +127,4 @@ class DataForComparison:
 
 if __name__ == '__main__':
 	comparator = DataForComparison()
-	comparator.addData([u"precip_mayaguez"])
+	comparator.addData([u"humidity_mayaguez"])
