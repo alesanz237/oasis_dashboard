@@ -27,56 +27,30 @@ def retrieveTweets(file):
 		
 def getPositiveTweets():
 	classified_sentences = []
-	try:
-		with open("data/tweets/positive.txt") as f:
-			# classified_sentence = ()
-			content = f.readlines()
-			# print content
-			for data in content:
-				tweet = eval(data)
-				sentence = tweet['text']
-				polarity    = tweet['polarity']
-				classified_sentence = (sentence,polarity)
-				classified_sentences.append(classified_sentence)
-	except:
-		pass
-	finally:
-		with open("data/tweets/positive_backup.txt") as f:
-			# classified_sentence = ()
-			content = f.readlines()
-			for data in content:
-				tweet = eval(data)
-				sentence = tweet['text']
-				polarity    = tweet['polarity']
-				classified_sentence = (sentence,polarity)
-				classified_sentences.append(classified_sentence)
+	with open("data/tweets/positive.txt") as f:
+		# classified_sentence = ()
+		content = f.readlines()
+		# print content
+		for data in content:
+			tweet = eval(data)
+			sentence = tweet['text']
+			polarity    = tweet['polarity']
+			classified_sentence = (sentence,polarity)
+			classified_sentences.append(classified_sentence)
 	return classified_sentences
 
 def getNegativeTweets():
 	classified_sentences = []
-	try:
-		with open("data/tweets/negative.txt") as f:
-			# classified_sentence = ()
-			content = f.readlines()
-			# print content
-			for data in content:
-				tweet = eval(data)
-				sentence = tweet['text']
-				polarity    = tweet['polarity']
-				classified_sentence = (sentence,polarity)
-				classified_sentences.append(classified_sentence)
-	except:
-		pass
-	finally:
-		with open("data/tweets/negative_backup.txt") as f:
-			# classified_sentence = ()
-			content = f.readlines()
-			for data in content:
-				tweet = eval(data)
-				sentence = tweet['text']
-				polarity    = tweet['polarity']
-				classified_sentence = (sentence,polarity)
-				classified_sentences.append(classified_sentence)
+	with open("data/tweets/negative.txt") as f:
+		# classified_sentence = ()
+		content = f.readlines()
+		# print content
+		for data in content:
+			tweet = eval(data)
+			sentence = tweet['text']
+			polarity    = tweet['polarity']
+			classified_sentence = (sentence,polarity)
+			classified_sentences.append(classified_sentence)
 	return classified_sentences
 
 # if __name__ == '__main__':

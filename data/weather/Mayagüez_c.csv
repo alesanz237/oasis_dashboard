@@ -1,25 +1,13 @@
 date,description,precipitation,temperature,humidity,wind,icon
-"Fri 03, Mar 2017 11:00 AM",Partly Cloudy,1%,27 C,64%,NE 3.69 mph,partly-cloudy-day
-"Fri 03, Mar 2017 12:00 PM",Partly Cloudy,0%,27 C,67%,NE 4.05 mph,partly-cloudy-day
-"Fri 03, Mar 2017 1:00 PM",Light Rain,0%,27 C,68%,NE 4.31 mph,rain
-"Fri 03, Mar 2017 2:00 PM",Light Rain,0%,27 C,69%,NE 3.11 mph,rain
-"Fri 03, Mar 2017 3:00 PM",Light Rain,0%,27 C,69%,NE 4.6 mph,rain
-"Fri 03, Mar 2017 4:00 PM",Light Rain,0%,27 C,70%,NE 4.56 mph,rain
-"Fri 03, Mar 2017 5:00 PM",Drizzle,0%,26 C,72%,NE 4.73 mph,rain
-"Fri 03, Mar 2017 6:00 PM",Drizzle,0%,26 C,74%,NE 4.68 mph,rain
-"Fri 03, Mar 2017 7:00 PM",Partly Cloudy,0%,25 C,77%,NE 4.87 mph,partly-cloudy-night
-"Fri 03, Mar 2017 8:00 PM",Clear,0%,24 C,79%,NE 4.94 mph,clear-night
-"Fri 03, Mar 2017 9:00 PM",Clear,0%,24 C,81%,NE 4.98 mph,clear-night
-"Fri 03, Mar 2017 10:00 PM",Clear,0%,24 C,82%,NE 5.2 mph,clear-night
-"Fri 03, Mar 2017 11:00 PM",Clear,0%,24 C,82%,NE 5.32 mph,clear-night
-"Sat 04, Mar 2017 12:00 AM",Clear,1%,24 C,82%,ENE 5.3 mph,clear-night
-"Sat 04, Mar 2017 1:00 AM",Clear,16%,23 C,83%,ENE 5.29 mph,clear-night
-"Sat 04, Mar 2017 2:00 AM",Clear,52%,23 C,83%,ENE 5.21 mph,clear-night
-"Sat 04, Mar 2017 3:00 AM",Clear,57%,23 C,83%,ENE 5.19 mph,clear-night
-"Sat 04, Mar 2017 4:00 AM",Clear,56%,23 C,84%,NE 5.18 mph,clear-night
-"Sat 04, Mar 2017 5:00 AM",Clear,51%,23 C,84%,NE 5.19 mph,clear-night
-"Sat 04, Mar 2017 6:00 AM",Clear,37%,24 C,84%,NE 5.33 mph,clear-night
-"Sat 04, Mar 2017 7:00 AM",Clear,23%,24 C,84%,NE 5.51 mph,clear-day
-"Sat 04, Mar 2017 8:00 AM",Clear,14%,25 C,82%,NE 4.46 mph,clear-day
-"Sat 04, Mar 2017 9:00 AM",Clear,8%,26 C,78%,NE 4.65 mph,clear-day
-"Sat 04, Mar 2017 10:00 AM",Partly Cloudy,3%,27 C,74%,NE 4.94 mph,partly-cloudy-day
+"Mon 13, Mar 2017 6:00 PM",Mostly Cloudy,4%,26 C,75%,ENE 3.1 mph,partly-cloudy-day
+"Mon 13, Mar 2017 7:00 PM",Partly Cloudy,5%,25 C,77%,ENE 2.9 mph,partly-cloudy-night
+"Mon 13, Mar 2017 8:00 PM",Partly Cloudy,1%,25 C,79%,NE 2.86 mph,partly-cloudy-night
+"Mon 13, Mar 2017 9:00 PM",Partly Cloudy,0%,25 C,81%,NE 3.03 mph,partly-cloudy-night
+"Mon 13, Mar 2017 10:00 PM",Partly Cloudy,0%,24 C,82%,NE 3.28 mph,partly-cloudy-night
+"Mon 13, Mar 2017 11:00 PM",Partly Cloudy,0%,24 C,83%,NE 3.92 mph,partly-cloudy-night
+"Tue 14, Mar 2017 12:00 AM",Partly Cloudy,0%,24 C,83%,NE 4.44 mph,partly-cloudy-night
+"Tue 14, Mar 2017 1:00 AM",Partly Cloudy,0%,24 C,84%,NE 4.81 mph,partly-cloudy-night
+"Tue 14, Mar 2017 2:00 AM",Clear,0%,24 C,85%,NE 4.85 mph,clear-night
+"Tue 14, Mar 2017 3:00 AM",Clear,0%,24 C,85%,NE 5.03 mph,clear-night
+"Tue 14, Mar 2017 4:00 AM",Clear,0%,24 C,85%,NE 5.17 mph,clear-night
+"Tue 14, Mar 2017 5:00 AM",Clear,0%,24 C,85%,NE 5.23 mph,clear-night

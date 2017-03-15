@@ -1,60 +1,128 @@
 # !/usr/bin/env python
 #  -*- coding: utf-8 -*-
-from weather import getHourlyWeather
-from market import getLoadData, getDayAheadMarketLBMPZonal
-from sentimentAnalysis import getTweetsLen
+from dataGathering import DataGathering
 
 class DataForComparison:
 	""" class that generates a graph based on user selected comparisons """
 
 	def __init__(self):
-		self.select1 = False
-		self.select2 = False 
-		self.select3 = False
-		self.select4 = False
-		self.data    = []
+		self.data    = DataGathering()
+		# self.select1 = False
+		# self.select2 = False 
+		# self.select3 = False
+		# self.select4 = False
+		self.dataset = []
 
 	def addData(self,selects):
-		""" Add data to graph portion """
-		for select in selects:
-			if self.select1 != True:
-				self.data.append(self.generateData(select,1))
-			elif self.select2 != True:
-				self.data.append(self.generateData(select,2))
-			elif self.select3 != True:
-				self.data.append(self.generateData(select,3))
-			elif self.select4 != True:
-				self.data.append(self.generateData(select,4))
+		""" 
+			Adds a dicitionary to dataset element. The amount
+			of dictionaries depends on how many selects does
+			the user want to compare. The dictionary is 
+			generated in the generateData method.
 
-	def generateData(self,select,select_number):
-		""" Gets data that will be added to class data list """
+		"""
 
-		if select == "pos_tweets":
-			y = getTweetsLen()[0]
-		elif select == "neg_tweets":
-			y = getTweetsLen()[1]
+		# Users selects 4 datasets
+		if len(selects)  == 4:
+			self.dataset.append(self.generateData(selects[0]))
+			self.dataset.append(self.generateData(selects[1]))
+			self.dataset.append(self.generateData(selects[2]))
+			self.dataset.append(self.generateData(selects[3]))
 
-		if select_number == 1:
-			self.select1 = True
-		if select_number == 2:
-			self.select2 = True
-		if select_number == 3:
-			self.select3 = True
-		if select_number == 4:
-			self.select4 = True
+		# User selects 3 datasets
+		elif len(selects) == 3:
+			self.dataset.append(self.generateData(selects[0]))
+			self.dataset.append(self.generateData(selects[1]))
+			self.dataset.append(self.generateData(selects[2]))
 
-	def getSelectStatus(self):
-		print self.select1
-		print self.select2
-		print self.select3
-		print self.select4 
+		# User select 2 datasets
+		elif len(selects) == 2:
+			self.dataset.append(self.generateData(selects[0]))
+			self.dataset.append(self.generateData(selects[1]))
+
+		# User selects 1 dataset
+		else:
+			self.dataset.append(self.generateData(selects[0]))
+
+	def generateData(self,dataset):
+		""" 
+			Generates dictionary based on the user selected 
+			dataset.
+			User may select the following datasets:
+			1. "pos_tweets" : amount of positive tweets per hour for a day
+			2. "neg_tweets" : amount of negative tweets per hour for a day
+			3. "precip_<town>": precipitation per hour for a day for a given town
+			4. "temp_<town>_<deg>": temperature in F or C per hour for a day for a give town
+			5. "humidity_<town>": humidity per hour for a day for a given town
+			6. "wind_<town>": wind per hour for a day for a given town:
+			7. "load": Loads per hour for a day from NYISO
+			8. "lmbp_<zone>": lbmp per hor for a day from NYISO
+
+			Returns:
+				Dictionary: Dictionary of data that will be added 
+		"""
+
+		# Variables
+		dataset    = dataset.split("_")
+		identifier = dataset[0]
+		data       = {}
+
+		# Getting precipitation dataset
+		if identifier == "precip":
+			town = dataset[1]
+			data["key"] = identifier + "_" + town
+			precip_data = self.data.getHourlyWeather(town,"f")
+			print precip_data
+			
+		# Getting humidity dataset
+		elif identifier == "humidity":
+			town = dataset[1]
+			data["key"] = identifier + "_" + town
+
+		# Getting wind dataset
+		elif identifier == "wind":
+			town = dataset[1]
+			data["key"] = identifier + "_" + town
+
+		# Getting temperature dataset
+		elif identifier == "temp":
+			town = dataset[1]
+			deg  = dateset[2]
+
+		# Getting load based marginal pricing dataset
+		elif identifier == "lbmp":
+			zone = dataset[1]
+
+		# # Getting load dataset
+		# elif identifier == "load":
+
+		# # Getting positive tweets dataset
+		# elif identifier == "pos":
+
+		# # Getting negative tweets dataset
+		# elif identifier == "neg":
+
+		
+
+	# def getSelectStatus(self):
+	# 	""" 
+	# 		Return select status
+	# 	"""
+	# 	print self.select1
+	# 	print self.select2
+	# 	print self.select3
+	# 	print self.select4 
 
 	def getData(self):
-		""" Getter for data attribute """
+		""" 
+			Getter for data attribute
+
+			Returns: 
+				dictionary of LBMP per New York zones.
+		"""
+
 		return self.data()
 
 if __name__ == '__main__':
 	comparator = DataForComparison()
-	selects = ["pos_tweets","neg_tweets"]
-	comparator.addData(selects)
-	comparator.getSelectStatus()
+	comparator.addData([u"precip_mayaguez"])

@@ -127,27 +127,15 @@ def getNegativeWords():
 
 def getTweetsLen():
 	""" Method that returns how many tweets are available """
-	try:
-		with open('data/tweets/positive.txt') as f:
-			for i, l in enumerate(f):
-				pass
-		positive_tweets = i + 1
 
-		with open('data/tweets/negative.txt') as f:
-			for i, l in enumerate(f):
-				pass
-		negative_tweets = i + 1
-	except:
-		pass
-	finally:
-		with open('data/tweets/positive_backup.txt') as f:
-			for i, l in enumerate(f):
-				pass
-		positive_tweets = i + 1
+	with open('data/tweets/positive.txt') as f:
+		for i, l in enumerate(f):
+			pass
+	positive_tweets = i + 1
 
-		with open('data/tweets/negative_backup.txt') as f:
-			for i, l in enumerate(f):
-				pass
+	with open('data/tweets/negative.txt') as f:
+		for i, l in enumerate(f):
+			pass
 		negative_tweets = i + 1
 	tweets_len = []
 	tweets_len.append(positive_tweets)
@@ -156,22 +144,12 @@ def getTweetsLen():
 
 def getTweets():
 	tweets = []
-	try:
-		with open('data/tweets/positive.txt') as tweet:
-			for t in tweet:
-				tweets.append(eval(t))
-		with open('data/tweets/negative.txt') as tweet:
-			for t in tweet:
-				tweets.append(eval(t))
-	except:
-		pass
-	finally:
-		with open('data/tweets/positive_backup.txt') as tweet:
-			for t in tweet:
-				tweets.append(eval(t))
-		with open('data/tweets/negative_backup.txt') as tweet:
-			for t in tweet:
-				tweets.append(eval(t))
+	with open('data/tweets/positive.txt') as tweet:
+		for t in tweet:
+			tweets.append(eval(t))
+	with open('data/tweets/negative.txt') as tweet:
+		for t in tweet:
+			tweets.append(eval(t))
 	tweets = scrambled(tweets)
 	return tweets
 
@@ -179,24 +157,14 @@ def getPositiveTweetsFromTo(_from,to):
 	""" Getting positive tweets from a given time frame"""
 	tweets = []
 	tweet_dict = {}
-	try:
-		tweets = getTweetsFromRange('data/tweets/positive.txt',_from,to)
-	except:
-		pass
-	finally:
-		tweets = getTweetsFromRange('data/tweets/positive_backup.txt',_from,to)
+	tweets = getTweetsFromRange('data/tweets/positive.txt',_from,to)
 	return tweets
 
 def getNegativeTweetsFromTo(_from,to):
 	""" Getting negative tweets from a given time frame"""
 	tweets = []
 	tweet_dict = {}
-	try:
-		tweets = getTweetsFromRange('data/tweets/negative.txt',_from,to)
-	except:
-		pass
-	finally:
-		tweets = getTweetsFromRange('data/tweets/negative_backup.txt',_from,to)
+	tweets = getTweetsFromRange('data/tweets/negative.txt',_from,to)
 	return tweets
 
 def getTweetsFromRange(filename,_from,to):
@@ -249,26 +217,14 @@ def convertTweetsToCSV():
 	""" Getting tweets from a given time frame"""
 	# Gathering positive and negative tweets
 	tweets = []
-	try:
-		with open('data/tweets/positive.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				tweets.append(t)
-		with open('data/tweets/negative.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				tweets.append(t)
-	except:
-		pass
-	finally:
-		with open('data/tweets/positive_backup.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				tweets.append(t)
-		with open('data/tweets/negative_backup.txt') as tweet:
-			for t in tweet:
-				t = eval(t)
-				tweets.append(t)
+	with open('data/tweets/positive.txt') as tweet:
+		for t in tweet:
+			t = eval(t)
+			tweets.append(t)
+	with open('data/tweets/negative.txt') as tweet:
+		for t in tweet:
+			t = eval(t)
+			tweets.append(t)
 
 	# Converting positive and negative tweets to csv
 	date = time.strftime("%d-%m-%Y")
@@ -307,8 +263,13 @@ def scrambled(orig):
 if __name__ == '__main__':
 	# print getCSVTweets("data/tweets/tweets_26-02-2017.csv")
 	# storeTweetsPerDate()
-	storeClassifiedTweets()
+	# storeClassifiedTweets()
 	# print convertTweetsToCSV()
 	# print getTweetsLen()
 	# print getPositiveTweetsFromTo(12,13)
+	print getPositiveWords()
+# 	3] "GET /_getTweetsCount HTTP/1.1" 500 -
+# 127.0.0.1 - - [15/Mar/2017 16:12:23] "GET /_getPositiveWords HTTP/1.1" 500 -
+# 127.0.0.1 - - [15/Mar/2017 16:12:23] "GET /_getNegativeWords HTTP/1.1" 500 -
+
 	

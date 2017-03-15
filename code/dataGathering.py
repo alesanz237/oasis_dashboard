@@ -1,9 +1,15 @@
+# !/usr/bin/env python
+#  -*- coding: utf-8 -*-
 from pprint import pprint
 from helper import Helper
+from random import randint
+from forecastiopy import *
 import json
 import csv
 import urllib2
 import operator 
+import datetime
+
 
 class DataGathering:
 	""" Class that gathers data from various data sources 
@@ -165,11 +171,11 @@ class DataGathering:
 		"""
 
 		# Variables
-		yesterday   = self.helper.getYesterday()[0] + self.helper.getYesterday()[1] + self.helper.getYesterday()[2]
-		url         = 'http://mis.nyiso.com/public/csv/damlbmp/'+yesterday+'damlbmp_zone.csv' 
+		today   = self.helper.getYear() + self.helper.getMonth() + self.helper.getDay()
+		url         = 'http://mis.nyiso.com/public/csv/damlbmp/'+today+'damlbmp_zone.csv' 
 		response    = urllib2.urlopen(url)
 		market_data = sorted(csv.reader(response), key=operator.itemgetter(1)) # Converting data to python csv
-		counter     = 0 # Counter used for determining which hour we are curretly on
+		counter     = 1 # Counter used for determining which hour we are curretly on
 		lbmpZonal   = {}
 		timestamp   = {}
 		timestamps  = []
@@ -177,7 +183,7 @@ class DataGathering:
 
 		# Converting csv data to market data and returning it
 		for row in market_data:
-			# Ignoring the first row
+			# Ignoring header row
 			if row[0] != 'Time Stamp':
 				market_info['LBMP ($/MWHr)']                     = float(row[3])
 				market_info['Marginal Cost Losses ($/MWHr)']     = float(row[4])
@@ -188,10 +194,12 @@ class DataGathering:
 				timestamps.append(timestamp)
 				timestamp         = {}
 				counter           +=1
+				# if counter == 23:
+					# key = row[1]
 				if counter == 24:
 					lbmpZonal[row[1]] = timestamps
 					timestamps        = []
-					counter           = 0		
+					counter           = 1
 		return lbmpZonal
 
 	def getDataForLBMPZonalComparison(self):
@@ -264,6 +272,7 @@ class DataGathering:
 		# Getting needed load data
 		yesterday = self.helper.getYesterday()
 		loads = load_data[yesterday[0]][int(yesterday[1])][int(yesterday[2])]
+		print len(loads),len(dates)
 		for i in range(0,len(loads)):
 			dates_and_loads = []
 			dates_and_loads.append(dates[i])
@@ -275,6 +284,239 @@ class DataGathering:
 		final_data.append(load_dict)
 		return final_data
 
-# if __name__ == '__main__':
-# 	data = DataGathering()
-# 	pprint(data.getDataForLBMPvsLoadComparisons())
+	def getHourlyWeather(self, keyword, temp, last_hour):
+		""" 
+			Function that gets hourly weather data from
+			dark sky API for the next 12 hours. 
+
+			Returns: 
+				array: 12 hour weather forcast.
+				Contains 12 dictionaries with the following:
+					icon: used for visualizing current weather
+					summary: sentence describing current weather
+					temperature: current temperature in F or C
+					humidity: current humidilty percentage
+					time: date for weather
+					precipProbability: precipitation probability
+					wind: The wind speed and direction
+		"""
+
+		# Variables
+		conditions = []
+		weather    = {}
+
+		fio = self.helper.getFio(keyword, temp) # Getting fio object
+
+		if fio.has_hourly() is True:
+			hourly = FIOHourly.FIOHourly(fio)
+
+			# Getting weather forecast for next 12 hours
+			for hour in xrange(1, last_hour):
+				for item in hourly.get_hour(hour).keys():
+					# Parsing data from hourly fio object and adding it to weather dictionary
+					if item == "icon":
+						weather[item] = unicode(hourly.get_hour(hour)[item])
+					if item == "summary":
+						weather[item] = unicode(hourly.get_hour(hour)[item])
+					if item == "temperature":
+						if temp == "f":
+							weather[item] = str(hourly.get_hour(hour)[item]).split(".")[0] + "° F"
+						else:
+							weather[item] = str(hourly.get_hour(hour)[item]).split(".")[0] + "° C"
+					if item == "humidity":
+						weather[item] = str(hourly.get_hour(hour)[item] * 100).split(".")[0] + "%"
+					if item == "time":
+						weather[item] = self.helper.getDateForWeather(hourly.get_hour(hour)[item])
+					if item == "precipProbability":
+						weather[item] = str(hourly.get_hour(hour)[item] * 100).split(".")[0] + "%"
+					if item == "windSpeed":
+						windSpeed = unicode(hourly.get_hour(hour)[item])
+					if item == "windBearing":
+						windBearing     = unicode(hourly.get_hour(hour)[item])
+						windBearing     = self.helper.convertWindBearing(windBearing)
+						weather["wind"] = windBearing + " " + windSpeed + " mph"
+
+				# Populating conditions array with weather dicitonary
+				conditions.append(weather)
+				weather = {}
+		else:
+			return 'No hourly data'
+		return conditions
+
+	def getHourlyWeatherInCSV(self, keyword, temp):
+		""" 
+			Function that gets hourly weather data from
+			dark sky API for the next 24 hours and stores 
+			it in a csv file. 
+
+			Returns: 
+				void: csv file with hourly forecast for the next 24 hours.
+				File name will be <town>_<c or f>.csv
+		"""
+		conditions = self.getHourlyWeather(keyword, temp, 25)
+		
+		if keyword[0] == "0":
+			keyword = self.helper.convertZipcodeToTown(keyword)
+		keyword = self.helper.getCorrectTownName(keyword)
+		if temp == 'f':
+			filename = "data/weather/"+keyword+"_f.csv"
+		else:
+			filename = "data/weather/"+keyword+"_c.csv"
+		f = csv.writer(open(filename, "wb+"))
+		f.writerow(["date", "description", "precipitation", "temperature", "humidity", "wind", "icon"])
+		for condition in conditions:
+			temp = condition['temperature'].split(" ")[0][:-2] + " " + condition['temperature'].split(" ")[1]
+			try:
+				f.writerow([condition['time'],
+					condition['summary'],
+					condition['precipProbability'],
+					temp,
+					condition['humidity'],
+					condition['wind'],
+					condition['icon']])
+			except:
+				pass
+
+	def getHourlyPrecip(self, keyword):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly precipitation.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the precipitation
+		"""
+
+		weather_data  = self.getHourlyWeather(keyword, "f", 25)
+		precip_values = [] # Array that will contain all the precipitation data
+		precip_data   = {} # Dictinary of precipitation data
+
+		# Getting precipiation data
+		for data in weather_data:
+			precip_data["x"] = self.helper.getDateInEpoch(data["time"])
+			precip_data["y"] = float(data["precipProbability"][:-1])/100
+			precip_values.append(precip_data)
+			precip_data = {}
+
+		return precip_values
+
+			
+
+	def getTodaysWeather(self, keyword, temp):
+		""" 
+			Function that returns today's weather given 
+			a towns name or zipcode from the dark sky API. 
+
+			Returns: 
+				dictionary: Contains a dictionary with the following:
+					current: current weather
+					icon: used for visualizing current weather
+					precipProbability: precipitation probability
+					summary: sentence describing current weather
+					sunriseTime: sunrise date
+					sunsetTime: sunset time
+					temperature: current temperature in F or C
+					temperatureMax: max temperature in F or C
+					temperatureMin: min temperature in F or C
+					humidity: current humidilty percentage
+					town: the town name
+					wind: The wind speed and direction
+		"""
+
+		# Variables
+		weather = {} 
+		fio     = self.helper.getFio(keyword, temp) # Getting fio object
+		
+		# Getting todays weather data and populating the dictionary
+		if fio.has_daily() is True and fio.has_hourly() is True:
+		    daily  = FIODaily.FIODaily(fio)
+		    hourly = FIOHourly.FIOHourly(fio)
+		    for day in xrange(0, 1):
+				for item in daily.get_day(day).keys():
+					if item == "temperatureMin":
+						weather[item] = str(daily.get_day(day)[item]).split(".")[0]
+					if item == "summary":
+						weather[item] = unicode(daily.get_day(day)[item])
+					if item == "temperatureMax":
+						weather[item] = str(daily.get_day(day)[item]).split(".")[0]
+					if item == "windSpeed":
+						windSpeed = unicode(daily.get_day(day)[item])
+					if item == "windBearing":
+						windBearing = unicode(daily.get_day(day)[item])
+						windBearing = self.helper.convertWindBearing(windBearing)
+					if item == "sunsetTime":
+						weather[item] = self.helper.getDateForWeather(daily.get_day(day)[item])
+					if item == "sunriseTime":
+						weather[item] = self.helper.getDateForWeather(daily.get_day(day)[item])
+					if item == "precipProbability":
+						weather[item] = str(daily.get_day(day)[item] * 100).split(".")[0] + "%"
+				weather["wind"] = windBearing + " " + windSpeed + " mph"
+				for item in hourly.get_hour(day).keys():
+					if item == "summary":
+						weather["current"] = unicode(hourly.get_hour(0)[item])
+					if item == "temperature":
+						weather[item] = str(hourly.get_hour(0)[item]).split(".")[0]
+					if item == "icon":
+						weather[item] = unicode(hourly.get_hour(0)[item])
+				weather["town"] = self.helper.getCoords(keyword)[2]
+		else:
+			return 'No Todays data'
+
+		return weather
+
+	def getDailyWeather(self, keyword, temp):
+		""" 
+			Function that returns weather forecast for the
+			next 4 days given a towns name or zipcode from 
+			the dark sky API. 
+
+			Returns: 
+				array: Contains 4 dictionaries with the following:
+					summary: sentence describing current weather
+					icon: used for visualizing current weather
+					current: current weather
+					temperatureMax: max temperature in F or C
+					temperatureMin: min temperature in F or C
+					precipProbability: precipitation probability
+					time: date of the weather forecast
+					sunriseTime: sunrise date
+					sunsetTime: sunset time
+					temperature: current temperature in F or C
+		"""
+
+		# Variables
+		daily_weather = []
+		weather       = {}
+		fio           = self.helper.getFio(keyword, temp) # Getting fio object
+
+		# Getting 4-day forecast, storing each day's data in a dictionary and
+		# storing each dictionary in an array
+		if fio.has_daily() is True:
+			daily = FIODaily.FIODaily(fio)
+			for day in xrange(0, 4):
+				for item in daily.get_day(day).keys():
+					if item == "summary":
+						weather[item] = unicode(daily.get_day(day)[item])
+					if item == "icon":
+						weather[item] = unicode(daily.get_day(day)[item])
+					if item == "temperatureMax":
+						weather[item] = str(daily.get_day(day)[item]).split(".")[0]	
+					if item == "temperatureMin":
+						weather[item] = str(daily.get_day(day)[item]).split(".")[0]
+					if item == "precipProbability":
+						weather[item] = str(daily.get_day(day)[item] * 100).split(".")[0] + "%"
+					if item == "time":
+						weather[item] = self.helper.getDateForWeather(daily.get_day(day)[item])
+				daily_weather.append(weather)
+				weather = {}
+		else:
+			return 'No Daily data'
+		return daily_weather
+
+
+if __name__ == '__main__':
+	data = DataGathering()
+	# pprint(data.getDayAheadMarketLBMPZonal())
+	pprint(data.getHourlyPrecip(u"mayaguez"))

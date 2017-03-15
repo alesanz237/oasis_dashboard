@@ -5,13 +5,14 @@ from flask import Flask, jsonify, render_template, request, send_from_directory
 import os.path, sys, subprocess, time, csv
 sys.path.insert(0, "./code")
 from dataGathering import DataGathering
+from helper import Helper
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
-from weather import getTodaysWeather, getHourlyWeather, getDailyWeather, convertZipcodeToTown, getCorrectTownName, getHourlyWeatherInCSV
 from params import towns
 
 app = Flask("__OasisDashboard__")
-# Class that returns data that will be displayed in the dashboard
-data = DataGathering()
+
+data   = DataGathering() # Class that returns data that will be displayed in the dashboard
+helper = Helper()        # Class that has helper functions for the dashboar
 
 @app.route("/")
 def init():
@@ -29,102 +30,138 @@ def getEnergy():
 def getMarket():
     return render_template("market.html")
 
-@app.route('/_getAEEDATA')
-def get_AEEData():
-    key =  request.args['key_1']
-    # aee_data = getAEEData(key_1)
-    aee_data = data.getAEEData(key)
-    print aee_data
-    return jsonify(result=aee_data)
-
-@app.route('/_getLBMPData')
-def get_LBMPData():
-    lbmpData = data.getDataForLBMPZonalComparison()
-    return jsonify(result=lbmpData)
-
-@app.route('/_getLoadData')
-def get_LoadData():
-    load_data = data.getDataForLoadComparisons()
-    return jsonify(result=load_data)
-
-@app.route('/_getLBMPvsLoadData')
-def get_LBMPvsLoadData():
-    lbmp_vs_load_data = data.getDataForLBMPvsLoadComparisons()
-    return jsonify(result=lbmp_vs_load_data)
-
 @app.route("/twitter")
 def getTwitter():
     return render_template("twitter.html")
-
-@app.route('/_getTweetsCount')
-def get_TweetsCount():
-    tweets_len = []
-    for length in getTweetsLen():
-        tweets_len.append(length)
-    print tweets_len
-    return jsonify(result=tweets_len)
-
-@app.route('/_getPositiveWords')
-def get_PositiveWords():
-    return jsonify(result=getPositiveWords())
-
-@app.route('/_getNegativeWords')
-def get_NegativeWords():
-    return jsonify(result=getNegativeWords())
-
-@app.route('/_getTweets')
-def get_Tweets():
-    return jsonify(result=getTweets())
 
 @app.route("/weather")
 def getWeather():
     return render_template("weather.html")
 
+@app.route('/_getAEEDATA')
+def get_AEEData():
+    """ 
+        Route that returns the AEE data that will be displayed
+        in the dashboard
+    """
+    key = request.args['key_1']
+    return jsonify(result = data.getAEEData(key))
+
+@app.route('/_getLBMPData')
+def get_LBMPData():
+    """ 
+        Route that returns the LBMP data that will be displayed
+        in the dashboard
+    """
+    return jsonify(result = data.getDataForLBMPZonalComparison())
+
+@app.route('/_getLoadData')
+def get_LoadData():
+    """ 
+        Route that returns the load data that will be displayed
+        in the dashboard
+    """
+    return jsonify(result = data.getDataForLoadComparisons())
+
+@app.route('/_getLBMPvsLoadData')
+def get_LBMPvsLoadData():
+    """ 
+        Route that returns the lbmp vs load data that 
+        will be displayed in the dashboard
+    """
+    return jsonify(result = data.getDataForLBMPvsLoadComparisons())
+
+@app.route('/_getTweetsCount')
+def get_TweetsCount():
+    """ 
+        Route that returns the tweets count data
+        that will be displayed in the dashboard
+    """
+    return jsonify(result=getTweetsLen())
+
+@app.route('/_getPositiveWords')
+def get_PositiveWords():
+    """ 
+        Route that returns the top 10 words in
+        positive tweets that will be displayed
+        in the dashboard
+    """
+    return jsonify(result=getPositiveWords())
+
+@app.route('/_getNegativeWords')
+def get_NegativeWords():
+    """ 
+        Route that returns the top 10 words in
+        negative tweets that will be displayed
+        in the dashboard
+    """
+    return jsonify(result=getNegativeWords())
+
+@app.route('/_getTweets')
+def get_Tweets():
+    """ 
+        Route that returns classified tweets
+        that will be displayed in the dashboard
+    """
+    return jsonify(result=getTweets())
+
 @app.route("/_getWeatherData")
 def getWeatherData():
-    temp = str(request.args['temp'])
-    town = unicode(request.args['town'])
+    """ 
+        Route that returns the weather data that will be displayed
+        in the dashboard
+    """
+    temp    = str(request.args['temp'])
+    town    = unicode(request.args['town'])
     weather = {}
-    # print type(town)
-    todaysForecast = getTodaysWeather(town, temp)
-    hourlyForecast = getHourlyWeather(town, temp)
-    dailyForecast  = getDailyWeather(town, temp)
+    todaysForecast = data.getTodaysWeather(town, temp)
+    hourlyForecast = data.getHourlyWeather(town, temp, 13)
+    dailyForecast  = data.getDailyWeather(town, temp)
     weather["todaysForecast"] = todaysForecast
     weather["hourlyForecast"] = hourlyForecast
-    weather["dailyForecast"] = dailyForecast
-    print weather 
-    return jsonify(result=weather)
+    weather["dailyForecast"]  = dailyForecast
+    return jsonify(result = weather)
 
 @app.route('/returnTweets')
 def return_tweets():
+    """ 
+        Route that returns the twitter data in a csv file to be downloaded
+    """
     date = time.strftime("%d-%m-%Y")
     filename = "tweets_"+date+".csv"
     return send_from_directory(directory='data/tweets',filename=filename, as_attachment=True)
 
 @app.route('/returnWeather')
 def return_weather():
+    """ 
+        Route that returns the weather data in a csv file to be downloaded
+    """
     temp = str(request.args['temp'])
     town = unicode(request.args['town'])
     if town not in towns:
         town = "mayaguez"
-    print temp, town
-    getHourlyWeatherInCSV(town, temp)
+    data.getHourlyWeatherInCSV(town, temp)
     if town[0] == "0":
-        town = convertZipcodeToTown(town)
-    town = getCorrectTownName(town)
+        town = helper.convertZipcodeToTown(town)
+    town = helper.getCorrectTownName(town)
     filename = town+"_"+temp+".csv"
     print filename
     return send_from_directory(directory='data/weather',filename=filename, as_attachment=True)
 
 @app.route('/returnLoads')
 def return_loads():
+    """ 
+        Route that returns the load data in a csv file to be downloaded
+    """
     url = 'http://mis.nyiso.com/public/dss/nyiso_loads.csv'
     response = urllib2.urlopen(url)
     load_data = csv.reader(response)
     return send_file(load_data, attachment_filename='nyiso_loads.csv')
 
 if __name__ == "__main__":
+    # Starting process that streams twitter data and classifies it as positive or negative
     process = subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    # Starting server
     app.run(host='0.0.0.0')
-    app.run()
+    # Killing process of twitter streaming
     process.kill()

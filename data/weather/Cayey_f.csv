@@ -1,0 +1,13 @@
+date,description,precipitation,temperature,humidity,wind,icon
+"Mon 13, Mar 2017 6:00 PM",Partly Cloudy,0%,78 F,70%,ENE 8.58 mph,partly-cloudy-day
+"Mon 13, Mar 2017 7:00 PM",Clear,0%,74 F,75%,NE 7.63 mph,clear-night
+"Mon 13, Mar 2017 8:00 PM",Partly Cloudy,0%,73 F,78%,NE 7.33 mph,partly-cloudy-night
+"Mon 13, Mar 2017 9:00 PM",Partly Cloudy,0%,72 F,82%,NE 7.77 mph,partly-cloudy-night
+"Mon 13, Mar 2017 10:00 PM",Partly Cloudy,0%,72 F,83%,NE 8.39 mph,partly-cloudy-night
+"Mon 13, Mar 2017 11:00 PM",Mostly Cloudy,0%,72 F,82%,NE 9.58 mph,partly-cloudy-night
+"Tue 14, Mar 2017 12:00 AM",Mostly Cloudy,0%,72 F,84%,NE 9.76 mph,partly-cloudy-night
+"Tue 14, Mar 2017 1:00 AM",Mostly Cloudy,0%,72 F,84%,NE 10.03 mph,partly-cloudy-night
+"Tue 14, Mar 2017 2:00 AM",Mostly Cloudy,0%,72 F,84%,NE 10.02 mph,partly-cloudy-night
+"Tue 14, Mar 2017 3:00 AM",Mostly Cloudy,0%,73 F,86%,NE 10.09 mph,partly-cloudy-night
+"Tue 14, Mar 2017 4:00 AM",Mostly Cloudy,4%,73 F,86%,NE 10.2 mph,partly-cloudy-night
+"Tue 14, Mar 2017 5:00 AM",Partly Cloudy,1%,72 F,86%,NE 10.14 mph,partly-cloudy-night
