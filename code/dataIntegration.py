@@ -113,7 +113,7 @@ class DataForComparison:
 
 		return data
 
-if __name__ == '__main__':
-	comparator = DataForComparison()
-	comparator.addData([u"lbmp_CAPITL"])
-	print comparator.dataset
+# if __name__ == '__main__':
+# 	comparator = DataForComparison()
+# 	comparator.addData([u"lbmp_CAPITL"])
+# 	print comparator.dataset

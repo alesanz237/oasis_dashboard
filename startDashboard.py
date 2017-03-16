@@ -16,11 +16,11 @@ helper = Helper()        # Class that has helper functions for the dashboar
 
 @app.route("/")
 def init():
-    return render_template("index.html")
+    return render_template("home.html")
 
-@app.route("/dashboard")
+@app.route("/home")
 def init1():
-    return render_template("index.html")
+    return render_template("home.html")
 
 @app.route("/energy")
 def getEnergy():
@@ -141,9 +141,9 @@ def return_weather():
     if town not in towns:
         town = "mayaguez"
     data.getHourlyWeatherInCSV(town, temp)
+    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
     if town[0] == "0":
         town = helper.convertZipcodeToTown(town)
-    town = helper.getCorrectTownName(town)
     filename = town+"_"+temp+".csv"
     print filename
     return send_from_directory(directory='data/weather',filename=filename, as_attachment=True)
@@ -160,7 +160,8 @@ def return_loads():
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
-    process = subprocess.Popen('static/start/twitterStreamer.sh',shell=True)
+    process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
+
     # Starting server
     app.run(host='0.0.0.0')
     # Killing process of twitter streaming

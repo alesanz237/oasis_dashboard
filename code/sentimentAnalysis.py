@@ -87,7 +87,6 @@ def storeClassifiedTweets():
 			continue
 
 	convertTweetsToCSV()
-	# storeTweetsLenPerDate()
 
 def getPositiveWords():
 	tweets = []
@@ -216,6 +215,7 @@ def getTweetsFromRange(filename,_from,to):
 def convertTweetsToCSV():
 	""" Getting tweets from a given time frame"""
 	# Gathering positive and negative tweets
+	subprocess.Popen('code/processes/deleteTwitterData.sh',shell=True)
 	tweets = []
 	with open('data/tweets/positive.txt') as tweet:
 		for t in tweet:
@@ -261,15 +261,7 @@ def scrambled(orig):
 	return dest
 
 if __name__ == '__main__':
-	# print getCSVTweets("data/tweets/tweets_26-02-2017.csv")
-	# storeTweetsPerDate()
-	# storeClassifiedTweets()
-	# print convertTweetsToCSV()
-	# print getTweetsLen()
-	# print getPositiveTweetsFromTo(12,13)
-	print getPositiveWords()
-# 	3] "GET /_getTweetsCount HTTP/1.1" 500 -
-# 127.0.0.1 - - [15/Mar/2017 16:12:23] "GET /_getPositiveWords HTTP/1.1" 500 -
-# 127.0.0.1 - - [15/Mar/2017 16:12:23] "GET /_getNegativeWords HTTP/1.1" 500 -
+	storeClassifiedTweets()
+
 
 	

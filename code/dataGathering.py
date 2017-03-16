@@ -357,7 +357,7 @@ class DataGathering:
 		
 		if keyword[0] == "0":
 			keyword = self.helper.convertZipcodeToTown(keyword)
-		keyword = self.helper.getCorrectTownName(keyword)
+		# keyword = self.helper.getCorrectTownName(keyword)
 		if temp == 'f':
 			filename = "data/weather/"+keyword+"_f.csv"
 		else:
