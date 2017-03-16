@@ -600,7 +600,7 @@ class DataGathering:
 					y: the float value of the load
 		"""
 
-		loads_data = self.getDataForLoadComparisons()
+		loads_data   = self.getDataForLoadComparisons()
 		load_values  = [] # Array that will contain all the load data
 		load_data    = {} # Dictionary of load data
 
@@ -614,8 +614,29 @@ class DataGathering:
 
 		return load_values
 
+	def getHourlyZonalLBMP(self, zone):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly lbmp based a user selected zone.
+			Data is collected from NYISO.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the lbmp data
+		"""
+
+		lbmp_data = self.getDataForLBMPZonalComparison()
+
+		# Parsing lbmp data
+		for data in lbmp_data:
+			if data["key"] == zone:
+				return data["values"]
+
+
 if __name__ == '__main__':
 	data = DataGathering()
 	# pprint(data.getDayAheadMarketLBMPZonal())
-	pprint(data.getHourlyLoads())
+	pprint(data.getHourlyZonalLBMP("CAPITL"))
 	# pprint(data.getHourlyTemp(u"mayaguez","f"))

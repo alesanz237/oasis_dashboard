@@ -4,7 +4,7 @@ from dataGathering import DataGathering
 from helper import Helper
 
 class DataForComparison:
-	""" class that generates a graph based on user selected comparisons """
+	""" class that gets a graph based on user selected comparisons """
 
 	def __init__(self):
 		self.data    = DataGathering()
@@ -20,33 +20,33 @@ class DataForComparison:
 			Adds a dicitionary to dataset element. The amount
 			of dictionaries depends on how many selects does
 			the user want to compare. The dictionary is 
-			generated in the generateData method.
+			getd in the getData method.
 
 		"""
 
 		# Users selects 4 datasets
 		if len(selects)  == 4:
-			self.dataset.append(self.generateData(selects[0]))
-			self.dataset.append(self.generateData(selects[1]))
-			self.dataset.append(self.generateData(selects[2]))
-			self.dataset.append(self.generateData(selects[3]))
+			self.dataset.append(self.getData(selects[0]))
+			self.dataset.append(self.getData(selects[1]))
+			self.dataset.append(self.getData(selects[2]))
+			self.dataset.append(self.getData(selects[3]))
 
 		# User selects 3 datasets
 		elif len(selects) == 3:
-			self.dataset.append(self.generateData(selects[0]))
-			self.dataset.append(self.generateData(selects[1]))
-			self.dataset.append(self.generateData(selects[2]))
+			self.dataset.append(self.getData(selects[0]))
+			self.dataset.append(self.getData(selects[1]))
+			self.dataset.append(self.getData(selects[2]))
 
 		# User select 2 datasets
 		elif len(selects) == 2:
-			self.dataset.append(self.generateData(selects[0]))
-			self.dataset.append(self.generateData(selects[1]))
+			self.dataset.append(self.getData(selects[0]))
+			self.dataset.append(self.getData(selects[1]))
 
 		# User selects 1 dataset
 		else:
-			self.dataset.append(self.generateData(selects[0]))
+			self.dataset.append(self.getData(selects[0]))
 
-	def generateData(self,dataset):
+	def getData(self,dataset):
 		""" 
 			Generates dictionary based on the user selected 
 			dataset.
@@ -97,7 +97,8 @@ class DataForComparison:
 		# Getting load based marginal pricing dataset
 		elif identifier == "lbmp":
 			zone = dataset[1]
-			# data["key"] = identifier
+			data["key"] = identifier + "_" + zone
+			data["values"] = self.data.getHourlyZonalLBMP(zone)
 
 		# # Getting load dataset
 		elif identifier == "load":
@@ -110,28 +111,9 @@ class DataForComparison:
 		# # Getting negative tweets dataset
 		# elif identifier == "neg":
 
-		print data
 		return data
-
-	# def getSelectStatus(self):
-	# 	""" 
-	# 		Return select status
-	# 	"""
-	# 	print self.select1
-	# 	print self.select2
-	# 	print self.select3
-	# 	print self.select4 
-
-	def getData(self):
-		""" 
-			Getter for data attribute
-
-			Returns: 
-				dictionary of LBMP per New York zones.
-		"""
-
-		return self.data()
 
 if __name__ == '__main__':
 	comparator = DataForComparison()
-	comparator.addData([u"load"])
+	comparator.addData([u"lbmp_CAPITL"])
+	print comparator.dataset
