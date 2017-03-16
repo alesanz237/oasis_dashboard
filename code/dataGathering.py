@@ -376,6 +376,42 @@ class DataGathering:
 			except:
 				pass
 
+	def generateHourlyWeatherInCSV(self):
+		""" 
+			Function that gets hourly weather data from
+			dark sky API for the next 24 hours and stores 
+			it in a csv file. 
+
+			Returns: 
+				void: csv file with hourly forecast for the next 24 hours.
+				File name will be <town>_<c or f>.csv
+		"""
+		# conditions = self.getHourlyWeather(keyword, temp, 25)
+		
+		# if keyword[0] == "0":
+		# 	keyword = self.helper.convertZipcodeToTown(keyword)
+		# # keyword = self.helper.getCorrectTownName(keyword)
+		# if temp == 'f':
+		# 	filename = "data/weather/"+keyword+"_f.csv"
+		# else:
+		# 	filename = "data/weather/"+keyword+"_c.csv"
+		# f = csv.writer(open(filename, "wb+"))
+		# f.writerow(["date", "description", "precipitation", "temperature", "humidity", "wind", "icon"])
+		# for condition in conditions:
+		# 	temp = condition['temperature'].split(" ")[0][:-2] + " " + condition['temperature'].split(" ")[1]
+		# 	try:
+		# 		f.writerow([condition['time'],
+		# 			condition['summary'],
+		# 			condition['precipProbability'],
+		# 			temp,
+		# 			condition['humidity'],
+		# 			condition['wind'],
+		# 			condition['icon']])
+		# 	except:
+		# 		pass
+		self.getHourlyWeatherInCSV(u"mayaguez","f")
+		self.getHourlyWeatherInCSV(u"mayaguez","c")
+
 	def getHourlyPrecip(self, keyword):
 		""" 
 			Function that returns an array of dicitionaries that

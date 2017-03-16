@@ -1,0 +1,1 @@
+python code/getWeatherData.py | at 00:00

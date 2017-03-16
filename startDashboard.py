@@ -8,6 +8,8 @@ from dataGathering import DataGathering
 from helper import Helper
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
 from params import towns
+import schedule
+import time
 
 app = Flask("__OasisDashboard__")
 
@@ -138,15 +140,19 @@ def return_weather():
     """
     temp = str(request.args['temp'])
     town = unicode(request.args['town'])
-    if town not in towns:
-        town = "mayaguez"
-    data.getHourlyWeatherInCSV(town, temp)
-    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
     if town[0] == "0":
         town = helper.convertZipcodeToTown(town)
     filename = town+"_"+temp+".csv"
-    print filename
     return send_from_directory(directory='data/weather',filename=filename, as_attachment=True)
+
+def job():
+    """
+        Function that generates daily weather data for each town
+        and stores it in a csv file.
+    """
+    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
+    data.generateHourlyWeatherInCSV()
+    return
 
 @app.route('/returnLoads')
 def return_loads():
@@ -160,9 +166,16 @@ def return_loads():
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
-    process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
+    twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
 
+    
     # Starting server
     app.run(host='0.0.0.0')
-    # Killing process of twitter streaming
-    process.kill()
+
+    # Running weather data
+    schedule.every().day.at("11:00").do(job)
+    while True:
+        schedule.run_pending()
+
+    # Killing processes
+    twitter_streaming_process.kill()
