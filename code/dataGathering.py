@@ -139,7 +139,7 @@ class DataGathering:
 		outer_dict = {}
 		final_data = []
 		yesterday  = self.helper.getYesterday()
-		key   = yesterday[0] + yesterday[1] + yesterday[2] + "-loadData"
+		key   = self.helper.getYear() + self.helper.getMonth() + self.helper.getDay() + "-loadData"
 		data  = load_data[yesterday[0]][int(yesterday[1])][int(yesterday[2])]
 		dates = (['12:00 AM','1:00 AM','2:00 AM','3:00 AM','4:00 AM','5:00 AM',
 			'6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM',
@@ -175,7 +175,7 @@ class DataGathering:
 		url         = 'http://mis.nyiso.com/public/csv/damlbmp/'+today+'damlbmp_zone.csv' 
 		response    = urllib2.urlopen(url)
 		market_data = sorted(csv.reader(response), key=operator.itemgetter(1)) # Converting data to python csv
-		counter     = 1 # Counter used for determining which hour we are curretly on
+		counter     = 0 # Counter used for determining which hour we are curretly on
 		lbmpZonal   = {}
 		timestamp   = {}
 		timestamps  = []
@@ -199,7 +199,7 @@ class DataGathering:
 				if counter == 24:
 					lbmpZonal[row[1]] = timestamps
 					timestamps        = []
-					counter           = 1
+					counter           = 0
 		return lbmpZonal
 
 	def getDataForLBMPZonalComparison(self):
@@ -272,7 +272,6 @@ class DataGathering:
 		# Getting needed load data
 		yesterday = self.helper.getYesterday()
 		loads = load_data[yesterday[0]][int(yesterday[1])][int(yesterday[2])]
-		print len(loads),len(dates)
 		for i in range(0,len(loads)):
 			dates_and_loads = []
 			dates_and_loads.append(dates[i])
@@ -637,6 +636,7 @@ class DataGathering:
 
 if __name__ == '__main__':
 	data = DataGathering()
-	# pprint(data.getDayAheadMarketLBMPZonal())
-	pprint(data.getHourlyZonalLBMP("CAPITL"))
+	# pprint(data.getHourlyLoads())
+	pprint(data.getDayAheadMarketLBMPZonal())
+	# pprint(data.getHourlyZonalLBMP("CAPITL"))
 	# pprint(data.getHourlyTemp(u"mayaguez","f"))

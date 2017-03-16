@@ -8,6 +8,7 @@ from params import energy_words
 import random
 import csv
 import time
+import subprocess
 #Example positive tweets
 t_set = getTrainingSet() 
 
