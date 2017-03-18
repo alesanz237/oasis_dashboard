@@ -2,7 +2,7 @@
 #  -*- coding: utf-8 -*-
 import time
 import calendar
-from params import lat_lon_towns, town_zipcodes, darksky
+from params import lat_lon_towns, town_zipcodes, darksky, towns, load_zones
 from unidecode import unidecode
 from forecastiopy import *
 from datetime import datetime
@@ -279,5 +279,21 @@ class Helper():
 			modded_hour = 12
 		return date + " " + str(modded_hour) + ":" + minutes + pm_or_am
 
+	def getTowns(self):
+		"""
+			Function that returns the town names for Puerto Rico
+		"""
+		pr_towns = [] # Array that will contain the town names
+		for town in towns:
+			pr_towns.append(self.getCorrectTownName(town))
+		return pr_towns
+
+	def getZones(self):
+		"""
+			Function that returns the zones for the NYISO
+		"""
+		return load_zones
+
 if __name__ == '__main__':
-	Helper().getDateInEpoch("03/12/2017 00:00")
+	# Helper().getDateInEpoch("03/12/2017 00:00")
+	print Helper().getTowns()

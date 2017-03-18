@@ -2,17 +2,18 @@
 #  -*- coding: utf-8 -*-
 from dataGathering import DataGathering
 from helper import Helper
+from params import towns, load_zones
 
-class DataForComparison:
+class DataIntegration:
 	""" class that gets a graph based on user selected comparisons """
 
 	def __init__(self):
-		self.data    = DataGathering()
-		self.helper  = Helper()
-		# self.select1 = False
-		# self.select2 = False 
-		# self.select3 = False
-		# self.select4 = False
+		self.data           = DataGathering()
+		self.helper         = Helper()
+		self.select_values  = {}
+		self.select_values2 = {}
+		self.select_values3 = {}
+		self.select_values4 = {}
 		self.dataset = []
 
 	def addData(self,selects):
@@ -113,7 +114,96 @@ class DataForComparison:
 
 		return data
 
+	def setSelectValues(self):
+		""" Sets dictionary of select values """
+		self.select_values = ({"":" ",
+							    "pos":"Positive Tweets",
+							    "neg":"Negative Tweets",
+							    "precip":"Precipitation data",
+							    "temp":"Temperature data",
+							    "humidity":"Humidity data",
+							    "wind":"Wind data",
+							    "load":"Load data",
+							    "lbmp":"Load based marginal pricing data"})
+		self.select_values2 = ({"":" ",
+							    "pos":"Positive Tweets",
+							    "neg":"Negative Tweets",
+							    "precip":"Precipitation data",
+							    "temp":"Temperature data",
+							    "humidity":"Humidity data",
+							    "wind":"Wind data",
+							    "load":"Load data",
+							    "lbmp":"Load based marginal pricing data"})
+		self.select_values3 = ({"":" ",
+							    "pos":"Positive Tweets",
+							    "neg":"Negative Tweets",
+							    "precip":"Precipitation data",
+							    "temp":"Temperature data",
+							    "humidity":"Humidity data",
+							    "wind":"Wind data",
+							    "load":"Load data",
+							    "lbmp":"Load based marginal pricing data"})
+		self.select_values4 = ({"":" ",
+							    "pos":"Positive Tweets",
+							    "neg":"Negative Tweets",
+							    "precip":"Precipitation data",
+							    "temp":"Temperature data",
+							    "humidity":"Humidity data",
+							    "wind":"Wind data",
+							    "load":"Load data",
+							    "lbmp":"Load based marginal pricing data"})
+
+	def getSelectValues(self, select):
+		""" Returns dictionary of select values """
+		select_values = {}
+		if int(select) == 0:
+			select_values = self.select_values
+		elif int(select) == 1:
+			select_values = self.select_values2
+		elif int(select) == 2:
+			select_values = self.select_values3
+		elif int(select) == 3:
+			select_values = self.select_values4
+		return select_values
+
+	def updateSelectValues(self,select,selected_value):
+		""" 
+			Function that removes a user selected value
+			from the select_values dictionary
+		"""
+
+		if int(select) == 1:
+			del self.select_values2[selected_value]
+			del self.select_values3[selected_value]
+			del self.select_values4[selected_value]
+
+
+		elif int(select) == 2:
+			del self.select_values3[selected_value]
+			del self.select_values4[selected_value]
+
+		elif int(select) == 3:
+			del self.select_values4[selected_value]
+		
+	def getTowns(self):
+		"""
+			Function that returns the town of Puerto Rico
+		"""
+		return towns
+
+	def getLoadZones(self):
+		"""
+			Function that retunrs NY load zones
+		"""
+		return load_zones
+
 # if __name__ == '__main__':
-# 	comparator = DataForComparison()
+	# comparator = DataIntegration()
+	# comparator.updateSelectValues("pos")
+	# print comparator.getTowns()
+	# comparator.setSelectValues()
+	# comparator.updateSelectValues(1,"load")
+	# print comparator.getSelectValues(0)
+	# print comparator.select_values
 # 	comparator.addData([u"lbmp_CAPITL"])
 # 	print comparator.dataset

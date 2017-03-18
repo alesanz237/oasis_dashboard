@@ -43,22 +43,6 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
-                <img src="./static/img/avatar.jpg" style="    border-radius: 50%; width: 50px; margin-left: 900px;">
-                <button class="btn dropdown-toggle" style="background:none"; type="button" data-toggle="dropdown">
-                    <span class="caret" style="color:white;"></span>
-                </button>    
-                <ul class="dropdown-menu" style="left: 1090px;" aria-labelledby="dropdownMenuDivider">
-                    <li>
-                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">View My Profile</button>
-                    </li>
-                    <li>
-                        <button data-toggle="modal" data-target="#customizeDashboard" style="background:none; border:none">Customize Dashboard</button>
-                    </li>
-                    <li role="separator" class="divider">Test</li>
-                    <li>
-                        <button data-toggle="modal" data-target="#myModal" style="background:none; border:none">Return to Oasis</button>
-                    </li>
-                </ul>
             </div>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -75,9 +59,6 @@
                     <li>
                         <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
                     </li>
-                    <!-- <li>
-                        <a href="\map"><i class="fa fa-fw fa-globe"></i> Town Specific Data</a>
-                    </li> -->
                     <li >
                         <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
                     </li>
@@ -95,19 +76,12 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">
                             Home
-                            <button data-toggle="modal" data-target="#AddGraphHomeDashboard" style="background:none; border:none; margin-left: 605px;">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                <small style="font-size: 40%;">Add graph</small>
-                            </button> 
-                            <button data-toggle="modal" data-target="#EditGraphHomeDashboard" style="color: black; border:none; background:none; margin-left: 35px;">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <small style="font-size: 40%;">Edit graphs</small>
-                            </button> 
+                            <button data-toggle="modal" data-target="#AddGraphHomeDashboard" style="background:none; border:none; margin-left: 730px; float: right;">
+                                <small style="">Add graph</small>
+                            </button>
                         </h1>
                     </div>
                 </div>
-                <!-- /.row -->
-
 
                 <!-- Customize Dashboard Modal -->
                 <div class="modal fade" id="customizeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -126,7 +100,6 @@
                                     <li><a data-toggle="pill" href="#energy">Energy data</a></li>
                                     <li><a data-toggle="pill" href="#social">Social data</a></li>
                                     <li><a data-toggle="pill" href="#weather">Weather data</a></li>
-                                    <li><a data-toggle="pill" href="#town">Data by town</a></li>
                                     <li><a data-toggle="pill" href="#market">Market data</a></li>
                                   </ul>
                                   
@@ -180,17 +153,238 @@
                                     <h3 class="modal-title">Add Graph to Home Dashboard</h3>
                             </div>
                             <div class="modal-body">
-                                
-                                <p>This should show a list of datasets and graphs available for this dashboard</p>
+                                Dataset 1:
+                                <select id="select_1">
+                                {% for value, description in select_values.items() %}
+                                    <option value={{value}}>{{description}}</option>
+                                {% endfor %}
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_1_town_or_zone"></div>
+                                <div id="select_1_deg"></div>
+
+                                Dataset 2:
+                                <select id="select_2">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_2_town_or_zone"></div>
+                                <div id="select_2_deg"></div>
+
+                                Dateset 3:
+                                <select id="select_3">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_3_town_or_zone"></div>
+                                <div id="select_3_deg"></div>
+
+                                Dataset 4:
+                                <select id="select_4">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_4_town_or_zone"></div>
+                                <div id="select_4_deg"></div>
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Save Settings</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Generate graph</button>
+                                <button type="button" class="btn btn-danger" onclick="resetSelectValues()" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script type="text/javascript">
+
+                    // Generating select2 values if select1 changes
+                    $('#select_1').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_1').val(),
+                              select: 1
+                            }, 
+                            function (select_values) {
+                                if ($('#select_1').val()=== "precip"   ||
+                                    $('#select_1').val() === "humidity" ||
+                                    $('#select_1').val() === "wind"     ){
+                                    getTowns(1);
+                                }
+                                else if ($('#select_1').val() === "temp"){
+                                    getTowns(1);
+                                    getDeg(1);
+                                }
+                                else if ($('#select_1').val() === "lbmp"){
+                                    getZones(1);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_2').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+
+                    // Generating select3 values if select2 changes
+                    $('#select_2').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_2').val(),
+                              select: 2
+                            }, 
+                            function (select_values) {
+                                if ($('#select_2').val()=== "precip"   ||
+                                    $('#select_2').val() === "humidity" ||
+                                    $('#select_2').val() === "wind"     ){
+                                    getTowns(2);
+                                }
+                                else if ($('#select_2').val() === "temp"){
+                                    getTowns(2);
+                                    getDeg(2);
+                                }
+                                else if ($('#select_2').val() === "lbmp"){
+                                    getZones(2);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_3').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+                    // Generating select4 values if select3 changes
+                    $('#select_3').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_3').val(),
+                              select: 3
+                            }, 
+                            function (select_values) {
+                                if ($('#select_3').val()=== "precip"   ||
+                                    $('#select_3').val() === "humidity" ||
+                                    $('#select_3').val() === "wind"     ){
+                                    getTowns(3);
+                                }
+                                else if ($('#select_3').val() === "temp"){
+                                    getTowns(3);
+                                    getDeg(3);
+                                }
+                                else if ($('#select_3').val() === "lbmp"){
+                                    getZones(3);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_4').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+                    $('#select_4').change(function () { 
+                        if ($('#select_4').val()=== "precip"   ||
+                            $('#select_4').val() === "humidity" ||
+                            $('#select_4').val() === "wind"     ){
+                            getTowns(4);
+                        }
+                        else if ($('#select_4').val() === "temp"){
+                            getTowns(4);
+                            getDeg(4);
+                        }
+                        else if ($('#select_4').val() === "lbmp"){
+                            getZones(4);
+                        }
+                    });
+
+                    function resetSelectValues(){
+                        $.get('/_resetSelectValues', 
+                            function (select_values) {
+                                document.getElementById("select_1").options.length = 0;
+                                document.getElementById("select_2").options.length = 0;
+                                document.getElementById("select_3").options.length = 0;
+                                document.getElementById("select_4").options.length = 0;
+                                $("#select_1_town_or_zone").empty()
+                                $("#select_2_town_or_zone").empty()
+                                $("#select_3_town_or_zone").empty()
+                                $("#select_4_town_or_zone").empty()
+                                $("#select_1_deg").empty()
+                                $("#select_2_deg").empty()
+                                $("#select_3_deg").empty()
+                                $("#select_4_deg").empty()
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    console.log("Entre")
+                                    $('#select_1').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    }
+
+                    function getTowns(select_index){
+                        $.get('/_getTowns',
+                            function (towns) {
+                                towns = towns.result;
+                                $('#select_'+select_index+'_town_or_zone').text("Town: ").append($('<select>', { id: "select_town_"+select_index})).append("<br>").append("<br>");
+                                $('#select_town_'+select_index).css("margin-left","28px");
+                                for (var town in towns) {
+                                    $('#select_town_'+select_index).append($('<option>', { 
+                                        value: towns[town],
+                                        text : towns[town]
+                                    }));
+                                }
+                            }
+                        );
+                    }
+
+                    function getDeg(select_index){
+                        console.log(select_index)
+                        $('#select_'+select_index+'_deg').text("Degree: ").append($('<select>', { id: "select_deg_"+select_index})).append("<br>").append("<br>");
+                        $('#select_deg_'+select_index).css("margin-left","18px");
+                        $('#select_deg_'+select_index).append($('<option>', {
+                            value: "c",
+                            text: "C"
+                        }));
+                        $('#select_deg_'+select_index).append($('<option>', {
+                            value: "f",
+                            text: "F"
+                        }));
+                    }
+
+                    function getZones(select_index){
+                        $.get('/_getZones',
+                            function (zones) {
+                                zones = zones.result;
+                                console.log('#select_'+select_index+'_town_or_zone')
+                                $('#select_'+select_index+'_town_or_zone').text("Zone: ").append($('<select>', { id: "select_zone_"+select_index})).append("<br>").append("<br>");
+                                $('#select_zone_'+select_index).css("margin-left","28px");
+                                for (var zone in zones) {
+                                    console.log(zones[zone])
+                                    $('#select_zone_'+select_index).append($('<option>', { 
+                                        value: zones[zone],
+                                        text : zones[zone]
+                                    }));
+                                }
+                            }
+                        );
+                    }
+                    
+                </script>
 
                 <!-- Edit Dashboard Modal -->
                 <div class="modal fade" id="EditGraphHomeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -206,7 +400,7 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Save Settings</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Generate Graph</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
                         </div>

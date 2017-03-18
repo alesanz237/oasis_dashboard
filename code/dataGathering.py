@@ -386,31 +386,9 @@ class DataGathering:
 				void: csv file with hourly forecast for the next 24 hours.
 				File name will be <town>_<c or f>.csv
 		"""
-		# conditions = self.getHourlyWeather(keyword, temp, 25)
-		
-		# if keyword[0] == "0":
-		# 	keyword = self.helper.convertZipcodeToTown(keyword)
-		# # keyword = self.helper.getCorrectTownName(keyword)
-		# if temp == 'f':
-		# 	filename = "data/weather/"+keyword+"_f.csv"
-		# else:
-		# 	filename = "data/weather/"+keyword+"_c.csv"
-		# f = csv.writer(open(filename, "wb+"))
-		# f.writerow(["date", "description", "precipitation", "temperature", "humidity", "wind", "icon"])
-		# for condition in conditions:
-		# 	temp = condition['temperature'].split(" ")[0][:-2] + " " + condition['temperature'].split(" ")[1]
-		# 	try:
-		# 		f.writerow([condition['time'],
-		# 			condition['summary'],
-		# 			condition['precipProbability'],
-		# 			temp,
-		# 			condition['humidity'],
-		# 			condition['wind'],
-		# 			condition['icon']])
-		# 	except:
-		# 		pass
-		self.getHourlyWeatherInCSV(u"mayaguez","f")
-		self.getHourlyWeatherInCSV(u"mayaguez","c")
+		for town in towns:
+			self.getHourlyWeatherInCSV(unicode(town),"f")
+			self.getHourlyWeatherInCSV(unicode(town),"c")
 
 	def getHourlyPrecip(self, keyword):
 		""" 

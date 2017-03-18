@@ -229,7 +229,7 @@ def convertTweetsToCSV():
 
 	# Converting positive and negative tweets to csv
 	date = time.strftime("%d-%m-%Y")
-	filename = "data/tweets/tweets_"+date+".csv"
+	filename = "data/tweets/tweets.csv"
 	f = csv.writer(open(filename, "wb+"))
 	f.writerow(["created_at","location","text","polarity"])
 	for tweet in tweets:

@@ -5,24 +5,26 @@ from flask import Flask, jsonify, render_template, request, send_from_directory
 import os.path, sys, subprocess, time, csv
 sys.path.insert(0, "./code")
 from dataGathering import DataGathering
+from dataIntegration import DataIntegration
 from helper import Helper
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
-from params import towns
 import schedule
-import time
 
 app = Flask("__OasisDashboard__")
 
-data   = DataGathering() # Class that returns data that will be displayed in the dashboard
-helper = Helper()        # Class that has helper functions for the dashboar
+data             = DataGathering()   # Class that returns data that will be displayed in the dashboard
+helper           = Helper()          # Class that has helper functions for the dashboar
+data_integration = DataIntegration() # Class that returns integrated data for home section
 
 @app.route("/")
 def init():
-    return render_template("home.html")
+    data_integration.setSelectValues()
+    return render_template("home.html",select_values=data_integration.getSelectValues(0))
 
 @app.route("/home")
 def init1():
-    return render_template("home.html")
+    data_integration.setSelectValues()
+    return render_template("home.html",select_values=data_integration.getSelectValues(0))
 
 @app.route("/energy")
 def getEnergy():
@@ -124,14 +126,48 @@ def getWeatherData():
     weather["dailyForecast"]  = dailyForecast
     return jsonify(result = weather)
 
+@app.route("/_updateSelectValues")
+def updateSelectValues():
+    """ 
+        Route that updates the select values and
+        returns the select values for the home section
+    """
+    selected_value = str(request.args['selected_value'])
+    select         = request.args['select']
+    data_integration.updateSelectValues(select, selected_value)
+    return jsonify(result = data_integration.getSelectValues(select))
+
+@app.route("/_getTowns")
+def getTowns():
+    """ 
+        Route that updates the select values and
+        returns the select values for the home section
+    """    
+    return jsonify(result = helper.getTowns())
+
+@app.route("/_getZones")
+def getZones():
+    """ 
+        Route that updates the select values and
+        returns the select values for the home section
+    """    
+    return jsonify(result = helper.getZones())
+
+@app.route("/_resetSelectValues")
+def resetSelectValues():
+    """ 
+        Route that updates the select values and
+        returns the select values for the home section
+    """
+    data_integration.setSelectValues()
+    return jsonify(result = data_integration.getSelectValues(0))
+
 @app.route('/returnTweets')
 def return_tweets():
     """ 
         Route that returns the twitter data in a csv file to be downloaded
     """
-    date = time.strftime("%d-%m-%Y")
-    filename = "tweets_"+date+".csv"
-    return send_from_directory(directory='data/tweets',filename=filename, as_attachment=True)
+    return send_from_directory(directory='data/tweets',filename="tweets.csv", as_attachment=True)
 
 @app.route('/returnWeather')
 def return_weather():
@@ -145,15 +181,6 @@ def return_weather():
     filename = town+"_"+temp+".csv"
     return send_from_directory(directory='data/weather',filename=filename, as_attachment=True)
 
-def job():
-    """
-        Function that generates daily weather data for each town
-        and stores it in a csv file.
-    """
-    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
-    data.generateHourlyWeatherInCSV()
-    return
-
 @app.route('/returnLoads')
 def return_loads():
     """ 
@@ -164,18 +191,28 @@ def return_loads():
     load_data = csv.reader(response)
     return send_file(load_data, attachment_filename='nyiso_loads.csv')
 
+def job():
+    """
+        Function that generates daily weather data for each town
+        and stores it in a csv file.
+    """
+    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
+    data.generateHourlyWeatherInCSV()
+    return
+
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
     twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
-
     
     # Starting server
     app.run(host='0.0.0.0')
 
+    # Killing processes
+    twitter_streaming_process.kill()
+
     # Running weather data
-    schedule.every().day.at("11:00").do(job)
+    schedule.every().day.at("23:00").do(job)
     while True:
         schedule.run_pending()
 
-    # Killing processes
-    twitter_streaming_process.kill()
+    
