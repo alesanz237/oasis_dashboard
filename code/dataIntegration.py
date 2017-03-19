@@ -72,8 +72,12 @@ class DataIntegration:
 
 		# Getting precipitation dataset
 		if identifier == "precip":
+
 			town           = dataset[1]
-			data["key"]    = identifier + "_" + self.helper.getCoords(town)[2]
+			# print identifier+"_"+town
+			# print self.data.getHourlyPrecip(town)
+			data["key"]    = identifier+"_"+town
+			# print data["key"]
 			data["values"] = self.data.getHourlyPrecip(town)
 			
 		# Getting humidity dataset
@@ -152,6 +156,7 @@ class DataIntegration:
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
+		self.dataset = []
 
 	def getSelectValues(self, select):
 		""" Returns dictionary of select values """
@@ -197,13 +202,18 @@ class DataIntegration:
 		"""
 		return load_zones
 
-# if __name__ == '__main__':
-	# comparator = DataIntegration()
+	def getDataset(self):
+		"""
+			Return dataset array for visualization
+		"""
+		return self.dataset
+if __name__ == '__main__':
+	comparator = DataIntegration()
 	# comparator.updateSelectValues("pos")
 	# print comparator.getTowns()
 	# comparator.setSelectValues()
 	# comparator.updateSelectValues(1,"load")
 	# print comparator.getSelectValues(0)
 	# print comparator.select_values
-# 	comparator.addData([u"lbmp_CAPITL"])
-# 	print comparator.dataset
+	comparator.addData([u'precip_mayaguez'])
+	print comparator.dataset

@@ -342,6 +342,55 @@ class DataGathering:
 			return 'No hourly data'
 		return conditions
 
+	def getHourlyWeatherFromCSV(self,town,deg,key):
+		"""
+			Function that returns weather data that is read from a csv file.
+			The csv file is accessed based on the town, deg and temperature data
+			that the user wants.
+
+			Returns:
+				Array of dicitionaries with weather data and time of the weather 
+				data.
+		"""
+
+		# Variables
+		file         = "data/weather/"+town+"_"+deg+".csv"
+		csv_data     = []
+		weather_data = []
+		weather      = {}
+
+		# Reading csv file and storing data in file
+		with open(file) as csvfile:
+			reader = csv.DictReader(csvfile)
+			for row in reader:
+				csv_data.append(row) 
+		# Getting data that is needed for visualization
+		for data in csv_data:
+			# Parsing date
+			hour = int(data["date"].split(" ")[4].split(":")[0])
+			pm_or_am = data["date"].split(" ")[5]
+			day = data["date"].split(",")[0]
+			if hour == 12 and pm_or_am == "AM":
+				data["date"] = "".join(data["date"].split(" ")[:-2]) + " 00:00"
+			elif hour < 10 and pm_or_am == "AM":
+				data["date"] = "".join(data["date"].split(" ")[:-2]) + " 0" + str(hour) + ":00"
+			elif hour >= 10 and pm_or_am == "AM":
+				data["date"] = "".join(data["date"].split(" ")[:-2]) + " " + str(hour) + ":00"
+			if pm_or_am == "PM":
+				if hour == 12: 
+					data["date"] = "".join(data["date"].split(" ")[:-2]) + " " + str(hour) + ":00"
+				else:
+					hour +=12
+					data["date"] = "".join(data["date"].split(" ")[:-2]) + " " + str(hour) + ":00"
+			weather["date"] = data["date"]
+
+			# Appending weather data
+			weather[key]    = data[key]
+			weather_data.append(weather)
+			weather = {}
+		return weather_data
+
+
 	def getHourlyWeatherInCSV(self, keyword, temp):
 		""" 
 			Function that gets hourly weather data from
@@ -401,15 +450,14 @@ class DataGathering:
 					x: the time in epoch where it occured
 					y: the float value of the precipitation
 		"""
-
-		weather_data  = self.getHourlyWeather(keyword, "f", 25)
+		weather_data  = self.getHourlyWeatherFromCSV(keyword, "f", "precipitation")
 		precip_values = [] # Array that will contain all the precipitation data
 		precip_data   = {} # Dictionary of precipitation data
 
 		# Getting precipiation data
 		for data in weather_data:
-			precip_data["x"] = self.helper.getDateInEpoch(data["time"])
-			precip_data["y"] = float(data["precipProbability"][:-1])/100
+			precip_data["x"] = self.helper.getDateInEpoch(data["date"])
+			precip_data["y"] = float(data["precipitation"][:-1])/100
 			precip_values.append(precip_data)
 			precip_data = {}
 
@@ -427,13 +475,13 @@ class DataGathering:
 					y: the float value of the humidity
 		"""
 
-		weather_data    = self.getHourlyWeather(keyword, "f", 25)
+		weather_data    = self.getHourlyWeatherFromCSV(keyword, "f", "humidity")
 		humidity_values = [] # Array that will contain all the humidity data
 		humidity_data   = {} # Dictionary of humidity data
 
 		# Getting humidity data
 		for data in weather_data:
-			humidity_data["x"] = self.helper.getDateInEpoch(data["time"])
+			humidity_data["x"] = self.helper.getDateInEpoch(data["date"])
 			humidity_data["y"] = float(data["humidity"][:-1])/100
 			humidity_values.append(humidity_data)
 			humidity_data = {}
@@ -452,13 +500,13 @@ class DataGathering:
 					y: the float value of the wind
 		"""
 
-		weather_data = self.getHourlyWeather(keyword, "f", 25)
+		weather_data = self.getHourlyWeatherFromCSV(keyword, "f", "wind")
 		wind_values  = [] # Array that will contain all the wind data
 		wind_data    = {} # Dictionary of wind data
 
 		# Getting humidity data
 		for data in weather_data:
-			wind_data["x"] = self.helper.getDateInEpoch(data["time"])
+			wind_data["x"] = self.helper.getDateInEpoch(data["date"])
 			wind_data["y"] = float(data["wind"].split(" ")[1])
 			wind_values.append(wind_data)
 			wind_data = {}
@@ -477,13 +525,13 @@ class DataGathering:
 					y: the float value of the temperature in C or F
 		"""
 
-		weather_data = self.getHourlyWeather(keyword, deg, 25)
+		weather_data = self.getHourlyWeatherFromCSV(keyword, deg, "temperature")
 		temp_values  = [] # Array that will contain all the temperature data
 		temp_data    = {} # Dictionary of temperature data
 
 		# Getting temperature data
 		for data in weather_data:
-			temp_data["x"] = self.helper.getDateInEpoch(data["time"])
+			temp_data["x"] = self.helper.getDateInEpoch(data["date"])
 			temp_data["y"] = float(data["temperature"].split("°")[0])
 			temp_values.append(temp_data)
 			temp_data      = {}
@@ -616,10 +664,27 @@ class DataGathering:
 		loads_data   = self.getDataForLoadComparisons()
 		load_values  = [] # Array that will contain all the load data
 		load_data    = {} # Dictionary of load data
+		hour         = 0  # Counter that determines the 24 hours in a day
 
 		# Parsing load data
-		today = self.helper.getYear() + self.helper.getMonth() + self.helper.getDay()
-		for data in loads_data[0]['values']:
+		today = self.helper.getMonth() + "/" + self.helper.getDay() + "/" + self.helper.getYear()
+		for data in loads_data[0]['values']:			
+			if data["label"] == "12:00 AM":
+				data["label"] = " 00:00"
+			elif data["label"].split(" ")[1] == "AM":
+
+				hour = int(data["label"].split(":")[0])
+				if hour < 10:
+					data["label"] = " 0" + str(hour) + ":00"
+				else:
+					data["label"] = str(hour) + ":00"
+			elif data["label"].split(" ")[1] == "PM":
+				if data["label"] == "12:00 PM":
+					data["label"] = " 12:00"
+				else:
+					hour = int(data["label"].split(":")[0])
+					hour += 12
+					data["label"] = " " + str(hour) + ":00"
 			load_data["x"] = self.helper.getDateInEpoch(today + " " + data["label"])
 			load_data["y"] = float(data["value"])
 			load_values.append(load_data)
@@ -648,9 +713,9 @@ class DataGathering:
 				return data["values"]
 
 
-if __name__ == '__main__':
-	data = DataGathering()
+# if __name__ == '__main__':
+	# data = DataGathering()
+	# pprint(data.getHourlyWeather(u"mayaguez","f",13))
 	# pprint(data.getHourlyLoads())
-	pprint(data.getDayAheadMarketLBMPZonal())
 	# pprint(data.getHourlyZonalLBMP("CAPITL"))
-	# pprint(data.getHourlyTemp(u"mayaguez","f"))
+	# pprint(data.getHourlyPrecip(u"mayaguez"))

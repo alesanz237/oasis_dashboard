@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # energy_related_keywords
-towns               = (["adjuntas","aguada","aguadilla","aguas buenas","aibonito","Anasco","arecibo","arroyo",
+towns               = (["adjuntas","aguada","aguadilla","aguas buenas","aibonito","anasco","arecibo","arroyo",
 						"barceloneta","barranquitas","bayamon","cabo rojo","caguas","camuy","canovanas","carolina",
 						"catano","cayey","ceiba","ciales","cidra","coamo","comerio","corozal","culebra","dorado","fajardo",
 						"florida","guanica","guayama","guayanilla","guaynabo","gurabo","hatillo","hormigueros","humacao",

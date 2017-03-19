@@ -83,12 +83,14 @@ class Helper():
 
 	def getDateInEpoch(self, timestamp):
 		""" Returns the current time in epoch """
+		# print timestamp
 		if "/" in timestamp:
+			# print "entre al if"
 			return calendar.timegm(time.strptime(timestamp,'%m/%d/%Y %H:%M'))
 		elif "," in timestamp:
-			return calendar.timegm(time.strptime(timestamp,'%a %d, %b %Y %H:%M %p'))
-		else:
-			return calendar.timegm(time.strptime(timestamp,'%Y%m%d %H:%M %p'))
+			# print "entre al else"
+			return calendar.timegm(time.strptime(timestamp,'%a%d,%b%Y %H:%M'))
+
 
 	def getLatLonByTown(self, town_name):
 		""" 
@@ -283,9 +285,9 @@ class Helper():
 		"""
 			Function that returns the town names for Puerto Rico
 		"""
-		pr_towns = [] # Array that will contain the town names
+		pr_towns = {} # Array that will contain the town names
 		for town in towns:
-			pr_towns.append(self.getCorrectTownName(town))
+			pr_towns[town] = self.getCorrectTownName(town)
 		return pr_towns
 
 	def getZones(self):

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,12 +22,18 @@
 
     <!-- Custom Fonts -->
     <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="../static/js/skycons.js"></script>
 
     <script src="../static/js/d3.js"></script>
     <script src="../static/js/klass.js"></script>
     <script src="../static/js/atlaspr.js"></script>
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
     <script src="../static/js/jquery.js"></script>
+
 </head>
+
 
 <body>
 
@@ -194,7 +201,7 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Generate graph</button>
+                                <button type="button" class="btn btn-success" onclick="generateGraph()" data-dismiss="modal">Generate graph</button>
                                 <button type="button" class="btn btn-danger" onclick="resetSelectValues()" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -210,7 +217,7 @@
                               select: 1
                             }, 
                             function (select_values) {
-                                if ($('#select_1').val()=== "precip"   ||
+                                if ($('#select_1').val() === "precip"   ||
                                     $('#select_1').val() === "humidity" ||
                                     $('#select_1').val() === "wind"     ){
                                     getTowns(1);
@@ -241,7 +248,7 @@
                               select: 2
                             }, 
                             function (select_values) {
-                                if ($('#select_2').val()=== "precip"   ||
+                                if ($('#select_2').val() === "precip"   ||
                                     $('#select_2').val() === "humidity" ||
                                     $('#select_2').val() === "wind"     ){
                                     getTowns(2);
@@ -271,7 +278,7 @@
                               select: 3
                             }, 
                             function (select_values) {
-                                if ($('#select_3').val()=== "precip"   ||
+                                if ($('#select_3').val() === "precip"   ||
                                     $('#select_3').val() === "humidity" ||
                                     $('#select_3').val() === "wind"     ){
                                     getTowns(3);
@@ -295,7 +302,7 @@
                     });
 
                     $('#select_4').change(function () { 
-                        if ($('#select_4').val()=== "precip"   ||
+                        if ($('#select_4').val() === "precip"   ||
                             $('#select_4').val() === "humidity" ||
                             $('#select_4').val() === "wind"     ){
                             getTowns(4);
@@ -326,7 +333,6 @@
                                 $("#select_4_deg").empty()
                                 s_values = select_values.result;
                                 for (var key in s_values) {
-                                    console.log("Entre")
                                     $('#select_1').append($('<option>', { 
                                         value: key,
                                         text : s_values[key] 
@@ -344,7 +350,7 @@
                                 $('#select_town_'+select_index).css("margin-left","28px");
                                 for (var town in towns) {
                                     $('#select_town_'+select_index).append($('<option>', { 
-                                        value: towns[town],
+                                        value: town,
                                         text : towns[town]
                                     }));
                                 }
@@ -374,7 +380,6 @@
                                 $('#select_'+select_index+'_town_or_zone').text("Zone: ").append($('<select>', { id: "select_zone_"+select_index})).append("<br>").append("<br>");
                                 $('#select_zone_'+select_index).css("margin-left","28px");
                                 for (var zone in zones) {
-                                    console.log(zones[zone])
                                     $('#select_zone_'+select_index).append($('<option>', { 
                                         value: zones[zone],
                                         text : zones[zone]
@@ -383,6 +388,121 @@
                             }
                         );
                     }
+
+                    function generateGraph(){
+                        selected_values = [$('#select_1').val(),$('#select_2').val(),$('#select_3').val(),$('#select_4').val()];
+                        datasets = []
+                        var values = {}
+
+                        // Getting index of values
+                        var precip_index   = selected_values.indexOf("precip");
+                        var humidity_index = selected_values.indexOf("humidity");
+                        var wind_index     = selected_values.indexOf("wind");
+                        var temp_index     = selected_values.indexOf("temp");
+                        var load_index     = selected_values.indexOf("load");
+                        var lbmp_index     = selected_values.indexOf("lbmp");
+                        var pos_index      = selected_values.indexOf("pos");
+                        var neg_index      = selected_values.indexOf("neg");
+
+                        if (precip_index > -1){
+                            precip_index +=1
+                            var town = $('#select_town_'+precip_index).val();
+                            datasets.push("precip_"+town);
+                        }
+                        if (humidity_index > -1){
+                            humidity_index +=1
+                            var town = $('#select_town_'+humidity_index).val();
+                            datasets.push("humidity_"+town);
+                        }
+                        if (wind_index > -1){
+                            wind_index +=1
+                            var wind = $('#select_town_'+wind_index).val();
+                            datasets.push("wind_"+town);
+                        }
+                        if (temp_index > -1){
+                            temp_index +=1
+                            var town = $('#select_town_'+temp_index).val();
+                            var deg  = $('#select_deg_'+temp_index).val();
+                            datasets.push("temp_"+town+"_"+deg);
+                        }
+                        if (lbmp_index > -1){
+                            lbmp_index +=1
+                            var zone = $('#select_zone_'+lbmp_index).val();
+                            datasets.push("lbmp_"+zone);
+                        }
+                        if (load_index > -1){
+                            datasets.push("load");
+                        }
+                        if (pos_index > -1){
+                            datasets.push("pos");
+                        }
+                        if (neg_index > -1){
+                            datasets.push("neg");
+                        }
+                        console.log(datasets);
+                        $.get('/_getIntegrationDataset',{
+                            data: datasets
+                            },
+                            function (integration_data) {
+                                i_data = integration_data.result;
+                                console.log(i_data);
+                                nv.addGraph(function() {
+                                    chart = nv.models.lineChart()
+                                        .options({
+                                            duration: 300,
+                                            useInteractiveGuideline: true
+                                        })
+                                        .width(965)
+                                        .height(500)
+                                    ;
+                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+                                    chart.xAxis
+                                        .axisLabel("Time (Hour)")
+                                        .tickFormat(function(d){
+                                            var myDate = new Date(d *1000).toGMTString();
+                                            myDate = myDate.split(" ")[4];
+                                            hour = parseInt(myDate.split(":")[0]);
+                                            minute = parseInt(myDate.split(":")[1])
+                                            var pm_or_am = " AM";
+                                            if (hour >= 12){
+                                                hour = hour % 12;
+                                                pm_or_am = " PM";
+                                            }
+                                            if (hour == 0)
+                                                hour = 12
+                                            if (hour < 10)
+                                                hour = "0" + String(hour);
+                                            if (minute < 10)
+                                                minute = "0" + String(minute);
+                                            hour = String(hour) + ":" + String(minute) + pm_or_am
+                                            return (hour);
+                                        })
+                                        .staggerLabels(true)
+                                    ;
+
+                                    chart.yAxis
+                                        .axisLabel('LBMP ($/MWHr)')
+                                        .tickFormat(function(d) {
+                                            if (d == null) {
+                                                return 'N/A';
+                                            }
+                                            return d3.format(',.2f')(d);
+                                        })
+                                    ;
+                                    d3.select('#chart0 svg')
+                                        .datum(i_data)
+                                        .call(chart);
+                                    nv.utils.windowResize(chart.update);
+                                    return chart;
+                                });
+                            }
+                        );
+                        resetSelectValues()
+                    }
+
+
+
+
                     
                 </script>
 
@@ -412,59 +532,20 @@
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-cloud"></i> Temperature throught the day in Mayagüez
+                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison Example
                                  <button data-toggle="modal" data-target="#EditGraphHomeDashboard" style="color: white; border:none; background:none; float: right;">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </h3>
                             </div>
                             <div class="panel-body">
+                                <div id="chart0">
+                                    <svg style="width:975px;height: 550px;"></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
-
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="panel panel-green">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-twitter"></i> Twitter Sentiment Analysis
-                                    <button data-toggle="modal" data-target="#EditGraphHomeDashboard" style="color: white; border:none; background:none; float: right;">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i> 
-                                </h3>
-                                
-                            </button> 
-                            </div>
-                            <div class="panel-body">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-area-chart fa-fw"></i> 
-                                    Energy Generation (Natural Year) in millions of kilowatts per hour (mkWh)
-                                <button data-toggle="modal" data-target="#EditGraphHomeDashboard" style="color: white; border:none; background:none; float: right;">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-area-chart"></div>
-                            </div>
-                            <!-- <div class="text-right">
-                                <a href="\energy">View More Energy Charts <i class="fa fa-arrow-circle-right"></i></a>
-                            </div> -->
-                        </div>
-                    </div>
-                    </div>
-                    <!-- /.row -->
-
-               
-                <!-- /.row -->
-
-            </div>
-            <!-- /.container-fluid -->
-
         </div>
         <!-- /#page-wrapper -->
 

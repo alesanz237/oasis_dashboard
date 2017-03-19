@@ -162,6 +162,18 @@ def resetSelectValues():
     data_integration.setSelectValues()
     return jsonify(result = data_integration.getSelectValues(0))
 
+@app.route("/_getIntegrationDataset")
+def getIntegrationDataset():
+    """ 
+        Route that updates the select values and
+        returns the select values for the home section
+    """
+    dataset = request.args.getlist('data[]')
+    # print dataset
+    data_integration.addData(dataset)
+    print data_integration.getDataset()
+    return jsonify(result = data_integration.getDataset())
+
 @app.route('/returnTweets')
 def return_tweets():
     """ 
