@@ -1,0 +1,25 @@
+date,description,precipitation,temperature,humidity,wind,icon
+"Sun 19, Mar 2017 6:00 PM",Partly Cloudy,3%,78 F,74%,E 4.46 mph,partly-cloudy-day
+"Sun 19, Mar 2017 7:00 PM",Partly Cloudy,16%,76 F,78%,ENE 4.46 mph,partly-cloudy-night
+"Sun 19, Mar 2017 8:00 PM",Partly Cloudy,4%,76 F,82%,ENE 4.61 mph,partly-cloudy-night
+"Sun 19, Mar 2017 9:00 PM",Partly Cloudy,1%,75 F,84%,ENE 4.9 mph,partly-cloudy-night
+"Sun 19, Mar 2017 10:00 PM",Clear,0%,75 F,86%,ENE 5.31 mph,clear-night
+"Sun 19, Mar 2017 11:00 PM",Clear,0%,75 F,88%,ENE 5.91 mph,clear-night
+"Mon 20, Mar 2017 12:00 AM",Clear,0%,74 F,89%,ENE 6.09 mph,clear-night
+"Mon 20, Mar 2017 1:00 AM",Clear,3%,75 F,89%,ENE 6.14 mph,clear-night
+"Mon 20, Mar 2017 2:00 AM",Partly Cloudy,14%,74 F,89%,ENE 5.59 mph,partly-cloudy-night
+"Mon 20, Mar 2017 3:00 AM",Drizzle,22%,74 F,90%,ENE 5.25 mph,rain
+"Mon 20, Mar 2017 4:00 AM",Drizzle,22%,74 F,90%,ENE 4.76 mph,rain
+"Mon 20, Mar 2017 5:00 AM",Drizzle,34%,74 F,91%,ENE 4.9 mph,rain
+"Mon 20, Mar 2017 6:00 AM",Partly Cloudy,9%,74 F,90%,E 5.41 mph,partly-cloudy-night
+"Mon 20, Mar 2017 7:00 AM",Partly Cloudy,17%,75 F,89%,E 5.36 mph,partly-cloudy-day
+"Mon 20, Mar 2017 8:00 AM",Drizzle,23%,76 F,86%,E 5.54 mph,rain
+"Mon 20, Mar 2017 9:00 AM",Drizzle,23%,78 F,81%,E 5.88 mph,rain
+"Mon 20, Mar 2017 10:00 AM",Partly Cloudy,6%,80 F,77%,ESE 5.31 mph,partly-cloudy-day
+"Mon 20, Mar 2017 11:00 AM",Partly Cloudy,5%,82 F,74%,ESE 5.46 mph,partly-cloudy-day
+"Mon 20, Mar 2017 12:00 PM",Partly Cloudy,19%,84 F,73%,E 5.59 mph,partly-cloudy-day
+"Mon 20, Mar 2017 1:00 PM",Light Rain,51%,85 F,73%,E 5.71 mph,rain
+"Mon 20, Mar 2017 2:00 PM",Light Rain,60%,85 F,73%,E 5.75 mph,rain
+"Mon 20, Mar 2017 3:00 PM",Light Rain,69%,84 F,74%,E 5.85 mph,rain
+"Mon 20, Mar 2017 4:00 PM",Rain,74%,83 F,76%,E 5.83 mph,rain
+"Mon 20, Mar 2017 5:00 PM",Rain,77%,80 F,79%,ENE 5.72 mph,rain

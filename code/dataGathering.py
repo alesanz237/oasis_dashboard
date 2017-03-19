@@ -9,6 +9,9 @@ import csv
 import urllib2
 import operator 
 import datetime
+import schedule
+import time
+import subprocess
 
 
 class DataGathering:
@@ -435,7 +438,7 @@ class DataGathering:
 				void: csv file with hourly forecast for the next 24 hours.
 				File name will be <town>_<c or f>.csv
 		"""
-		for town in towns:
+		for town in self.helper.getTowns():
 			self.getHourlyWeatherInCSV(unicode(town),"f")
 			self.getHourlyWeatherInCSV(unicode(town),"c")
 
@@ -712,8 +715,24 @@ class DataGathering:
 			if data["key"] == zone:
 				return data["values"]
 
+def job():
+    """
+        Function that generates daily weather data for each town
+        and stores it in a csv file.
+    """
+    data = DataGathering()
+    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
+    data.generateHourlyWeatherInCSV()
 
-# if __name__ == '__main__':
+
+if __name__ == '__main__':
+
+	schedule.every().day.at("23:00").do(job)
+
+	while True:
+	    schedule.run_pending()
+	    time.sleep(20) # wait one minute
+
 	# data = DataGathering()
 	# pprint(data.getHourlyWeather(u"mayaguez","f",13))
 	# pprint(data.getHourlyLoads())

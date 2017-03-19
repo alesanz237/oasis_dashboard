@@ -8,13 +8,13 @@ from dataGathering import DataGathering
 from dataIntegration import DataIntegration
 from helper import Helper
 from sentimentAnalysis import getTweetsLen, getPositiveWords, getNegativeWords, getTweets
-import schedule
 
 app = Flask("__OasisDashboard__")
 
 data             = DataGathering()   # Class that returns data that will be displayed in the dashboard
 helper           = Helper()          # Class that has helper functions for the dashboar
 data_integration = DataIntegration() # Class that returns integrated data for home section
+# twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
 
 @app.route("/")
 def init():
@@ -203,28 +203,13 @@ def return_loads():
     load_data = csv.reader(response)
     return send_file(load_data, attachment_filename='nyiso_loads.csv')
 
-def job():
-    """
-        Function that generates daily weather data for each town
-        and stores it in a csv file.
-    """
-    subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
-    data.generateHourlyWeatherInCSV()
-    return
-
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
     twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
-    
+    weather_gathering_process = subprocess.Popen('code/processes/generateWeatherData.sh',shell=True)
+
     # Starting server
     app.run(host='0.0.0.0')
 
-    # Killing processes
     twitter_streaming_process.kill()
-
-    # Running weather data
-    schedule.every().day.at("23:00").do(job)
-    while True:
-        schedule.run_pending()
-
     
