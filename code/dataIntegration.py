@@ -3,6 +3,7 @@
 from dataGathering import DataGathering
 from helper import Helper
 from params import towns, load_zones
+import csv
 
 class DataIntegration:
 	""" class that gets a graph based on user selected comparisons """
@@ -46,6 +47,9 @@ class DataIntegration:
 		# User selects 1 dataset
 		else:
 			self.dataset.append(self.getData(selects[0]))
+
+		# Generating csv file
+		self.generateCSVFile()
 
 	def getData(self,dataset):
 		""" 
@@ -189,31 +193,70 @@ class DataIntegration:
 
 		elif int(select) == 3:
 			del self.select_values4[selected_value]
-		
-	def getTowns(self):
-		"""
-			Function that returns the town of Puerto Rico
-		"""
-		return towns
-
-	def getLoadZones(self):
-		"""
-			Function that retunrs NY load zones
-		"""
-		return load_zones
 
 	def getDataset(self):
 		"""
 			Return dataset array for visualization
 		"""
 		return self.dataset
+
+	def generateCSVFile(self):
+		"""
+			Funtion that generates a csv file with the 
+			selected datasets by the user and stores it in 
+			integrated_data folder.
+		"""
+
+		keys   = []
+		dates  = []
+		values = []
+
+		filename = "data/integrated_data/graph_dataset.csv"
+		i        = 0
+		# print self.dataset
+
+		
+		# print self.dataset[0].keys()
+
+		# Getting keys, dates and values
+		keys.append("date")
+		for dataset in self.dataset:
+			keys.append(dataset["key"])
+			for data in dataset["values"]:
+				if i < 24:
+					dates.append(self.helper.convertDateFromEpoch(data["x"]))
+				i+=1
+				values.append(data["y"])
+					
+		
+		f = csv.writer(open(filename, "wb+"))
+		f.writerow(keys)
+		if len(self.dataset) == 4:
+			for i in range(0,len(dates)):
+				f.writerow([dates[i],
+						   values[i],
+						   values[i+12],
+						   values[i+12],
+						   values[i+24]])
+		elif len(self.dataset) == 3:
+			for i in range(0,len(dates)):
+				print dates[i]
+				print 
+				f.writerow([dates[i],
+						   values[i],
+						   values[i+12],
+						   values[i+24]])
+		elif len(self.dataset) == 2:
+			for i in range(0,len(dates)):
+				f.writerow([dates[i],
+					       values[i],
+						   values[i+12]])
+
+		elif len(self.dataset) == 1:
+			for i in range(0,len(dates)):
+				f.writerow([dates[i],values[i]])
+
 if __name__ == '__main__':
 	comparator = DataIntegration()
-	# comparator.updateSelectValues("pos")
-	# print comparator.getTowns()
-	# comparator.setSelectValues()
-	# comparator.updateSelectValues(1,"load")
-	# print comparator.getSelectValues(0)
-	# print comparator.select_values
-	comparator.addData([u'precip_mayaguez'])
-	print comparator.dataset
+	comparator.addData([u"lbmp_CAPITL",u"load"])
+	comparator.generateCSVFile()

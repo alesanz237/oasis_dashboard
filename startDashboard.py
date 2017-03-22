@@ -169,9 +169,7 @@ def getIntegrationDataset():
         returns the select values for the home section
     """
     dataset = request.args.getlist('data[]')
-    # print dataset
     data_integration.addData(dataset)
-    print data_integration.getDataset()
     return jsonify(result = data_integration.getDataset())
 
 @app.route('/returnTweets')
@@ -202,6 +200,13 @@ def return_loads():
     response = urllib2.urlopen(url)
     load_data = csv.reader(response)
     return send_file(load_data, attachment_filename='nyiso_loads.csv')
+
+@app.route('/returnIntegratedData')
+def return_integratedData():
+    """ 
+        Route that returns the weather data in a csv file to be downloaded
+    """
+    return send_from_directory(directory='data/integrated_data',filename="graph_dataset.csv", as_attachment=True)
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative

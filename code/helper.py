@@ -91,6 +91,9 @@ class Helper():
 			# print "entre al else"
 			return calendar.timegm(time.strptime(timestamp,'%a%d,%b%Y %H:%M'))
 
+	def convertDateFromEpoch(self, timestamp):
+		""" Converts current epoch time to human readable form """
+		return datetime.utcfromtimestamp(timestamp).strftime('%m/%d/%Y %H:%M')
 
 	def getLatLonByTown(self, town_name):
 		""" 
@@ -298,4 +301,4 @@ class Helper():
 
 if __name__ == '__main__':
 	# Helper().getDateInEpoch("03/12/2017 00:00")
-	print Helper().getTowns()
+	print Helper().convertDateFromEpoch(1490137200)

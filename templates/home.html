@@ -83,8 +83,9 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">
                             Home
-                            <button data-toggle="modal" data-target="#AddGraphHomeDashboard" style="background:none; border:none; margin-left: 730px; float: right;">
-                                <small style="">Add graph</small>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphHomeDashboard" style=" float: right;"> Generate graph from dashboard dataset
+                            </button>
+                            <button class="btn btn-success" data-toggle="modal" style=" float: right; margin-right: 10px;"> Generate graph from user imported datasets
                             </button>
                         </h1>
                     </div>
@@ -159,7 +160,7 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h3 class="modal-title">Add Graph to Home Dashboard</h3>
                             </div>
-                            <div class="modal-body">
+                            <div id="dashboard_data" class="modal-body">
                                 Dataset 1:
                                 <select id="select_1">
                                 {% for value, description in select_values.items() %}
@@ -198,10 +199,9 @@
 
                                 <div id="select_4_town_or_zone"></div>
                                 <div id="select_4_deg"></div>
-
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" onclick="generateGraph()" data-dismiss="modal">Generate graph</button>
+                                <button type="button" class="btn btn-success" onclick="callGenerateGraph()" data-dismiss="modal">Generate graph</button>
                                 <button type="button" class="btn btn-danger" onclick="resetSelectValues()" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -239,7 +239,6 @@
                             }
                         );
                     });
-
 
                     // Generating select3 values if select2 changes
                     $('#select_2').change(function () { 
@@ -389,8 +388,13 @@
                         );
                     }
 
-                    function generateGraph(){
+                    function callGenerateGraph(){
                         selected_values = [$('#select_1').val(),$('#select_2').val(),$('#select_3').val(),$('#select_4').val()];
+                        generateGraph(selected_values);
+                    }
+
+                    function generateGraph(selected_values){
+                        console.log(selected_values);
                         datasets = []
                         var values = {}
 
@@ -439,7 +443,6 @@
                         if (neg_index > -1){
                             datasets.push("neg");
                         }
-                        console.log(datasets);
                         $.get('/_getIntegrationDataset',{
                             data: datasets
                             },
@@ -481,7 +484,7 @@
                                     ;
 
                                     chart.yAxis
-                                        .axisLabel('LBMP ($/MWHr)')
+                                        .axisLabel('Datasets')
                                         .tickFormat(function(d) {
                                             if (d == null) {
                                                 return 'N/A';
@@ -500,10 +503,11 @@
                         resetSelectValues()
                     }
 
-
-
-
-                    
+                    $(function() {
+                        // Generating default graph
+                        generateGraph(["load"]);
+                    });
+        
                 </script>
 
                 <!-- Edit Dashboard Modal -->
@@ -512,7 +516,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3 class="modal-title">Edit Graphs in Home Dashboard</h3>
+                                    <h3 class="modal-title">Download dataset Graphs in Home Dashboard</h3>
                             </div>
                             <div class="modal-body">
                                 
@@ -532,14 +536,18 @@
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison Example
-                                 <button data-toggle="modal" data-target="#EditGraphHomeDashboard" style="color: white; border:none; background:none; float: right;">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison 
+                                 <form method="get" action="/returnIntegratedData" style="display: inline;">
+                                    <button class="btn btn-info" type="submit" style="color: white; border:none; background:none; float: right; padding-top: 0px;">
+                                        <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> Download Data
+                                    </button>
+                                </form>
+                                    
                                 </h3>
                             </div>
                             <div class="panel-body">
                                 <div id="chart0">
-                                    <svg style="width:975px;height: 550px;"></svg>
+                                    <svg style="width:975px;height: 500px;"></svg>
                                 </div>
                             </div>
                         </div>

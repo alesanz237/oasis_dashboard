@@ -36,9 +36,12 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-<<<<<<< HEAD
+
+
+# Project files #
+#################
 positive.txt
 negative.txt
-positive_backup.txt
-negative_backup.txt
 tweets.txt
+tweets.csv
+data/weather/*.csv
