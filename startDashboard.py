@@ -1,7 +1,8 @@
 # #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 
-from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask import Flask, jsonify, render_template, request, send_from_directory, redirect, url_for
+from werkzeug import secure_filename
 import os.path, sys, subprocess, time, csv
 sys.path.insert(0, "./code")
 from dataGathering import DataGathering
@@ -22,7 +23,7 @@ def init():
     return render_template("home.html",select_values=data_integration.getSelectValues(0))
 
 @app.route("/home")
-def init1():
+def home():
     data_integration.setSelectValues()
     return render_template("home.html",select_values=data_integration.getSelectValues(0))
 
@@ -207,6 +208,24 @@ def return_integratedData():
         Route that returns the weather data in a csv file to be downloaded
     """
     return send_from_directory(directory='data/integrated_data',filename="graph_dataset.csv", as_attachment=True)
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      if f and allowed_filename(f.filename):
+        f.save(secure_filename("/data/uploads/"+f.filename))
+        return redirect(url_for("home"))
+
+@app.route('/foo')
+def foo():
+    data_integration.setSelectValues()
+    return render_template("home.html",select_values=data_integration.getSelectValues(0))
+    return 'Hello Foo!'
+
+# File extension checking
+def allowed_filename(filename):
+    return '.' in filename and filename.rsplit('.',1)[1] in set(['txt', 'csv'])
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative

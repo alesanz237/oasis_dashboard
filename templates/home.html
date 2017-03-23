@@ -83,11 +83,14 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">
                             Home
-                            <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphHomeDashboard" style=" float: right;"> Generate graph from dashboard dataset
-                            </button>
-                            <button class="btn btn-success" data-toggle="modal" style=" float: right; margin-right: 10px;"> Generate graph from user imported datasets
-                            </button>
+                            <!-- <button class="btn btn-success" data-toggle="modal" style="  margin-right: 0px;"> Generate graph from user imported datasets -->
                         </h1>
+                        <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
+                            <input  type ="file" name ="file" style="float: right; font-size: 12px; margin-right: 777px; margin-top:  -10px;"/>
+                            <input style="margin-top: 5px" class="btn btn-success" type = "submit" value="Generate graph from user imported datasets"/>
+                        </form>
+                        <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphHomeDashboard" style=" float: right; margin-right: 410px; margin-top: -34px;"> Generate graph from dashboard dataset
+                        </button>
                     </div>
                 </div>
 
@@ -532,7 +535,7 @@
                 </div>
 
 
-                <div class="row">
+                <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">

@@ -256,6 +256,7 @@ class DataIntegration:
 			for i in range(0,len(dates)):
 				f.writerow([dates[i],values[i]])
 
+	# def importDataFromCSV(self):
 if __name__ == '__main__':
 	comparator = DataIntegration()
 	comparator.addData([u"lbmp_CAPITL",u"load"])
