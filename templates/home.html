@@ -488,12 +488,71 @@
 
                                     chart.yAxis
                                         .axisLabel('Datasets')
-                                        .tickFormat(function(d) {
-                                            if (d == null) {
-                                                return 'N/A';
-                                            }
-                                            return d3.format(',.2f')(d);
+                                        // .tickFormat(function(d) {
+                                        //     if (d == null) {
+                                        //         return 'N/A';
+                                        //     }
+                                        //     return (d);
+                                        // })
+                                    ;
+                                    d3.select('#chart0 svg')
+                                        .datum(i_data)
+                                        .call(chart);
+                                    nv.utils.windowResize(chart.update);
+                                    return chart;
+                                });
+                            }
+                        );
+                        resetSelectValues()
+                    }
+
+                    function generateUserGraph(){
+                        $.get('/_getUserIntegrationDataset',
+                            function (integration_data) {
+                                i_data = integration_data.result;
+                                console.log(i_data);
+                                nv.addGraph(function() {
+                                    chart = nv.models.lineChart()
+                                        .options({
+                                            duration: 300,
+                                            useInteractiveGuideline: true
                                         })
+                                        .width(965)
+                                        .height(500)
+                                    ;
+                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+                                    chart.xAxis
+                                        .axisLabel("Time (Hour)")
+                                        .tickFormat(function(d){
+                                            var myDate = new Date(d *1000).toGMTString();
+                                            myDate = myDate.split(" ")[4];
+                                            hour = parseInt(myDate.split(":")[0]);
+                                            minute = parseInt(myDate.split(":")[1])
+                                            var pm_or_am = " AM";
+                                            if (hour >= 12){
+                                                hour = hour % 12;
+                                                pm_or_am = " PM";
+                                            }
+                                            if (hour == 0)
+                                                hour = 12
+                                            if (hour < 10)
+                                                hour = "0" + String(hour);
+                                            if (minute < 10)
+                                                minute = "0" + String(minute);
+                                            hour = String(hour) + ":" + String(minute) + pm_or_am
+                                            return (hour);
+                                        })
+                                        .staggerLabels(true)
+                                    ;
+
+                                    chart.yAxis
+                                        .axisLabel('Datasets')
+                                        // .tickFormat(function(d) {
+                                        //     if (d == null) {
+                                        //         return 'N/A';
+                                        //     }
+                                        //     return (d);
+                                        // })
                                     ;
                                     d3.select('#chart0 svg')
                                         .datum(i_data)
@@ -508,7 +567,7 @@
 
                     $(function() {
                         // Generating default graph
-                        generateGraph(["load"]);
+                        generateUserGraph();
                     });
         
                 </script>

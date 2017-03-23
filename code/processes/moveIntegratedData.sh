@@ -1,0 +1,1 @@
+mv *.csv data/uploads

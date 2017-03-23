@@ -4,6 +4,7 @@ from dataGathering import DataGathering
 from helper import Helper
 from params import towns, load_zones
 import csv
+from pprint import pprint
 
 class DataIntegration:
 	""" class that gets a graph based on user selected comparisons """
@@ -235,29 +236,76 @@ class DataIntegration:
 			for i in range(0,len(dates)):
 				f.writerow([dates[i],
 						   values[i],
-						   values[i+12],
-						   values[i+12],
-						   values[i+24]])
+						   values[i+24],
+						   values[i+48],
+						   values[i+72]])
 		elif len(self.dataset) == 3:
 			for i in range(0,len(dates)):
 				print dates[i]
 				print 
 				f.writerow([dates[i],
 						   values[i],
-						   values[i+12],
-						   values[i+24]])
+						   values[i+24],
+						   values[i+48]])
 		elif len(self.dataset) == 2:
 			for i in range(0,len(dates)):
 				f.writerow([dates[i],
 					       values[i],
-						   values[i+12]])
+						   values[i+24]])
 
 		elif len(self.dataset) == 1:
 			for i in range(0,len(dates)):
 				f.writerow([dates[i],values[i]])
 
-	# def importDataFromCSV(self):
+	def importDataFromCSV(self):
+		"""
+			Functions that reads a csv file and adds
+			the data to the DataIntegration class
+		"""
+		file         = "data/uploads/graph_dataset.csv"
+		csv_data     = []
+		integrated_data = []
+		outer_data      = {}
+		values          = []
+		inner_data      = {}
+
+		counter = 0
+
+		# Reading csv file and storing data in file
+		with open(file) as csvfile:
+			reader = csv.DictReader(csvfile)
+			for row in reader:
+				csv_data.append(row) 
+
+		# print csv_data
+		# Getting data that is needed for visualization
+		keys =  csv_data[0].keys()[1:]
+		# print keys
+		for key in keys:
+			for data in csv_data:
+				if key in data and counter < 24:
+					inner_data["x"] = self.helper.getDateInEpoch(data["date"])
+					# print type(float(data[key]))
+					inner_data["y"] = float(data[key])
+					values.append(inner_data)
+					counter += 1
+					inner_data = {}
+				if counter == 24:
+					outer_data["values"] = values
+					outer_data["key"]    = key
+					counter = 0
+					values = []
+					integrated_data.append(outer_data)
+					outer_data = {}
+
+		self.dataset = integrated_data
+
+		# pprint(integrated_data)
+
 if __name__ == '__main__':
 	comparator = DataIntegration()
-	comparator.addData([u"lbmp_CAPITL",u"load"])
-	comparator.generateCSVFile()
+	# comparator.addData([u"lbmp_CAPITL",u"load"])
+	# pprint(comparator.dataset)
+	# comparator.generateCSVFile()
+	comparator.importDataFromCSV()
+	pprint(comparator.dataset)

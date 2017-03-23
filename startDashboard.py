@@ -173,6 +173,12 @@ def getIntegrationDataset():
     data_integration.addData(dataset)
     return jsonify(result = data_integration.getDataset())
 
+@app.route("/_getUserIntegrationDataset")
+def getUserIntegrationDataset():
+    data_integration.importDataFromCSV()
+    print data_integration.getDataset()
+    return jsonify(result = data_integration.getDataset())
+
 @app.route('/returnTweets')
 def return_tweets():
     """ 
@@ -211,21 +217,17 @@ def return_integratedData():
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
-   if request.method == 'POST':
-      f = request.files['file']
-      if f and allowed_filename(f.filename):
-        f.save(secure_filename("/data/uploads/"+f.filename))
-        return redirect(url_for("home"))
+    if request.method == 'POST':
+        f = request.files['file']
+        if f and allowed_filename(f.filename):
+            filename = "graph_dataset.csv"
+            f.save(secure_filename(filename))
+            subprocess.Popen('code/processes/moveIntegratedData.sh',shell=True)
+            return redirect(url_for("home"))
 
-@app.route('/foo')
-def foo():
-    data_integration.setSelectValues()
-    return render_template("home.html",select_values=data_integration.getSelectValues(0))
-    return 'Hello Foo!'
-
-# File extension checking
 def allowed_filename(filename):
-    return '.' in filename and filename.rsplit('.',1)[1] in set(['txt', 'csv'])
+    """ Function that checks that file extension is csv """
+    return '.' in filename and filename.rsplit('.',1)[1] in set(['csv'])
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
