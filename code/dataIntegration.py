@@ -4,6 +4,7 @@ from dataGathering import DataGathering
 from helper import Helper
 from params import towns, load_zones
 import csv
+from sentimentAnalysis import getPositiveTweetsPerHour, getNegativeTweetsPerHour
 from pprint import pprint
 
 class DataIntegration:
@@ -110,16 +111,18 @@ class DataIntegration:
 			data["key"] = identifier + "_" + zone
 			data["values"] = self.data.getHourlyZonalLBMP(zone)
 
-		# # Getting load dataset
+		# Getting load dataset
 		elif identifier == "load":
 			data["key"]    = identifier
 			data["values"] = self.data.getHourlyLoads()
 
-		# # Getting positive tweets dataset
-		# elif identifier == "pos":
+		# Getting positive tweets dataset
+		elif identifier == "pos":
+			data = getPositiveTweetsPerHour()
 
-		# # Getting negative tweets dataset
-		# elif identifier == "neg":
+		# Getting negative tweets dataset
+		elif identifier == "neg":
+			data = getNegativeTweetsPerHour()
 
 		return data
 

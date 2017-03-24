@@ -44,4 +44,5 @@ positive.txt
 negative.txt
 tweets.txt
 tweets.csv
-data/weather/*.csv
+_f*.csv
+_c*.csv

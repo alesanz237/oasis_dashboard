@@ -9,6 +9,7 @@ import random
 import csv
 import time
 import subprocess
+from helper import Helper
 #Example positive tweets
 t_set = getTrainingSet() 
 
@@ -46,7 +47,6 @@ def get_word_features_and_values(wordlist):
 			if word_features[i] == word:
 				word_features_and_values[word_features[i]] = word_values[i]
 	return list(reversed(sorted(word_features_and_values.items(), key=lambda x: x[1])))[0:10]
-
 
 word_features = get_word_features(get_words_in_tweets(tweets))
 
@@ -153,65 +153,93 @@ def getTweets():
 	tweets = scrambled(tweets)
 	return tweets
 
-def getPositiveTweetsFromTo(_from,to):
-	""" Getting positive tweets from a given time frame"""
-	tweets = []
-	tweet_dict = {}
-	tweets = getTweetsFromRange('data/tweets/positive.txt',_from,to)
-	return tweets
-
-def getNegativeTweetsFromTo(_from,to):
-	""" Getting negative tweets from a given time frame"""
-	tweets = []
-	tweet_dict = {}
-	tweets = getTweetsFromRange('data/tweets/negative.txt',_from,to)
-	return tweets
-
-def getTweetsFromRange(filename,_from,to):
-	tweets = []
-	tweet_dict = {}
-	dict_of_tweets = {}
-	counter = 1
-	tweet_dict['y'] = 0
-	updated_from = _from
+def getPositiveTweetsPerHour():
+	""" Getting positive tweets from today """
+	helper = Helper()
+	tweets_dict = {}
+	values_dict = {}
+	values = []
+	filename = 'data/tweets/positive.txt'
+	hours = ([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23])
+	dict_of_hours = ({0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,
+	                  12:0,13:0,14:0,15:0,16:0,17:0,18:0,19:0,20:0,21:0,
+	                  22:0,23:0})
+	# Getting todays tweets per hour
 	with open(filename) as tweet:
 		for t in tweet:
 			t = eval(t)
-			date  = t['created_at'].split(" ")
-			day   = date[2]
-			month = date[1]
-			hour  = date[3].split(":")[0]
-			year  = date[5]
-			date_time = day+"."+month+"."+year+" "+hour+":00"
-			hour = int(hour)
-			pattern = '%d.%b.%Y %H:%M'
-			epoch = int(time.mktime(time.strptime(date_time, pattern)))
-			# Getting how much hours do I have to store for array
-			hours = to - _from
-			
-			tweet_dict['x'] = epoch
-			# print 'hours',hours
-			
-			for i in range(0,hours):
-				dict_of_tweets[updated_from] = 0
-				print 'updated_from',updated_from
-				if hour == updated_from:
-					dict_of_tweets[updated_from] += counter
-					counter+=1
-			# if hour > updated_from:
-			# 	updated_from +=1
-					# tweet_dict['y'] += 1
-			# 		# print tweet_dict
-			# 	updated_from 
-			# print "hour",hour
-			# if hour >= updated_from:
-			# 	tweets.append(tweet_dict)
-			# 	tweet_dict = {}
-			# 	tweet_dict['y'] = 0
-			# 	updated_from+=1	
-	# print tweet_dict
-	print dict_of_tweets
-	return tweets
+			year  = t["created_at"].split(" ")[5]
+			month = t["created_at"].split(" ")[1]
+			day   = t["created_at"].split(" ")[2]
+			hour  = int(t["created_at"].split(" ")[3].split(":")[0])
+			date  = year + month + day
+			if date == time.strftime("%Y%b%d"):
+				dict_of_hours[hour] += 1
+
+	# Populating values array
+	for key,value in dict_of_hours.iteritems():
+		year = time.strftime("")
+		if len(str(key)) == 1:
+			key = "0" + str(key)
+		else:
+			key = str(key)
+		timestamp = helper.getMonth() + "/" + helper.getDay() + "/" + helper.getYear() + " " + key + ":00" 
+		date      = helper.getDateInEpoch(timestamp)
+		values_dict["x"] = date
+		values_dict["y"] = float(value)
+		values.append(values_dict)
+		values_dict = {}
+
+	# Generating tweets_data array
+	tweets_dict["key"]    = "Positive Tweets"
+	tweets_dict["values"] = values
+
+	return tweets_dict
+
+	# return tweets
+
+def getNegativeTweetsPerHour():
+	""" Getting negative tweets from today """
+	helper = Helper()
+	tweets_dict = {}
+	values_dict = {}
+	values = []
+	filename = 'data/tweets/negative.txt'
+	hours = ([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23])
+	dict_of_hours = ({0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,
+	                  12:0,13:0,14:0,15:0,16:0,17:0,18:0,19:0,20:0,21:0,
+	                  22:0,23:0})
+	# Getting todays tweets per hour
+	with open(filename) as tweet:
+		for t in tweet:
+			t = eval(t)
+			year  = t["created_at"].split(" ")[5]
+			month = t["created_at"].split(" ")[1]
+			day   = t["created_at"].split(" ")[2]
+			hour  = int(t["created_at"].split(" ")[3].split(":")[0])
+			date  = year + month + day
+			if date == time.strftime("%Y%b%d"):
+				dict_of_hours[hour] += 1
+
+	# Populating values array
+	for key,value in dict_of_hours.iteritems():
+		year = time.strftime("")
+		if len(str(key)) == 1:
+			key = "0" + str(key)
+		else:
+			key = str(key)
+		timestamp = helper.getMonth() + "/" + helper.getDay() + "/" + helper.getYear() + " " + key + ":00" 
+		date      = helper.getDateInEpoch(timestamp)
+		values_dict["x"] = date
+		values_dict["y"] = float(value)
+		values.append(values_dict)
+		values_dict = {}
+
+	# Generating tweets_data array
+	tweets_dict["key"]    = "Negative Tweets"
+	tweets_dict["values"] = values
+
+	return tweets_dict
 
 def convertTweetsToCSV():
 	""" Getting tweets from a given time frame"""
@@ -263,6 +291,8 @@ def scrambled(orig):
 
 if __name__ == '__main__':
 	storeClassifiedTweets()
+	# print getPositiveTweetsPerHour(), "\n"
+	# print getNegativeTweetsPerHour(), "\n"
 
 
 	
