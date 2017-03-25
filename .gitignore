@@ -40,9 +40,6 @@ Thumbs.db
 
 # Project files #
 #################
-positive.txt
-negative.txt
-tweets.txt
 tweets.csv
 _f*.csv
 _c*.csv
