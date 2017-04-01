@@ -307,8 +307,8 @@ class DataIntegration:
 
 if __name__ == '__main__':
 	comparator = DataIntegration()
-	# comparator.addData([u"lbmp_CAPITL",u"load"])
+	comparator.addData([u"lbmp_CAPITL",u"load"])
 	# pprint(comparator.dataset)
 	# comparator.generateCSVFile()
-	comparator.importDataFromCSV()
+	# comparator.importDataFromCSV()
 	pprint(comparator.dataset)

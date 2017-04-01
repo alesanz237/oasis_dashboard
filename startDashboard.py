@@ -43,6 +43,10 @@ def getTwitter():
 def getWeather():
     return render_template("weather.html")
 
+@app.route("/integration")
+def dataIntegration():
+    return render_template("data_integration.html",select_values=data_integration.getSelectValues(0))
+
 @app.route('/_getAEEDATA')
 def get_AEEData():
     """ 
@@ -223,7 +227,7 @@ def upload_file():
             filename = "graph_dataset.csv"
             f.save(secure_filename(filename))
             subprocess.Popen('code/processes/moveIntegratedData.sh',shell=True)
-            return redirect(url_for("home"))
+            return redirect(url_for("dataIntegration"))
 
 def allowed_filename(filename):
     """ Function that checks that file extension is csv """

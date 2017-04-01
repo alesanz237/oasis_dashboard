@@ -393,7 +393,6 @@ class DataGathering:
 			weather = {}
 		return weather_data
 
-
 	def getHourlyWeatherInCSV(self, keyword, temp):
 		""" 
 			Function that gets hourly weather data from
@@ -724,7 +723,6 @@ def job():
     subprocess.Popen('code/processes/deleteWeatherData.sh',shell=True)
     data.generateHourlyWeatherInCSV()
 
-
 if __name__ == '__main__':
 
 	schedule.every().day.at("23:00").do(job)
@@ -732,6 +730,8 @@ if __name__ == '__main__':
 	while True:
 	    schedule.run_pending()
 	    time.sleep(20) # wait one minute
+
+	# pprint(DataGathering().getDayAheadMarketLBMPZonal())
 
 	# data = DataGathering()
 	# pprint(data.getHourlyWeather(u"mayaguez","f",13))

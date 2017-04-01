@@ -87,7 +87,8 @@
                                 .attr("class","col-lg-12")
                                 .append("div")
                                 .attr("class","panel panel-default")
-                                .style("height","550px")             
+                                .style("height","550px") 
+                                .style("width","100%")            
                     var heading = head.append("div")
                                 .attr("class","panel-heading")
                                 .append("h3")
@@ -131,7 +132,7 @@
                             .x(function(d) { return d[0] })
                             .y(function(d) { return d[1] })
                             .controlLabels({stacked: "Stacked"})
-                            .width(965)
+                            // .width(965)
                             .height(500)
                             .duration(300);
                         chart.xAxis.tickFormat(function(d) { return d });
@@ -140,6 +141,7 @@
                         d3.select(chartId)
                             .datum(energy_data.result)
                             .transition().duration(1000)
+                            .attr('width','100%')
                             .call(chart)
                             .each('start', function() {
                                 setTimeout(function() {
