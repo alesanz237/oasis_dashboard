@@ -66,6 +66,9 @@
                     <li>
                         <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
                     </li>
+                    <li class="active">
+                        <a href="\integration"><i class="fa fa-fw fa-bar-chart-o"></i> Data Integration</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -132,12 +135,13 @@
                             .x(function(d) { return d[0] })
                             .y(function(d) { return d[1] })
                             .controlLabels({stacked: "Stacked"})
-                            // .width(965)
+                            .showControls(false)
                             .height(500)
                             .duration(300);
                         chart.xAxis.tickFormat(function(d) { return d });
                         chart.yAxis.tickFormat(d3.format(',.2f'));
                         chart.legend.vers('furious');
+                        chart.margin().left = 80
                         d3.select(chartId)
                             .datum(energy_data.result)
                             .transition().duration(1000)
