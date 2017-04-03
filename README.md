@@ -57,6 +57,7 @@ With pip is installed, the user can proceed to install the necessary libraries b
 * sudo pip install unidecode
 * sudo pip install tweepy
 * sudo pip install flask
+
 After the user has finished typing all those commands, the user may now download the dashboard by going to the desired folder in the terminal where the dashboard will be stored. For example, the dashboard may be stored in /User/me/Desktop, where me is the name of the user of the computer. Assuming we want to store the dashboard in the Desktop in a folder called oasis_dashboard, we type the following in the terminal:
 * cd 
 * cd Desktop/
