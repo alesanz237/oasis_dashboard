@@ -45,26 +45,26 @@ These datasets may be imported or exported.
 
 # How to run 
 To install the dashboard in Mac or Ubuntu, first the user must have installed Python in their computer. By default, MacOS and Ubuntu come with Python preinstalled so this should not be a problem. After this, the user must make sure that the following Python libraries are installed: Schedule, Forecastiopy, NLTK, Tweepy, Unidecode and Flask. To install each of these libraries, the users must first install pip, which can be done in Ubuntu by opening and typing in the terminal:
-*sudo apt-get install python-setuptools python-dev build-essential
-*sudo easy_install pip
+* sudo apt-get install python-setuptools python-dev build-essential
+* sudo easy_install pip
 For Mac users, open the terminal and type:
-*curl https://bootstrap.pypa.io/ez_setup.py -o | sudo python 
-*sudo easy_install pip
+* curl https://bootstrap.pypa.io/ez_setup.py -o | sudo python 
+* sudo easy_install pip
 With pip is installed, the user can proceed to install the necessary libraries by typing the following commands in the terminal:
-*sudo pip install schedule
-*sudo pip install python-forecastio
-*sudo pip install nltk
-*sudo pip install unidecode
-*sudo pip install tweepy
-*sudo pip install flask
+* sudo pip install schedule
+* sudo pip install python-forecastio
+* sudo pip install nltk
+* sudo pip install unidecode
+* sudo pip install tweepy
+* sudo pip install flask
 After the user has finished typing all those commands, the user may now download the dashboard by going to the desired folder in the terminal where the dashboard will be stored. For example, the dashboard may be stored in /User/me/Desktop, where me is the name of the user of the computer. Assuming we want to store the dashboard in the Desktop in a folder called oasis_dashboard, we type the following in the terminal:
-*cd 
-*cd Desktop/
-*mkdir oasis_dasboard
-*cd oasis_dashboard
-*git init
-*git clone https://github.com/alesanz237/oasis_dashboard.git
-*python startDashboard.py
+* cd 
+* cd Desktop/
+* mkdir oasis_dasboard
+* cd oasis_dashboard
+* git init
+* git clone https://github.com/alesanz237/oasis_dashboard.git
+* python startDashboard.py
 Once the user has finalized typing these commands in the terminal, the dashboard should be successfully installed. To verify that the dashboard is running, the terminal should show say that the dashboard is running on port 5000. If everything was installed successfully, the user may go the web browser and type in the url localhost:5000 to use the dashboard. 
 
 The OASIS dashboard is an open source project and is part of the OASIS project, more information about this project is provided in http://oasis.uprm.edu
