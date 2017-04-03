@@ -2,11 +2,11 @@
 This is a dashboard for visualizing big data related to smart grids. 
 
 The dashboard has 5 areas of interest: 
-Energy Data
-Social Data
-Weather Data
-Market Data
-Data Integration
+1. Energy Data
+2. Social Data
+3. Weather Data
+4. Market Data
+5. Data Integration
 The Energy Data area will show users AEE (Puerto Rico Electric Power Authority) historic data that was gathered from 2000 to 2015.
 
 Social data is being gathered from Twitter. 
@@ -19,10 +19,11 @@ Twitter data may be exported as a csv file.
 Weather data is being gathered using the Dark Sky API. 
 This area shows the following weather data for a given town:
 
-current condition
-today’s forecast
-today’s 12-hour forecast
-4-day forecast
+* current condition
+* today’s forecast
+* today’s 12-hour forecast
+* 4-day forecast
+
 Users may search for a town by name or zip code. 
 This area also shows users radar images for Puerto Rico. 
 The hourly forecast for the next 24 hours can be exported as a csv file.
@@ -32,14 +33,15 @@ Also, a graph comparing loads with Day-Ahead Locational Based Marginal Pricing (
 The Data Integration section is the area in the dashboard where users will be able to make comparisons between the different datasets. 
 Users will be able to compare the following datasets:
 
-Humidity data per hour for a given town
-Precipitation data per hour for a given town
-Wind data per hour for a given town
-Temperature data per hour for a given town in Fahrenheit or Celsius
-Load data
-Load based marginal pricing data per zone
-Positive Tweets
-Negative Tweets
+* Humidity data per hour for a given town
+* Precipitation data per hour for a given town
+* Wind data per hour for a given town
+* Temperature data per hour for a given town in Fahrenheit or Celsius
+* Load data
+* Load based marginal pricing data per zone
+* Positive Tweets
+* Negative Tweets
+
 Up to four of these datasets may be compared. 
 These datasets may be imported or exported.
 
@@ -50,7 +52,9 @@ To install the dashboard in Mac or Ubuntu, first the user must have installed Py
 For Mac users, open the terminal and type:
 * curl https://bootstrap.pypa.io/ez_setup.py -o | sudo python 
 * sudo easy_install pip
+
 With pip is installed, the user can proceed to install the necessary libraries by typing the following commands in the terminal:
+
 * sudo pip install schedule
 * sudo pip install python-forecastio
 * sudo pip install nltk
