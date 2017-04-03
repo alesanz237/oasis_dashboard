@@ -1,5 +1,6 @@
 # OASIS Dashboard
 This is a dashboard for visualizing big data related to smart grids. 
+To access this dashboard go to http://oasisdash.upr.edu
 
 The dashboard has 5 areas of interest: 
 1. Energy Data
