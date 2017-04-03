@@ -235,7 +235,7 @@ if __name__ == "__main__":
     weather_gathering_process = subprocess.Popen('code/processes/generateWeatherData.sh',shell=True)
 
     # Starting server
-    app.run(host='0.0.0.0')
+    app.run(port=80, host='0.0.0.0')
 
     twitter_streaming_process.kill()
     
