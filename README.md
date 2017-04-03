@@ -70,6 +70,7 @@ After the user has finished typing all those commands, the user may now download
 * git init
 * git clone https://github.com/alesanz237/oasis_dashboard.git
 * python startDashboard.py
+
 Once the user has finalized typing these commands in the terminal, the dashboard should be successfully installed. To verify that the dashboard is running, the terminal should show say that the dashboard is running on port 5000. If everything was installed successfully, the user may go the web browser and type in the url localhost:5000 to use the dashboard. 
 
 The OASIS dashboard is an open source project and is part of the OASIS project, more information about this project is provided in http://oasis.uprm.edu
