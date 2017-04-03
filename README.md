@@ -7,6 +7,7 @@ The dashboard has 5 areas of interest:
 3. Weather Data
 4. Market Data
 5. Data Integration
+
 The Energy Data area will show users AEE (Puerto Rico Electric Power Authority) historic data that was gathered from 2000 to 2015.
 
 Social data is being gathered from Twitter. 
@@ -27,6 +28,7 @@ This area shows the following weather data for a given town:
 Users may search for a town by name or zip code. 
 This area also shows users radar images for Puerto Rico. 
 The hourly forecast for the next 24 hours can be exported as a csv file.
+
 The Market data section will show users loads in MWhr and Day-ahead Locational Based Marginal Pricing gathered from the NYISO. 
 Also, a graph comparing loads with Day-Ahead Locational Based Marginal Pricing (LBMP) is shown.
 
