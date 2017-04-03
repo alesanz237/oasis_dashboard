@@ -69,6 +69,9 @@
                     <li >
                         <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
                     </li>
+                    <li >
+                        <a href="\integration"><i class="fa fa-fw fa-bar-chart-o"></i> Data Integration</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -83,534 +86,91 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">
                             Home
-                            <!-- <button class="btn btn-success" data-toggle="modal" style="  margin-right: 0px;"> Generate graph from user imported datasets -->
                         </h1>
-                        <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
-                            <input  type ="file" name ="file" style="float: right; font-size: 12px; margin-right: 777px; margin-top:  -10px;"/>
-                            <input style="margin-top: 5px" class="btn btn-success" type = "submit" value="Generate graph from user imported datasets"/>
-                        </form>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphHomeDashboard" style=" float: right; margin-right: 410px; margin-top: -34px;"> Generate graph from dashboard dataset
-                        </button>
                     </div>
                 </div>
 
-                <!-- Customize Dashboard Modal -->
-                <div class="modal fade" id="customizeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3 class="modal-title">Customize Dashboard</h3>
-                            </div>
-                            <div class="modal-body">
-                                
-                                <div class="container">
-                                  <ul class="nav nav-pills">
-                                    <li class="active"><a data-toggle="pill" href="#general">General</a></li>
-                                    <li><a data-toggle="pill" href="#home">Home</a></li>
-                                    <li><a data-toggle="pill" href="#energy">Energy data</a></li>
-                                    <li><a data-toggle="pill" href="#social">Social data</a></li>
-                                    <li><a data-toggle="pill" href="#weather">Weather data</a></li>
-                                    <li><a data-toggle="pill" href="#market">Market data</a></li>
-                                  </ul>
-                                  
-                                  <div class="tab-content">
-                                    <div id="general" class="tab-pane fade in active">
-                                      <h3>General</h3>
-                                      <p>Grab data from [Poner lista de available datasets]</p>
-                                    </div>
-                                    <div id="home" class="tab-pane fade">
-                                      <h3>Home</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                    <div id="energy" class="tab-pane fade">
-                                      <h3>Energy Data</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                    <div id="social" class="tab-pane fade">
-                                      <h3>Social Data</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                    <div id="weather" class="tab-pane fade">
-                                      <h3>Weather Data</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                    <div id="town" class="tab-pane fade">
-                                      <h3>Data by town</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                    <div id="market" class="tab-pane fade">
-                                      <h3>Market Data</h3>
-                                      <p>Show list of graphs, add, remove, sort and increment/decrease size</p>
-                                    </div>
-                                  </div>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Save Settings</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add dataModal -->
-                <div class="modal fade" id="AddGraphHomeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3 class="modal-title">Add Graph to Home Dashboard</h3>
-                            </div>
-                            <div id="dashboard_data" class="modal-body">
-                                Dataset 1:
-                                <select id="select_1">
-                                {% for value, description in select_values.items() %}
-                                    <option value={{value}}>{{description}}</option>
-                                {% endfor %}
-                                </select>
-                                <br>
-                                <br>
-
-                                <div id="select_1_town_or_zone"></div>
-                                <div id="select_1_deg"></div>
-
-                                Dataset 2:
-                                <select id="select_2">
-                                </select>
-                                <br>
-                                <br>
-
-                                <div id="select_2_town_or_zone"></div>
-                                <div id="select_2_deg"></div>
-
-                                Dateset 3:
-                                <select id="select_3">
-                                </select>
-                                <br>
-                                <br>
-
-                                <div id="select_3_town_or_zone"></div>
-                                <div id="select_3_deg"></div>
-
-                                Dataset 4:
-                                <select id="select_4">
-                                </select>
-                                <br>
-                                <br>
-
-                                <div id="select_4_town_or_zone"></div>
-                                <div id="select_4_deg"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success" onclick="callGenerateGraph()" data-dismiss="modal">Generate graph</button>
-                                <button type="button" class="btn btn-danger" onclick="resetSelectValues()" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <script type="text/javascript">
-
-                    // Generating select2 values if select1 changes
-                    $('#select_1').change(function () { 
-                        $.get('/_updateSelectValues',
-                            { selected_value: $('#select_1').val(),
-                              select: 1
-                            }, 
-                            function (select_values) {
-                                if ($('#select_1').val() === "precip"   ||
-                                    $('#select_1').val() === "humidity" ||
-                                    $('#select_1').val() === "wind"     ){
-                                    getTowns(1);
-                                }
-                                else if ($('#select_1').val() === "temp"){
-                                    getTowns(1);
-                                    getDeg(1);
-                                }
-                                else if ($('#select_1').val() === "lbmp"){
-                                    getZones(1);
-                                }
-                                s_values = select_values.result;
-                                for (var key in s_values) {
-                                    $('#select_2').append($('<option>', { 
-                                        value: key,
-                                        text : s_values[key] 
-                                    }));
-                                }
-                            }
-                        );
-                    });
-
-                    // Generating select3 values if select2 changes
-                    $('#select_2').change(function () { 
-                        $.get('/_updateSelectValues',
-                            { selected_value: $('#select_2').val(),
-                              select: 2
-                            }, 
-                            function (select_values) {
-                                if ($('#select_2').val() === "precip"   ||
-                                    $('#select_2').val() === "humidity" ||
-                                    $('#select_2').val() === "wind"     ){
-                                    getTowns(2);
-                                }
-                                else if ($('#select_2').val() === "temp"){
-                                    getTowns(2);
-                                    getDeg(2);
-                                }
-                                else if ($('#select_2').val() === "lbmp"){
-                                    getZones(2);
-                                }
-                                s_values = select_values.result;
-                                for (var key in s_values) {
-                                    $('#select_3').append($('<option>', { 
-                                        value: key,
-                                        text : s_values[key] 
-                                    }));
-                                }
-                            }
-                        );
-                    });
-
-                    // Generating select4 values if select3 changes
-                    $('#select_3').change(function () { 
-                        $.get('/_updateSelectValues',
-                            { selected_value: $('#select_3').val(),
-                              select: 3
-                            }, 
-                            function (select_values) {
-                                if ($('#select_3').val() === "precip"   ||
-                                    $('#select_3').val() === "humidity" ||
-                                    $('#select_3').val() === "wind"     ){
-                                    getTowns(3);
-                                }
-                                else if ($('#select_3').val() === "temp"){
-                                    getTowns(3);
-                                    getDeg(3);
-                                }
-                                else if ($('#select_3').val() === "lbmp"){
-                                    getZones(3);
-                                }
-                                s_values = select_values.result;
-                                for (var key in s_values) {
-                                    $('#select_4').append($('<option>', { 
-                                        value: key,
-                                        text : s_values[key] 
-                                    }));
-                                }
-                            }
-                        );
-                    });
-
-                    $('#select_4').change(function () { 
-                        if ($('#select_4').val() === "precip"   ||
-                            $('#select_4').val() === "humidity" ||
-                            $('#select_4').val() === "wind"     ){
-                            getTowns(4);
-                        }
-                        else if ($('#select_4').val() === "temp"){
-                            getTowns(4);
-                            getDeg(4);
-                        }
-                        else if ($('#select_4').val() === "lbmp"){
-                            getZones(4);
-                        }
-                    });
-
-                    function resetSelectValues(){
-                        $.get('/_resetSelectValues', 
-                            function (select_values) {
-                                document.getElementById("select_1").options.length = 0;
-                                document.getElementById("select_2").options.length = 0;
-                                document.getElementById("select_3").options.length = 0;
-                                document.getElementById("select_4").options.length = 0;
-                                $("#select_1_town_or_zone").empty()
-                                $("#select_2_town_or_zone").empty()
-                                $("#select_3_town_or_zone").empty()
-                                $("#select_4_town_or_zone").empty()
-                                $("#select_1_deg").empty()
-                                $("#select_2_deg").empty()
-                                $("#select_3_deg").empty()
-                                $("#select_4_deg").empty()
-                                s_values = select_values.result;
-                                for (var key in s_values) {
-                                    $('#select_1').append($('<option>', { 
-                                        value: key,
-                                        text : s_values[key] 
-                                    }));
-                                }
-                            }
-                        );
-                    }
-
-                    function getTowns(select_index){
-                        $.get('/_getTowns',
-                            function (towns) {
-                                towns = towns.result;
-                                $('#select_'+select_index+'_town_or_zone').text("Town: ").append($('<select>', { id: "select_town_"+select_index})).append("<br>").append("<br>");
-                                $('#select_town_'+select_index).css("margin-left","28px");
-                                for (var town in towns) {
-                                    $('#select_town_'+select_index).append($('<option>', { 
-                                        value: town,
-                                        text : towns[town]
-                                    }));
-                                }
-                            }
-                        );
-                    }
-
-                    function getDeg(select_index){
-                        console.log(select_index)
-                        $('#select_'+select_index+'_deg').text("Degree: ").append($('<select>', { id: "select_deg_"+select_index})).append("<br>").append("<br>");
-                        $('#select_deg_'+select_index).css("margin-left","18px");
-                        $('#select_deg_'+select_index).append($('<option>', {
-                            value: "c",
-                            text: "C"
-                        }));
-                        $('#select_deg_'+select_index).append($('<option>', {
-                            value: "f",
-                            text: "F"
-                        }));
-                    }
-
-                    function getZones(select_index){
-                        $.get('/_getZones',
-                            function (zones) {
-                                zones = zones.result;
-                                console.log('#select_'+select_index+'_town_or_zone')
-                                $('#select_'+select_index+'_town_or_zone').text("Zone: ").append($('<select>', { id: "select_zone_"+select_index})).append("<br>").append("<br>");
-                                $('#select_zone_'+select_index).css("margin-left","28px");
-                                for (var zone in zones) {
-                                    $('#select_zone_'+select_index).append($('<option>', { 
-                                        value: zones[zone],
-                                        text : zones[zone]
-                                    }));
-                                }
-                            }
-                        );
-                    }
-
-                    function callGenerateGraph(){
-                        selected_values = [$('#select_1').val(),$('#select_2').val(),$('#select_3').val(),$('#select_4').val()];
-                        generateGraph(selected_values);
-                    }
-
-                    function generateGraph(selected_values){
-                        console.log(selected_values);
-                        datasets = []
-                        var values = {}
-
-                        // Getting index of values
-                        var precip_index   = selected_values.indexOf("precip");
-                        var humidity_index = selected_values.indexOf("humidity");
-                        var wind_index     = selected_values.indexOf("wind");
-                        var temp_index     = selected_values.indexOf("temp");
-                        var load_index     = selected_values.indexOf("load");
-                        var lbmp_index     = selected_values.indexOf("lbmp");
-                        var pos_index      = selected_values.indexOf("pos");
-                        var neg_index      = selected_values.indexOf("neg");
-
-                        if (precip_index > -1){
-                            precip_index +=1
-                            var town = $('#select_town_'+precip_index).val();
-                            datasets.push("precip_"+town);
-                        }
-                        if (humidity_index > -1){
-                            humidity_index +=1
-                            var town = $('#select_town_'+humidity_index).val();
-                            datasets.push("humidity_"+town);
-                        }
-                        if (wind_index > -1){
-                            wind_index +=1
-                            var wind = $('#select_town_'+wind_index).val();
-                            datasets.push("wind_"+town);
-                        }
-                        if (temp_index > -1){
-                            temp_index +=1
-                            var town = $('#select_town_'+temp_index).val();
-                            var deg  = $('#select_deg_'+temp_index).val();
-                            datasets.push("temp_"+town+"_"+deg);
-                        }
-                        if (lbmp_index > -1){
-                            lbmp_index +=1
-                            var zone = $('#select_zone_'+lbmp_index).val();
-                            datasets.push("lbmp_"+zone);
-                        }
-                        if (load_index > -1){
-                            datasets.push("load");
-                        }
-                        if (pos_index > -1){
-                            datasets.push("pos");
-                        }
-                        if (neg_index > -1){
-                            datasets.push("neg");
-                        }
-                        $.get('/_getIntegrationDataset',{
-                            data: datasets
-                            },
-                            function (integration_data) {
-                                i_data = integration_data.result;
-                                console.log(i_data);
-                                nv.addGraph(function() {
-                                    chart = nv.models.lineChart()
-                                        .options({
-                                            duration: 300,
-                                            useInteractiveGuideline: true
-                                        })
-                                        .width(965)
-                                        .height(500)
-                                    ;
-                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
-                                    chart.xAxis
-                                        .axisLabel("Time (Hour)")
-                                        .tickFormat(function(d){
-                                            var myDate = new Date(d *1000).toGMTString();
-                                            myDate = myDate.split(" ")[4];
-                                            hour = parseInt(myDate.split(":")[0]);
-                                            minute = parseInt(myDate.split(":")[1])
-                                            var pm_or_am = " AM";
-                                            if (hour >= 12){
-                                                hour = hour % 12;
-                                                pm_or_am = " PM";
-                                            }
-                                            if (hour == 0)
-                                                hour = 12
-                                            if (hour < 10)
-                                                hour = "0" + String(hour);
-                                            if (minute < 10)
-                                                minute = "0" + String(minute);
-                                            hour = String(hour) + ":" + String(minute) + pm_or_am
-                                            return (hour);
-                                        })
-                                        .staggerLabels(true)
-                                    ;
-
-                                    chart.yAxis
-                                        .axisLabel('Datasets')
-                                        // .tickFormat(function(d) {
-                                        //     if (d == null) {
-                                        //         return 'N/A';
-                                        //     }
-                                        //     return (d);
-                                        // })
-                                    ;
-                                    d3.select('#chart0 svg')
-                                        .datum(i_data)
-                                        .call(chart);
-                                    nv.utils.windowResize(chart.update);
-                                    return chart;
-                                });
-                            }
-                        );
-                        resetSelectValues()
-                    }
-
-                    function generateUserGraph(){
-                        $.get('/_getUserIntegrationDataset',
-                            function (integration_data) {
-                                i_data = integration_data.result;
-                                console.log(i_data);
-                                nv.addGraph(function() {
-                                    chart = nv.models.lineChart()
-                                        .options({
-                                            duration: 300,
-                                            useInteractiveGuideline: true
-                                        })
-                                        .width(965)
-                                        .height(500)
-                                    ;
-                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
-                                    chart.xAxis
-                                        .axisLabel("Time (Hour)")
-                                        .tickFormat(function(d){
-                                            var myDate = new Date(d *1000).toGMTString();
-                                            myDate = myDate.split(" ")[4];
-                                            hour = parseInt(myDate.split(":")[0]);
-                                            minute = parseInt(myDate.split(":")[1])
-                                            var pm_or_am = " AM";
-                                            if (hour >= 12){
-                                                hour = hour % 12;
-                                                pm_or_am = " PM";
-                                            }
-                                            if (hour == 0)
-                                                hour = 12
-                                            if (hour < 10)
-                                                hour = "0" + String(hour);
-                                            if (minute < 10)
-                                                minute = "0" + String(minute);
-                                            hour = String(hour) + ":" + String(minute) + pm_or_am
-                                            return (hour);
-                                        })
-                                        .staggerLabels(true)
-                                    ;
-
-                                    chart.yAxis
-                                        .axisLabel('Datasets')
-                                        // .tickFormat(function(d) {
-                                        //     if (d == null) {
-                                        //         return 'N/A';
-                                        //     }
-                                        //     return (d);
-                                        // })
-                                    ;
-                                    d3.select('#chart0 svg')
-                                        .datum(i_data)
-                                        .call(chart);
-                                    nv.utils.windowResize(chart.update);
-                                    return chart;
-                                });
-                            }
-                        );
-                        resetSelectValues()
-                    }
-
-                    $(function() {
-                        // Generating default graph
-                        generateUserGraph();
-                    });
-        
-                </script>
-
-                <!-- Edit Dashboard Modal -->
-                <div class="modal fade" id="EditGraphHomeDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3 class="modal-title">Download dataset Graphs in Home Dashboard</h3>
-                            </div>
-                            <div class="modal-body">
-                                
-                                <p>This should show a list of the graphs in this dashboard and should let you move them, set size or delete them</p>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Generate Graph</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row" style="padding-top: 10px;">
+                <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison 
-                                 <form method="get" action="/returnIntegratedData" style="display: inline;">
-                                    <button class="btn btn-info" type="submit" style="color: white; border:none; background:none; float: right; padding-top: 0px;">
-                                        <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> Download Data
-                                    </button>
-                                </form>
-                                    
-                                </h3>
+                                <h3 class="panel-title">About this dashboard</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="chart0">
-                                    <svg style="width:975px;height: 500px;"></svg>
-                                </div>
+                                <p>
+                                    Welcome to the OASIS Dashboard! </br>
+                                    The dashboard has 5 areas of interest: <br>
+                                    <ul>
+                                        <li><strong>Energy Data</strong></li>
+                                        <li><strong>Social Data</strong></li> 
+                                        <li><strong>Weather Data</strong></li> 
+                                        <li><strong>Market Data</strong></li>
+                                        <li><strong>Data Integration</strong></li>
+                                    </ul>
+                                </p>
+                                <p>
+                                    The <strong>Energy Data</strong> area will show users AEE (Puerto Rico Electric Power Authority) historic data that was gathered from 2000 to 2015. 
+                                </p>
+                                <p>
+                                    <strong>Social data</strong> is being gathered from Twitter. 
+                                    <br>
+                                    Tweets from Puerto Rico related to smart grids and energy are being streamed, stored and classified as positive or negative using a naïve bayes classifier.
+                                    <br>
+                                    A pie chart shows the amount of positive and negative tweets.
+                                    <br>
+                                    Two donut charts show the top 10 most positive and negative words and the tweets classified as positive or negative are being shown in near real-time. 
+                                    <br>
+                                    Positive tweets are colored blue and negative tweets are colored red.
+                                    <br>
+                                    Twitter data may be exported as a csv file.
+                                </p>
+                                <p>
+                                    <strong>Weather data</strong> is being gathered using the Dark Sky API. <br>
+                                    This area shows the following weather data for a given town:
+                                    <ul>
+                                        <li>current condition</li>
+                                        <li>today’s forecast</li> 
+                                        <li>today’s 12-hour forecast</li> 
+                                        <li>4-day forecast</li> 
+                                    </ul>
+                                    Users may search for a town by name or zip code.
+                                    <br> 
+                                    This area also shows users radar images for Puerto Rico.
+                                    <br>  
+                                    The hourly forecast for the next 24 hours can be exported as a csv file.
+                                </p>
+                                <p>
+                                The <strong>Market data</strong> section will show users loads in MWhr and Day-ahead Locational Based Marginal Pricing gathered from the NYISO. 
+                                <br>
+                                Also, a graph comparing loads with Day-Ahead Locational Based Marginal Pricing (LBMP) is shown.
+                                </p>
+                                <p>
+                                The Data Integration section is the area in the dashboard where users will be able to make comparisons between the different datasets. 
+                                <br>
+                                Users will be able to compare the following datasets:
+                                <ul>
+                                    <li>Humidity data per hour for a given town</li>
+                                    <li>Precipitation data per hour for a given town</li>
+                                    <li>Wind data per hour for a given town</li>
+                                    <li>Temperature data per hour for a given town in Fahrenheit or Celsius</li>
+                                    <li>Load data</li>
+                                    <li>Load based marginal pricing data per zone</li>
+                                    <li>Positive Tweets</li>
+                                    <li>Negative Tweets</li>
+                                </ul>
+                                Up to four of these datasets may be compared. 
+                                <br>
+                                These datasets may be imported or exported. 
+                                </p>
+                                <p>
+                                    The OASIS dashboard is an open source project.
+                                    The code can be accessed in 
+                                    <a href="https://github.com/alesanz237/oasis_dashboard">Github</a>.
+                                </p>
+                                <p>
+                                    This dashboard is part of the OASIS project, more information about this project is provided in 
+                                    <a href="http://oasis.uprm.edu">oasis.uprm.edu</a>
+                                </p>
                             </div>
                         </div>
                     </div>

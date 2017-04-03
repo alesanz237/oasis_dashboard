@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Oasis Dashboard</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../static/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="../static/js/skycons.js"></script>
+
+    <script src="../static/js/d3.js"></script>
+    <script src="../static/js/klass.js"></script>
+    <script src="../static/js/atlaspr.js"></script>
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
+    <script src="../static/js/jquery.js"></script>
+
+</head>
+
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="height:50px;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand navbar-left" href="\"><img style="height: 50px; margin-top: -15px;" src="./static/img/oasis-white.png"><h3 style="margin-top:-27px; margin-left:115px; color:white;">Dashboard</h3></img></a>
+            </div>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="\home"><i class="fa fa-fw fa-dashboard"></i> Home</a>
+                    </li>
+                    <li >
+                        <a href="\energy"><i class="fa fa-fw fa-bar-chart-o"></i> Energy Data</a>
+                    </li>
+                    <li>
+                        <a href="\twitter"><i class="fa fa-fw fa-twitter"></i> Social Data</a>
+                    </li>
+                    <li>
+                        <a href="\weather"><i class="fa fa-fw fa-cloud"></i> Weather Data</a>
+                    </li>
+                    <li >
+                        <a href="\market"><i class="fa fa-fw fa-bar-chart-o"></i> Market Data</a>
+                    </li>
+                    <li class="active">
+                        <a href="\integration"><i class="fa fa-fw fa-bar-chart-o"></i> Data Integration</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper" style="margin-top: -40px;">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Data Integration
+                            <!-- <button class="btn btn-success" data-toggle="modal" style="  margin-right: 0px;"> Generate graph from user imported datasets -->
+                        </h1>
+                        <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
+                            <input  type ="file" name ="file" style="float: right; font-size: 12px; margin-right: 777px; margin-top:  -10px;"/>
+                            <input style="margin-top: 5px" class="btn btn-success" type = "submit" value="Generate graph from user imported datasets"/>
+                        </form>
+                        <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphToDashboard" style=" float: right; margin-right: 410px; margin-top: -34px;"> Generate graph from dashboard dataset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add dataModal -->
+                <div class="modal fade" id="AddGraphToDashboard" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add Graph to Dashboard</h3>
+                            </div>
+                            <div id="dashboard_data" class="modal-body">
+                                Dataset 1:
+                                <select id="select_1">
+                                {% for value, description in select_values.items() %}
+                                    <option value={{value}}>{{description}}</option>
+                                {% endfor %}
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_1_town_or_zone"></div>
+                                <div id="select_1_deg"></div>
+
+                                Dataset 2:
+                                <select id="select_2">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_2_town_or_zone"></div>
+                                <div id="select_2_deg"></div>
+
+                                Dateset 3:
+                                <select id="select_3">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_3_town_or_zone"></div>
+                                <div id="select_3_deg"></div>
+
+                                Dataset 4:
+                                <select id="select_4">
+                                </select>
+                                <br>
+                                <br>
+
+                                <div id="select_4_town_or_zone"></div>
+                                <div id="select_4_deg"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" onclick="callGenerateGraph()" data-dismiss="modal">Generate graph</button>
+                                <button type="button" class="btn btn-danger" onclick="resetSelectValues()" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+
+                    // Generating select2 values if select1 changes
+                    $('#select_1').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_1').val(),
+                              select: 1
+                            }, 
+                            function (select_values) {
+                                if ($('#select_1').val() === "precip"   ||
+                                    $('#select_1').val() === "humidity" ||
+                                    $('#select_1').val() === "wind"     ){
+                                    getTowns(1);
+                                }
+                                else if ($('#select_1').val() === "temp"){
+                                    getTowns(1);
+                                    getDeg(1);
+                                }
+                                else if ($('#select_1').val() === "lbmp"){
+                                    getZones(1);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_2').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+                    // Generating select3 values if select2 changes
+                    $('#select_2').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_2').val(),
+                              select: 2
+                            }, 
+                            function (select_values) {
+                                if ($('#select_2').val() === "precip"   ||
+                                    $('#select_2').val() === "humidity" ||
+                                    $('#select_2').val() === "wind"     ){
+                                    getTowns(2);
+                                }
+                                else if ($('#select_2').val() === "temp"){
+                                    getTowns(2);
+                                    getDeg(2);
+                                }
+                                else if ($('#select_2').val() === "lbmp"){
+                                    getZones(2);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_3').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+                    // Generating select4 values if select3 changes
+                    $('#select_3').change(function () { 
+                        $.get('/_updateSelectValues',
+                            { selected_value: $('#select_3').val(),
+                              select: 3
+                            }, 
+                            function (select_values) {
+                                if ($('#select_3').val() === "precip"   ||
+                                    $('#select_3').val() === "humidity" ||
+                                    $('#select_3').val() === "wind"     ){
+                                    getTowns(3);
+                                }
+                                else if ($('#select_3').val() === "temp"){
+                                    getTowns(3);
+                                    getDeg(3);
+                                }
+                                else if ($('#select_3').val() === "lbmp"){
+                                    getZones(3);
+                                }
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_4').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    });
+
+                    $('#select_4').change(function () { 
+                        if ($('#select_4').val() === "precip"   ||
+                            $('#select_4').val() === "humidity" ||
+                            $('#select_4').val() === "wind"     ){
+                            getTowns(4);
+                        }
+                        else if ($('#select_4').val() === "temp"){
+                            getTowns(4);
+                            getDeg(4);
+                        }
+                        else if ($('#select_4').val() === "lbmp"){
+                            getZones(4);
+                        }
+                    });
+
+                    function resetSelectValues(){
+                        $.get('/_resetSelectValues', 
+                            function (select_values) {
+                                document.getElementById("select_1").options.length = 0;
+                                document.getElementById("select_2").options.length = 0;
+                                document.getElementById("select_3").options.length = 0;
+                                document.getElementById("select_4").options.length = 0;
+                                $("#select_1_town_or_zone").empty()
+                                $("#select_2_town_or_zone").empty()
+                                $("#select_3_town_or_zone").empty()
+                                $("#select_4_town_or_zone").empty()
+                                $("#select_1_deg").empty()
+                                $("#select_2_deg").empty()
+                                $("#select_3_deg").empty()
+                                $("#select_4_deg").empty()
+                                s_values = select_values.result;
+                                for (var key in s_values) {
+                                    $('#select_1').append($('<option>', { 
+                                        value: key,
+                                        text : s_values[key] 
+                                    }));
+                                }
+                            }
+                        );
+                    }
+
+                    function getTowns(select_index){
+                        $.get('/_getTowns',
+                            function (towns) {
+                                towns = towns.result;
+                                $('#select_'+select_index+'_town_or_zone').text("Town: ").append($('<select>', { id: "select_town_"+select_index})).append("<br>").append("<br>");
+                                $('#select_town_'+select_index).css("margin-left","28px");
+                                for (var town in towns) {
+                                    $('#select_town_'+select_index).append($('<option>', { 
+                                        value: town,
+                                        text : towns[town]
+                                    }));
+                                }
+                            }
+                        );
+                    }
+
+                    function getDeg(select_index){
+                        console.log(select_index)
+                        $('#select_'+select_index+'_deg').text("Scale: ").append($('<select>', { id: "select_deg_"+select_index})).append("<br>").append("<br>");
+                        $('#select_deg_'+select_index).css("margin-left","25px");
+                        $('#select_deg_'+select_index).append($('<option>', {
+                            value: "c",
+                            text: "C"
+                        }));
+                        $('#select_deg_'+select_index).append($('<option>', {
+                            value: "f",
+                            text: "F"
+                        }));
+                    }
+
+                    function getZones(select_index){
+                        $.get('/_getZones',
+                            function (zones) {
+                                zones = zones.result;
+                                console.log('#select_'+select_index+'_town_or_zone')
+                                $('#select_'+select_index+'_town_or_zone').text("Zone: ").append($('<select>', { id: "select_zone_"+select_index})).append("<br>").append("<br>");
+                                $('#select_zone_'+select_index).css("margin-left","28px");
+                                for (var zone in zones) {
+                                    $('#select_zone_'+select_index).append($('<option>', { 
+                                        value: zones[zone],
+                                        text : zones[zone]
+                                    }));
+                                }
+                            }
+                        );
+                    }
+
+                    function callGenerateGraph(){
+                        selected_values = [$('#select_1').val(),$('#select_2').val(),$('#select_3').val(),$('#select_4').val()];
+                        generateGraph(selected_values);
+                    }
+
+                    function generateGraph(selected_values){
+                        console.log(selected_values);
+                        datasets = []
+                        var values = {}
+
+                        // Getting index of values
+                        var precip_index   = selected_values.indexOf("precip");
+                        var humidity_index = selected_values.indexOf("humidity");
+                        var wind_index     = selected_values.indexOf("wind");
+                        var temp_index     = selected_values.indexOf("temp");
+                        var load_index     = selected_values.indexOf("load");
+                        var lbmp_index     = selected_values.indexOf("lbmp");
+                        var pos_index      = selected_values.indexOf("pos");
+                        var neg_index      = selected_values.indexOf("neg");
+
+                        if (precip_index > -1){
+                            precip_index +=1
+                            var town = $('#select_town_'+precip_index).val();
+                            datasets.push("precip_"+town);
+                        }
+                        if (humidity_index > -1){
+                            humidity_index +=1
+                            var town = $('#select_town_'+humidity_index).val();
+                            datasets.push("humidity_"+town);
+                        }
+                        if (wind_index > -1){
+                            wind_index +=1
+                            var wind = $('#select_town_'+wind_index).val();
+                            datasets.push("wind_"+town);
+                        }
+                        if (temp_index > -1){
+                            temp_index +=1
+                            var town = $('#select_town_'+temp_index).val();
+                            var deg  = $('#select_deg_'+temp_index).val();
+                            datasets.push("temp_"+town+"_"+deg);
+                        }
+                        if (lbmp_index > -1){
+                            lbmp_index +=1
+                            var zone = $('#select_zone_'+lbmp_index).val();
+                            datasets.push("lbmp_"+zone);
+                        }
+                        if (load_index > -1){
+                            datasets.push("load");
+                        }
+                        if (pos_index > -1){
+                            datasets.push("pos");
+                        }
+                        if (neg_index > -1){
+                            datasets.push("neg");
+                        }
+                        $.get('/_getIntegrationDataset',{
+                            data: datasets
+                            },
+                            function (integration_data) {
+                                i_data = integration_data.result;
+                                console.log(i_data);
+                                nv.addGraph(function() {
+                                    chart = nv.models.lineChart()
+                                        .options({
+                                            duration: 300,
+                                            useInteractiveGuideline: true
+                                        })
+                                        .width(965)
+                                        .height(500)
+                                    ;
+                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+                                    chart.xAxis
+                                        .axisLabel("Time (Hour)")
+                                        .tickFormat(function(d){
+                                            var myDate = new Date(d *1000).toGMTString();
+                                            myDate = myDate.split(" ")[4];
+                                            hour = parseInt(myDate.split(":")[0]);
+                                            minute = parseInt(myDate.split(":")[1])
+                                            var pm_or_am = " AM";
+                                            if (hour >= 12){
+                                                hour = hour % 12;
+                                                pm_or_am = " PM";
+                                            }
+                                            if (hour == 0)
+                                                hour = 12
+                                            if (hour < 10)
+                                                hour = "0" + String(hour);
+                                            if (minute < 10)
+                                                minute = "0" + String(minute);
+                                            hour = String(hour) + ":" + String(minute) + pm_or_am
+                                            return (hour);
+                                        })
+                                        .staggerLabels(true)
+                                    ;
+
+                                    chart.yAxis
+                                        .axisLabel('Datasets')
+                                        // .tickFormat(function(d) {
+                                        //     if (d == null) {
+                                        //         return 'N/A';
+                                        //     }
+                                        //     return (d);
+                                        // })
+                                    ;
+                                    d3.select('#chart0 svg')
+                                        .datum(i_data)
+                                        .call(chart);
+                                    nv.utils.windowResize(chart.update);
+                                    return chart;
+                                });
+                            }
+                        );
+                        resetSelectValues()
+                    }
+
+                    function generateUserGraph(){
+                        $.get('/_getUserIntegrationDataset',
+                            function (integration_data) {
+                                i_data = integration_data.result;
+                                console.log(i_data);
+                                nv.addGraph(function() {
+                                    chart = nv.models.lineChart()
+                                        .options({
+                                            duration: 300,
+                                            useInteractiveGuideline: true
+                                        })
+                                        .width(965)
+                                        .height(500)
+                                    ;
+                                    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+                                    chart.xAxis
+                                        .axisLabel("Time (Hour)")
+                                        .tickFormat(function(d){
+                                            var myDate = new Date(d *1000).toGMTString();
+                                            myDate = myDate.split(" ")[4];
+                                            hour = parseInt(myDate.split(":")[0]);
+                                            minute = parseInt(myDate.split(":")[1])
+                                            var pm_or_am = " AM";
+                                            if (hour >= 12){
+                                                hour = hour % 12;
+                                                pm_or_am = " PM";
+                                            }
+                                            if (hour == 0)
+                                                hour = 12
+                                            if (hour < 10)
+                                                hour = "0" + String(hour);
+                                            if (minute < 10)
+                                                minute = "0" + String(minute);
+                                            hour = String(hour) + ":" + String(minute) + pm_or_am
+                                            return (hour);
+                                        })
+                                        .staggerLabels(true)
+                                    ;
+
+                                    chart.yAxis
+                                        .axisLabel('Datasets')
+                                        // .tickFormat(function(d) {
+                                        //     if (d == null) {
+                                        //         return 'N/A';
+                                        //     }
+                                        //     return (d);
+                                        // })
+                                    ;
+                                    d3.select('#chart0 svg')
+                                        .datum(i_data)
+                                        .call(chart);
+                                    nv.utils.windowResize(chart.update);
+                                    return chart;
+                                });
+                            }
+                        );
+                        resetSelectValues()
+                    }
+
+                    $(function() {
+                        // Generating default graph
+                        generateUserGraph();
+                    });
+        
+                </script>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison 
+                                 <form method="get" action="/returnIntegratedData" style="display: inline;">
+                                    <button class="btn btn-info" type="submit" style="color: white; border:none; background:none; float: right; padding-top: 0px;">
+                                        <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> Download Data
+                                    </button>
+                                </form>
+                                    
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="chart0">
+                                    <svg style="width:975px;height: 500px;"></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
