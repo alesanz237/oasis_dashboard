@@ -26,10 +26,10 @@
     <script src="../static/js/d3.js"></script>
     <script src="../static/js/klass.js"></script>
     <script src="../static/js/atlaspr.js"></script>
+    <link href="../static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="../static/js/nv.d3.js"></script>
     <script src="../static/js/jquery.js"></script>
-
-    <!-- NVD3 Twitter Charts -->
-    <!-- <script src="../static/js/twitterCharts.js"></script> -->
 
     <!-- CSS for spinner -->
     <link href="../static/css/spinner.css" rel="stylesheet" type="text/css">
@@ -95,16 +95,26 @@
                 <!-- /.row -->
 
                 <div class="row" style="margin-top: 10px;">
-                    <div class="col-lg-12">
-                        <div class="panel panel-green">
+                    <div class="col-lg-5">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-twitter"></i> Twitter Sentiment Analysis </h3>
                             </div>
                             <div class="panel-body">
-                                <div class="flot-chart">
-                                    <!-- <div id="loader"></div> -->
-                                    <div class="flot-chart-content" id="flot-pie-chart"></div>
+                                <div id="pie-chart" style="height: 500px; width:100%;">
+                                    <svg></svg>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Twitter Stream</h3>
+                            </div>
+                            <div class="panel-body">
+                                    <div id="loader" class="loader_stream"></div>
+                                    <div id="twitter_stream" style="height: 500px; width: 100%;"></div>
                             </div>
                         </div>
                     </div>
@@ -117,40 +127,27 @@
                                 <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Energy Related Words in Positive Tweets</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="loader" class="loader_positive" ></div>
-                                <div id="positive-tweets"></div>
-                                <!-- <div class="text-right">
-                                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
-                                </div> -->
+                                <!-- <div id="loader" class="loader_positive" ></div> -->
+                                <div id="positive-tweets" style="height: 500px; width: 100%;">
+                                    <svg></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6" >
-                        <div class="panel panel-red">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Top Energy Related Words in Negative Tweets</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="loader" class="loader_negative"></div>
-                                <div id="negative-tweets"></div>
+                                <!-- <div id="loader" class="loader_negative"></div> -->
+                                <div id="negative-tweets" style="height: 500px; width: 100%;">
+                                    <svg></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div> 
-
-                <div class="row" >
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-twitter fa-fw"></i> Twitter Stream</h3>
-                            </div>
-                            <div class="panel-body">
-                                    <div id="loader" class="loader_stream"></div>
-                                    <div id="twitter_stream"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <script>
                     // Donut Chart
@@ -158,78 +155,98 @@
 
                         $.get('/_getTweetsCount', 
                             function (tweets_count) {
-                                var data = [{
-                                    label: "Positive Tweets",
-                                    data: tweets_count.result[0],
-                                    color: '#337AB8'
-                                }, {
-                                    label: "Negative Tweets",
-                                    data: tweets_count.result[1],
-                                    color: '#ff0000'
-                                }];
 
-                                var plotObj = $.plot($("#flot-pie-chart"), data, {
-                                    series: {
-                                        pie: {
-                                            show: true
-                                        }
-                                    },
-                                    grid: {
-                                        hoverable: true,
-                                    },
-                                    tooltip: true,
-                                    tooltipOpts: {
-                                        content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
-                                        shifts: {
-                                            x: 20,
-                                            y: 0
-                                        },
-                                        defaultTheme: true
-                                    }
+                                var myColors = ["#3232ff", "#ff3232"];
+                                d3.scale.myColors = function() {
+                                    return d3.scale.ordinal().range(myColors);
+                                };
+
+                                var data = [
+                                  { 
+                                    "label": "Positive Tweets",
+                                    "value" : tweets_count.result[0]
+                                  } , 
+                                  { 
+                                    "label": "Negative Tweets",
+                                    "value" : tweets_count.result[1]
+                                  }];
+
+                                //Regular pie chart example
+                                nv.addGraph(function() {
+                                  var chart = nv.models.pieChart()
+                                      .x(function(d) { return d.label })
+                                      .y(function(d) { return d.value })
+                                      // .width(400)
+                                      .height(400)
+                                      .labelType("percent") //Configure what type of data to show in the label. Can be 
+                                      .showLabels(true).color(d3.scale.myColors().range());
+
+                                    d3.select("#pie-chart svg")
+                                        .datum(data)
+                                        .transition().duration(350)
+                                        .attr('width','100%')
+                                        .call(chart);
+
+                                  return chart;
                                 });
                             });
 
                         $.get('/_getPositiveWords', 
                             function (positive_words) {
-                                $(".loader_positive").hide();
-                                Morris.Donut({
-                                    element: 'positive-tweets',
-                                    data: positive_words.result,
-                                    resize: true,
-                                    colors: [
-                                        '#0000ff',
-                                        '#0000e5',
-                                        '#1919ff',
-                                        '#3232ff',
-                                        '#0000cc',
-                                        '#0000b2',
-                                        '#4c4cff',
-                                        '#6666ff',
-                                        '#7f7fff',
-                                        '#9999ff',     
-                                    ],
+                                nv.addGraph(function() {
+                                    // console.log(positive_words.result)
+                                    // var myColors = ['#0000ff','#0000e5','#1919ff','#3232ff','#0000cc','#0000b2','#4c4cff','#6666ff','#7f7fff','#9999ff'];
+                                    // d3.scale.myColors = function() {
+                                        // return d3.scale.ordinal().range(myColors);
+                                    // };
+                                    var chart = nv.models.pieChart()
+                                        .x(function(d) { return d.label })
+                                        .y(function(d) { return d.value })
+                                        .showLabels(true)     //Display pie labels
+                                        .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                                        // .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                                        // .width(400)
+                                        .height(400)
+                                        .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                                        .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
+                                        .showLabels(true)
+                                    ;
+
+                                    d3.select("#positive-tweets svg")
+                                        .datum(positive_words.result)
+                                        .transition().duration(350)
+                                        .attr('width','100%')
+                                        .call(chart);
+
+                                  return chart;
                                 });
                             });
 
+
                         $.get('/_getNegativeWords', 
                             function (negative_words) {
-                                $(".loader_negative").hide();
-                                Morris.Donut({
-                                    element: 'negative-tweets',
-                                    data: negative_words.result,
-                                    resize: true,
-                                    colors: [
-                                        '#ff0000',
-                                        '#e50000',
-                                        '#ff1919',
-                                        '#cc0000',
-                                        '#ff3232',
-                                        '#b20000',
-                                        '#990000',
-                                        '#7f0000',
-                                        '#7f0000',
-                                        '#4c0000',    
-                                    ],
+                                nv.addGraph(function() {
+                                    console.log(negative_words.result)
+                                    var chart = nv.models.pieChart()
+                                        .x(function(d) { return d.label })
+                                        .y(function(d) { return d.value })
+                                        .showLabels(true)     //Display pie labels
+                                        .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                                        // .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+                                        // .width(400)
+                                        .height(400)
+                                        .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+                                        .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
+                                        .showLabels(true)
+                                    ;
+
+                                    d3.select("#negative-tweets svg")
+                                        .datum(negative_words.result)
+                                        .transition().duration(350)
+                                        .attr('width','100%')
+                                        .call(chart);
+
+                                  return chart;
                                 });
                             });
 
@@ -273,24 +290,8 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="../static/js/jquery.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="../static/js/bootstrap.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="../static/js/plugins/morris/raphael.min.js"></script>
-    <script src="../static/js/plugins/morris/morris.min.js"></script>
-    <!-- <script src="../static/js/plugins/morris/morris-data.js"></script> -->
-
-    <!-- Flot Charts JavaScript -->
-    <!--[if lte IE 8]><script src="js/excanvas.min.js"></script><![endif]-->
-    <script src="../static/js/plugins/flot/jquery.flot.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.resize.js"></script>
-    <script src="../static/js/plugins/flot/jquery.flot.pie.js"></script>
-    <script src="../static/js/plugins/flot/flot-data.js"></script>
 
 </body>
 
