@@ -61,11 +61,12 @@ class DataIntegration:
 			1. "pos_tweets" : amount of positive tweets per hour for a day
 			2. "neg_tweets" : amount of negative tweets per hour for a day
 			3. "precip_<town>": precipitation per hour for a day for a given town
-			4. "temp_<town>_<deg>": temperature in F or C per hour for a day for a give town
-			5. "humidity_<town>": humidity per hour for a day for a given town
-			6. "wind_<town>": wind per hour for a day for a given town:
-			7. "load": Loads per hour for a day from NYISO
-			8. "lmbp_<zone>": lbmp per hor for a day from NYISO
+			4. "cloudCover_<town>": cloud coverage per hour for a day for a given town
+			5. "temp_<town>_<deg>": temperature in F or C per hour for a day for a give town
+			6. "humidity_<town>": humidity per hour for a day for a given town
+			7. "wind_<town>": wind per hour for a day for a given town:
+			8. "load": Loads per hour for a day from NYISO
+			9. "lmbp_<zone>": lbmp per hor for a day from NYISO
 
 			Returns:
 				Dictionary: Dictionary of data that will be added 
@@ -85,6 +86,12 @@ class DataIntegration:
 			data["key"]    = identifier+"_"+town
 			# print data["key"]
 			data["values"] = self.data.getHourlyPrecip(town)
+
+		# Getting cloud coverage dataset
+		if identifier == "cloudCover":
+			town           = dataset[1]
+			data["key"]    = identifier+"_"+town
+			data["values"] = self.data.getHourlyCloudCoverage(town)
 			
 		# Getting humidity dataset
 		elif identifier == "humidity":
@@ -129,38 +136,42 @@ class DataIntegration:
 	def setSelectValues(self):
 		""" Sets dictionary of select values """
 		self.select_values = ({"":" ",
-							    "pos":"Positive Tweets",
-							    "neg":"Negative Tweets",
+							    "pos":"Positive tweets",
+							    "neg":"Negative tweets",
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
+							    "cloudCover":"Cloud coverage"
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
 		self.select_values2 = ({"":" ",
-							    "pos":"Positive Tweets",
-							    "neg":"Negative Tweets",
+							    "pos":"Positive tweets",
+							    "neg":"Negative tweets",
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
+							    "cloudCover":"Cloud coverage"
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
 		self.select_values3 = ({"":" ",
-							    "pos":"Positive Tweets",
-							    "neg":"Negative Tweets",
+							    "pos":"Positive tweets",
+							    "neg":"Negative tweets",
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
+							    "cloudCover":"Cloud coverage"
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
 		self.select_values4 = ({"":" ",
-							    "pos":"Positive Tweets",
-							    "neg":"Negative Tweets",
+							    "pos":"Positive tweets",
+							    "neg":"Negative tweets",
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
+							    "cloudCover":"Cloud coverage"
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})

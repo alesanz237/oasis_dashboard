@@ -415,13 +415,14 @@ class DataGathering:
 		else:
 			filename = "data/weather/"+keyword+"_c.csv"
 		f = csv.writer(open(filename, "wb+"))
-		f.writerow(["date", "description", "precipitation", "temperature", "humidity", "wind", "icon"])
+		f.writerow(["date", "description", "precipitation", "cloud coverage", "temperature", "humidity", "wind", "icon"])
 		for condition in conditions:
 			temp = condition['temperature'].split(" ")[0][:-2] + " " + condition['temperature'].split(" ")[1]
 			try:
 				f.writerow([condition['time'],
 					condition['summary'],
 					condition['precipProbability'],
+					condition['cloudCover'],
 					temp,
 					condition['humidity'],
 					condition['wind'],
@@ -464,6 +465,30 @@ class DataGathering:
 			precip_data["y"] = float(data["precipitation"][:-1])/100
 			precip_values.append(precip_data)
 			precip_data = {}
+
+		return precip_values
+
+	def getHourlyCloudCoverage(self, keyword):
+		""" 
+			Function that returns an array of dicitionaries that
+			contain hourly cloud coverage.
+
+			Return:
+				Array: filled with dictionary that have the 
+				following:
+					x: the time in epoch where it occured
+					y: the float value of the cloud coverage
+		"""
+		weather_data  = self.getHourlyWeatherFromCSV(keyword, "f", "cloudCover")
+		cloud_cover_values = [] # Array that will contain all the precipitation data
+		cloud_cover_data   = {} # Dictionary of precipitation data
+
+		# Getting precipiation data
+		for data in weather_data:
+			cloud_cover_data["x"] = self.helper.getDateInEpoch(data["date"])
+			cloud_cover_data["y"] = float(data["cloudCover"][:-1])/100
+			cloud_cover_values.append(cloud_cover_data)
+			cloud_cover_data = {}
 
 		return precip_values
 
@@ -731,15 +756,16 @@ def job():
 
 if __name__ == '__main__':
 
-	schedule.every().day.at("23:00").do(job)
+	# schedule.every().day.at("23:00").do(job)
 
-	while True:
-	    schedule.run_pending()
-	    time.sleep(20) # wait one minute
+	# while True:
+	    # schedule.run_pending()
+	    # time.sleep(20) # wait one minute
 
 	# pprint(DataGathering().getDayAheadMarketLBMPZonal())
 
-	# data = DataGathering()
+	data = DataGathering()
+	data.getHourlyWeatherInCSV(u"mayaguez","f")
 	# pprint(data.getDailyWeather(u"mayaguez","f"))
 	# pprint(data.getHourlyWeather(u"mayaguez","f",13))
 	# pprint(data.getHourlyLoads())
