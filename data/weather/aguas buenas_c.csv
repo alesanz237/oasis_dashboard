@@ -1,0 +1,25 @@
+date,description,precipitation,temperature,humidity,wind,icon
+"Mon 10, Apr 2017 12:00 AM",Light Rain,62%,23 C,89%,N 1.46 mph,rain
+"Mon 10, Apr 2017 1:00 AM",Light Rain,63%,23 C,91%,N 1.82 mph,rain
+"Mon 10, Apr 2017 2:00 AM",Light Rain,57%,23 C,90%,NNE 1.74 mph,rain
+"Mon 10, Apr 2017 3:00 AM",Drizzle,26%,23 C,90%,NNE 1.78 mph,rain
+"Mon 10, Apr 2017 4:00 AM",Partly Cloudy,9%,23 C,90%,NE 1.56 mph,partly-cloudy-night
+"Mon 10, Apr 2017 5:00 AM",Partly Cloudy,0%,23 C,91%,NE 1.61 mph,partly-cloudy-night
+"Mon 10, Apr 2017 6:00 AM",Partly Cloudy,1%,23 C,90%,NE 1.38 mph,partly-cloudy-night
+"Mon 10, Apr 2017 7:00 AM",Partly Cloudy,17%,24 C,88%,ENE 1.94 mph,partly-cloudy-day
+"Mon 10, Apr 2017 8:00 AM",Drizzle,25%,25 C,84%,ENE 2.31 mph,rain
+"Mon 10, Apr 2017 9:00 AM",Drizzle,45%,27 C,80%,ENE 2.7 mph,rain
+"Mon 10, Apr 2017 10:00 AM",Light Rain,58%,28 C,77%,E 3.1 mph,rain
+"Mon 10, Apr 2017 11:00 AM",Light Rain,59%,29 C,76%,E 3.48 mph,rain
+"Mon 10, Apr 2017 12:00 PM",Light Rain,62%,29 C,76%,E 3.57 mph,rain
+"Mon 10, Apr 2017 1:00 PM",Light Rain,65%,29 C,76%,E 3.16 mph,rain
+"Mon 10, Apr 2017 2:00 PM",Light Rain,68%,28 C,77%,E 2.9 mph,rain
+"Mon 10, Apr 2017 3:00 PM",Light Rain,69%,28 C,77%,E 2.91 mph,rain
+"Mon 10, Apr 2017 4:00 PM",Light Rain,69%,27 C,77%,E 3.14 mph,rain
+"Mon 10, Apr 2017 5:00 PM",Light Rain,68%,26 C,78%,E 3.28 mph,rain
+"Mon 10, Apr 2017 6:00 PM",Light Rain,65%,25 C,80%,E 3.29 mph,rain
+"Mon 10, Apr 2017 7:00 PM",Light Rain,61%,25 C,82%,ENE 3.19 mph,rain
+"Mon 10, Apr 2017 8:00 PM",Light Rain,56%,24 C,85%,ENE 3.2 mph,rain
+"Mon 10, Apr 2017 9:00 PM",Light Rain,56%,24 C,85%,ENE 3.17 mph,rain
+"Mon 10, Apr 2017 10:00 PM",Light Rain,57%,23 C,87%,ENE 3.17 mph,rain
+"Mon 10, Apr 2017 11:00 PM",Light Rain,59%,23 C,88%,ENE 3.17 mph,rain

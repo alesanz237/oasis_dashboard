@@ -536,7 +536,7 @@ class DataGathering:
 		# Getting temperature data
 		for data in weather_data:
 			temp_data["x"] = self.helper.getDateInEpoch(data["date"])
-			temp_data["y"] = float(data["temperature"].split("°")[0])
+			temp_data["y"] = float(data["temperature"].split("°")[0].split(" ")[0])
 			temp_values.append(temp_data)
 			temp_data      = {}
 
