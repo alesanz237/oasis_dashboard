@@ -92,38 +92,6 @@
                     </div>
                 </div>
                 <!-- /.row -->
-                <script type="text/javascript">
-                    var objToday = new Date();
-                    weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-                    dayOfWeek = weekday[objToday.getDay()];
-                    domEnder = function() 
-                        { var a = objToday; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }();
-                    dayOfMonth = today + ( objToday.getDate() < 10) ? '0' + objToday.getDate() + domEnder : objToday.getDate();
-                    months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-                    curMonth = months[objToday.getMonth()];
-                    curYear = objToday.getFullYear();
-                    curHour = objToday.getHours() > 12 ? objToday.getHours() - 12 : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours());
-                    curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes();
-                    curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds();
-                    curMeridiem = objToday.getHours() > 12 ? "PM" : "AM";
-                    var today = curMonth + ", " + dayOfWeek + " " + dayOfMonth + domEnder + ", " + curYear;
-                    document.getElementById("date").innerHTML = today;
-
-                    // For dowloading lbmp data
-                    console.log(dayOfMonth);
-                    console.log(dayOfMonth.toString().length)
-                    if (dayOfMonth.toString().length == 1){
-                        dayOfMonth = dayOfMonth - 1
-                        dayOfMonth = "0" + dayOfMonth.toString();
-                        console.log(day);
-                    }
-                    if (objToday.getMonth().toString().length == 1){
-                        month = objToday.getMonth() + 1;
-                        month = "0" + month;
-                    }
-                    yesterday = curYear.toString() + month + dayOfMonth
-                    document.getElementById("lbmp_data").href = "http://mis.nyiso.com/public/csv/damlbmp/"+yesterday+"damlbmp_zone.csv"
-                </script>
 
                 <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
@@ -133,7 +101,7 @@
                             </div>
                             <div class="panel-body">
                                 <div id="loads_chart" >
-                                    <svg style="width:975px;height: 550px;"></svg>
+                                    <svg style="width:100%;height: 550px;"></svg>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +115,7 @@
                             </div>
                             <div class="panel-body">
                                 <div id="lbmp_chart">
-                                    <svg style="width:975px;height: 550px;"></svg>
+                                    <svg style="width:100%;height: 550px;"></svg>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +129,7 @@
                             </div>
                             <div class="panel-body">
                                 <div id="loads_vs_lbmp_chart">
-                                    <svg style="width:975px;height: 550px;"></svg>
+                                    <svg style="width:100%;height: 550px;"></svg>
                                 </div>
                             </div>
                         </div>
@@ -185,14 +153,14 @@
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
                     .staggerLabels(true)
-                    .duration(250)
-                    
+                    .duration(250)    
                     ;
                 chart.yAxis.axisLabel("Loads per Hour (kWh)")
                 chart.xAxis.axisLabel("Hours")
                 chart.yAxis.tickFormat(d3.format(''));
                 d3.select('#loads_chart svg')
                     .datum(load_data.result)
+                    .attr('width','100%')
                     .call(chart);
                 nv.utils.windowResize(chart.update);
                 return chart;
@@ -252,6 +220,7 @@
                     data = data;
                     d3.select('#lbmp_chart svg')
                         .datum(data)
+                        .attr('width','100%')
                         .call(chart);
                     nv.utils.windowResize(chart.update);
                     return chart;
@@ -317,7 +286,9 @@
                     chart.focusEnable(false);
                     d3.select('#loads_vs_lbmp_chart svg')
                         .datum(data)
-                        .transition().duration(500).call(chart);
+                        .transition().duration(500)
+                        .attr('width','100%')
+                        .call(chart);
                     nv.utils.windowResize(chart.update);
                     chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
                     return chart;
