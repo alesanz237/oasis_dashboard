@@ -89,10 +89,10 @@
                             <!-- <button class="btn btn-success" data-toggle="modal" style="  margin-right: 0px;"> Generate graph from user imported datasets -->
                         </h1>
                         <form action = "/uploader" method = "POST" enctype = "multipart/form-data">
-                            <input  type ="file" name ="file" style="float: right; font-size: 12px; margin-right: 777px; margin-top:  -10px;"/>
+                            <input required type ="file" name ="file" style="font-size: 12px; margin-right: 777px; margin-top:  -10px;"/>
                             <input style="margin-top: 5px" class="btn btn-success" type = "submit" value="Generate graph from user imported datasets"/>
                         </form>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphToDashboard" style=" float: right; margin-right: 410px; margin-top: -34px;"> Generate graph from dashboard dataset
+                        <button class="btn btn-info" data-toggle="modal" data-target="#AddGraphToDashboard" style=" margin-right: 410px; margin-top: 10px; padding-right: 40px;"> Generate graph from dashboard dataset
                         </button>
                     </div>
                 </div>
@@ -430,15 +430,10 @@
 
                                     chart.yAxis
                                         .axisLabel('Datasets')
-                                        // .tickFormat(function(d) {
-                                        //     if (d == null) {
-                                        //         return 'N/A';
-                                        //     }
-                                        //     return (d);
-                                        // })
                                     ;
                                     d3.select('#chart0 svg')
                                         .datum(i_data)
+                                        .attr('width','100%')
                                         .call(chart);
                                     nv.utils.windowResize(chart.update);
                                     return chart;
@@ -489,15 +484,10 @@
 
                                     chart.yAxis
                                         .axisLabel('Datasets')
-                                        // .tickFormat(function(d) {
-                                        //     if (d == null) {
-                                        //         return 'N/A';
-                                        //     }
-                                        //     return (d);
-                                        // })
                                     ;
                                     d3.select('#chart0 svg')
                                         .datum(i_data)
+                                        .attr('width','100%')
                                         .call(chart);
                                     nv.utils.windowResize(chart.update);
                                     return chart;
@@ -529,7 +519,7 @@
                             </div>
                             <div class="panel-body">
                                 <div id="chart0">
-                                    <svg style="width:975px;height: 500px;"></svg>
+                                    <svg style="width:100%;height: 500px;"></svg>
                                 </div>
                             </div>
                         </div>

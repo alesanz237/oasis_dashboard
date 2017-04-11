@@ -235,8 +235,8 @@ def allowed_filename(filename):
 
 if __name__ == "__main__":
     # Starting process that streams twitter data and classifies it as positive or negative
-    twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
-    weather_gathering_process = subprocess.Popen('code/processes/generateWeatherData.sh',shell=True)
+    # twitter_streaming_process = subprocess.Popen('code/processes/twitterStreamer.sh',shell=True)
+    # weather_gathering_process = subprocess.Popen('code/processes/generateWeatherData.sh',shell=True)
 
     # Starting server
     app.run(port=80, host='0.0.0.0')

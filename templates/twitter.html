@@ -173,14 +173,14 @@
 
                                 //Regular pie chart example
                                 nv.addGraph(function() {
-                                  var chart = nv.models.pieChart()
+                                    var chart = nv.models.pieChart()
                                       .x(function(d) { return d.label })
                                       .y(function(d) { return d.value })
                                       // .width(400)
                                       .height(400)
                                       .labelType("percent") //Configure what type of data to show in the label. Can be 
                                       .showLabels(true).color(d3.scale.myColors().range());
-
+                                    chart.pie.valueFormat(d3.format(',.0d'));
                                     d3.select("#pie-chart svg")
                                         .datum(data)
                                         .transition().duration(350)
@@ -211,6 +211,7 @@
                                         .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
                                         .showLabels(true)
                                     ;
+                                    chart.pie.valueFormat(d3.format(',.0d'));
 
                                     d3.select("#positive-tweets svg")
                                         .datum(positive_words.result)
@@ -239,6 +240,7 @@
                                         .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
                                         .showLabels(true)
                                     ;
+                                    chart.pie.valueFormat(d3.format(',.0d'));
 
                                     d3.select("#negative-tweets svg")
                                         .datum(negative_words.result)
