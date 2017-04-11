@@ -95,7 +95,7 @@
 
                 <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
-                        <div class="panel panel-primary" style="height:580px;">
+                        <div class="panel panel-primary" style="height:580px; width:100%;">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-bar-chart" aria-hidden="true"></i> CAPITL Loads per hour</h3>
                             </div>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
-                        <div class="panel panel-primary" style="height:580px;">
+                        <div class="panel panel-primary" style="height:580px; width:100%;">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i></i> Zonal LBMP</h3>
                             </div>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
-                        <div class="panel panel-primary" style="height:580px;">
+                        <div class="panel panel-primary" style="height:580px; width:100%;">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-bar-chart" aria-hidden="true"></i> CAPITAL loads vs Zonal LBMP</h3>
                             </div>
@@ -148,7 +148,6 @@
             function (load_data) {
                 nv.addGraph(function() {
                 var chart = nv.models.discreteBarChart()
-                    .width(965)
                     .height(500)
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
@@ -179,7 +178,6 @@
                             duration: 300,
                             useInteractiveGuideline: true
                         })
-                        .width(965)
                         .height(500)
                     ;
                     // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
@@ -241,7 +239,6 @@
                         .margin({top: 50, right: 80, bottom: 30, left: 80})
                         // .legendRightAxisHint(' (right axis)')
                         .color(d3.scale.category10().range())
-                        .width(965)
                         .height(500);
                     chart.xAxis.tickFormat(function(d) {
                         var myDate = new Date(d *1000).toGMTString();

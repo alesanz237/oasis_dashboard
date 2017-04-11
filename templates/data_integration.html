@@ -303,7 +303,7 @@
                     }
 
                     function getDeg(select_index){
-                        console.log(select_index)
+                        // console.log(select_index)
                         $('#select_'+select_index+'_deg').text("Scale: ").append($('<select>', { id: "select_deg_"+select_index})).append("<br>").append("<br>");
                         $('#select_deg_'+select_index).css("margin-left","25px");
                         $('#select_deg_'+select_index).append($('<option>', {
@@ -320,7 +320,7 @@
                         $.get('/_getZones',
                             function (zones) {
                                 zones = zones.result;
-                                console.log('#select_'+select_index+'_town_or_zone')
+                                // console.log('#select_'+select_index+'_town_or_zone')
                                 $('#select_'+select_index+'_town_or_zone').text("Zone: ").append($('<select>', { id: "select_zone_"+select_index})).append("<br>").append("<br>");
                                 $('#select_zone_'+select_index).css("margin-left","28px");
                                 for (var zone in zones) {
@@ -339,7 +339,7 @@
                     }
 
                     function generateGraph(selected_values){
-                        console.log(selected_values);
+                        // console.log(selected_values);
                         datasets = []
                         var values = {}
 
@@ -393,14 +393,25 @@
                             },
                             function (integration_data) {
                                 i_data = integration_data.result;
-                                console.log(i_data);
+                                function data(i_data){
+                                      return i_data.map(function(series) { 
+                                          var d0 = series.values[0].y;
+                                          var dN = series.values[series.values.length -1].y;             
+                                          series.values = series.values.map(function(d) {                     
+                                              return { 
+                                                x: d.x, 
+                                                y: (d.y-d0)/(dN-d0) 
+                                              }
+                                          });
+                                          return series;
+                                      })  
+                                    }
                                 nv.addGraph(function() {
                                     chart = nv.models.lineChart()
                                         .options({
                                             duration: 300,
                                             useInteractiveGuideline: true
                                         })
-                                        .width(965)
                                         .height(500)
                                     ;
                                     // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
@@ -431,10 +442,13 @@
                                     chart.yAxis
                                         .axisLabel('Datasets')
                                     ;
+                                    // chart.yAxis.outerTickSize(0);
+                                    chart.margin().left = 80;
                                     d3.select('#chart0 svg')
-                                        .datum(i_data)
+                                        .datum(data(i_data))
                                         .attr('width','100%')
                                         .call(chart);
+                                    d3.selectAll(".nv-axisMaxMin-y").remove();
                                     nv.utils.windowResize(chart.update);
                                     return chart;
                                 });
@@ -447,14 +461,25 @@
                         $.get('/_getUserIntegrationDataset',
                             function (integration_data) {
                                 i_data = integration_data.result;
-                                console.log(i_data);
+                                function data(i_data){
+                                      return i_data.map(function(series) { 
+                                          var d0 = series.values[0].y;
+                                          var dN = series.values[series.values.length -1].y;             
+                                          series.values = series.values.map(function(d) {                     
+                                              return { 
+                                                x: d.x, 
+                                                y: (d.y-d0)/(dN-d0) 
+                                              }
+                                          });
+                                          return series;
+                                      })  
+                                    }
                                 nv.addGraph(function() {
                                     chart = nv.models.lineChart()
                                         .options({
                                             duration: 300,
                                             useInteractiveGuideline: true
                                         })
-                                        .width(965)
                                         .height(500)
                                     ;
                                     // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
@@ -484,11 +509,15 @@
 
                                     chart.yAxis
                                         .axisLabel('Datasets')
+                                        // .ticks([0])
+                                        // .tickSizeOuter([0])
+                                        // .outerTicks(0)
                                     ;
                                     d3.select('#chart0 svg')
-                                        .datum(i_data)
+                                        .datum(data(i_data))
                                         .attr('width','100%')
                                         .call(chart);
+                                    d3.selectAll(".nv-axisMaxMin-y").remove();
                                     nv.utils.windowResize(chart.update);
                                     return chart;
                                 });
@@ -506,9 +535,9 @@
 
                 <div class="row" style="padding-top: 10px;">
                     <div class="col-lg-12">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-primary" style="height: 550px; width:100%">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Datasets Comparison 
+                                <h3 class="panel-title"><i class="fa fa-line-chart" aria-hidden="true"></i> Normalized Datasets Comparison 
                                  <form method="get" action="/returnIntegratedData" style="display: inline;">
                                     <button class="btn btn-info" type="submit" style="color: white; border:none; background:none; float: right; padding-top: 0px;">
                                         <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;"></i> Download Data
@@ -518,8 +547,8 @@
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <div id="chart0">
-                                    <svg style="width:100%;height: 500px;"></svg>
+                                <div id="chart0" style="height:500px;">
+                                    <svg width="100%" style="overflow: visible;"></svg>
                                 </div>
                             </div>
                         </div>

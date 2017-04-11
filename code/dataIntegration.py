@@ -211,8 +211,9 @@ class DataIntegration:
 
 	def getDataset(self):
 		"""
-			Return dataset array for visualization
+			Return normalized dataset array for visualization
 		"""
+		# self.normalizeDataset()
 		return self.dataset
 
 	def generateCSVFile(self):
@@ -228,10 +229,6 @@ class DataIntegration:
 
 		filename = "data/integrated_data/graph_dataset.csv"
 		i        = 0
-		# print self.dataset
-
-		
-		# print self.dataset[0].keys()
 
 		# Getting keys, dates and values
 		keys.append("date")
@@ -316,10 +313,38 @@ class DataIntegration:
 
 		# pprint(integrated_data)
 
+	def normalizeDataset(self):
+		"""
+			Funtion that normalize the dataset so that it can 
+			be properly graphed. We are utilizing the formula 
+			norm_value = (dataset_value - min(dataset)) / (max(dateset) - min(dateset))
+		"""
+
+		# Setting max and min as the first value
+		min = float(self.dataset[0]['values'][0]['y'])
+		max = min
+
+		# Getting min value of dataset
+		for dataset in self.dataset:
+			for value in dataset['values']:
+				if value['y'] < min:
+					min = value['y']
+
+		# Getting max value of dataset
+		for dataset in self.dataset:
+			for value in dataset['values']:
+				if value['y'] > max:
+					max = value['y']
+
+		for dataset in self.dataset:
+			for value in dataset['values']:
+				value['y'] = (value['y'] - min) / (max - min)
+
 if __name__ == '__main__':
 	comparator = DataIntegration()
 	comparator.addData([u"lbmp_CAPITL",u"load"])
+	pprint(comparator.getDataset())
 	# pprint(comparator.dataset)
 	# comparator.generateCSVFile()
 	# comparator.importDataFromCSV()
-	pprint(comparator.dataset)
+	# pprint(comparator.normalizeDataset())
