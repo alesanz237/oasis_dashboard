@@ -141,7 +141,7 @@ class DataIntegration:
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
-							    "cloudCover":"Cloud coverage"
+							    "cloudCover":"Cloud coverage",
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
@@ -151,7 +151,7 @@ class DataIntegration:
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
-							    "cloudCover":"Cloud coverage"
+							    "cloudCover":"Cloud coverage",
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
@@ -161,7 +161,7 @@ class DataIntegration:
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
-							    "cloudCover":"Cloud coverage"
+							    "cloudCover":"Cloud coverage",
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
@@ -171,7 +171,7 @@ class DataIntegration:
 							    "precip":"Precipitation data",
 							    "temp":"Temperature data",
 							    "humidity":"Humidity data",
-							    "cloudCover":"Cloud coverage"
+							    "cloudCover":"Cloud coverage",
 							    "wind":"Wind data",
 							    "load":"Load data",
 							    "lbmp":"Load based marginal pricing data"})
