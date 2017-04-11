@@ -337,6 +337,8 @@ class DataGathering:
 						windBearing     = unicode(hourly.get_hour(hour)[item])
 						windBearing     = self.helper.convertWindBearing(windBearing)
 						weather["wind"] = windBearing + " " + windSpeed + " mph"
+					if item == "cloudCover":
+						weather[item]   = str(hourly.get_hour(hour)[item] * 100).split(".")[0] + "%"
 
 				# Populating conditions array with weather dicitonary
 				conditions.append(weather)
@@ -596,6 +598,8 @@ class DataGathering:
 						weather[item] = str(hourly.get_hour(0)[item]).split(".")[0]
 					if item == "icon":
 						weather[item] = unicode(hourly.get_hour(0)[item])
+					if item == "cloudCover":
+						weather[item]   = str(hourly.get_hour(0)[item] * 100).split(".")[0] + "%"
 				weather["town"] = self.helper.getCoords(keyword)[2]
 		else:
 			return 'No Todays data'
@@ -645,6 +649,8 @@ class DataGathering:
 						weather[item] = str(daily.get_day(day)[item] * 100).split(".")[0] + "%"
 					if item == "time":
 						weather[item] = self.helper.getDateForWeather(daily.get_day(day)[item])
+					if item == "cloudCover":
+						weather[item]   = str(daily.get_day(day)[item] * 100).split(".")[0] + "%"
 				daily_weather.append(weather)
 				weather = {}
 		else:
@@ -734,6 +740,7 @@ if __name__ == '__main__':
 	# pprint(DataGathering().getDayAheadMarketLBMPZonal())
 
 	# data = DataGathering()
+	# pprint(data.getDailyWeather(u"mayaguez","f"))
 	# pprint(data.getHourlyWeather(u"mayaguez","f",13))
 	# pprint(data.getHourlyLoads())
 	# pprint(data.getHourlyZonalLBMP("CAPITL"))

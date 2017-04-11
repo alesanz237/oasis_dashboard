@@ -3738,3 +3738,14 @@
 {'polarity': 'negative', 'text': u'#RespectYourEldees https://t.co/Ug4yaPBnoi', 'created_at': u'Mon Apr 10 23:55:41 +0000 2017', 'location': u'San Juan, Puerto Rico'}
 {'polarity': 'negative', 'text': u'#RespectYourElders https://t.co/Ug4yaPBnoi', 'created_at': u'Mon Apr 10 23:56:02 +0000 2017', 'location': u'San Juan, Puerto Rico'}
 {'polarity': 'negative', 'text': u'@Lady_Distort Waiting for my stupid ac to drain and thaw out so I can get my booze on in cool comfort! Then mass ef\u2026 https://t.co/WZKTDbFVVz', 'created_at': u'Mon Apr 10 23:56:18 +0000 2017', 'location': u'San Juan, Puerto Rico'}
+{'polarity': 'negative', 'text': u'@KhonjinsHouse but he kicked a dog and put a live oNE IN A FURNACE https://t.co/okgXtIMmYy', 'created_at': u'Tue Apr 11 00:17:57 +0000 2017', 'location': u'san juan, puerto rico'}
+{'polarity': 'negative', 'text': u'@walkkker_ Ah no, es con las nenas de ac\xe1, si tiras el trip te ganas mi coraz\xf3n #serio \U0001f602', 'created_at': u'Tue Apr 11 00:18:44 +0000 2017', 'location': u'Puerto Rico '}
+{'polarity': 'negative', 'text': u'Pero por qu\xe9 suben la gasolina? Si la Tercera Guerra Mundial solo dur\xf3 un d\xeda. \U0001f914\U0001f914', 'created_at': u'Tue Apr 11 00:19:10 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'RT @Ariday228: te cuento ac\xe1... https://t.co/34c02XJ0Ke', 'created_at': u'Tue Apr 11 00:19:58 +0000 2017', 'location': u'Villalba, Puerto Rico'}
+{'polarity': 'negative', 'text': u'RT @IrisOrtiz60: Qu\xe9 pasar\xeda si RR no logra acuerdos con los estudiantes y la JSF asume el control? Pensando yo ac\xe1 .Dec\xeda mi mam\xe1 que cuan\u2026', 'created_at': u'Tue Apr 11 00:21:15 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'RT @pedromartir11: Me encojona cuando se va la luz y no tengo casi bateria', 'created_at': u'Tue Apr 11 00:21:48 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'*perdidos pero con gasolina*', 'created_at': u'Tue Apr 11 00:23:11 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u"Grayson Allen mocks his tripping incidents with 'Don't Trip\u2019 hat https://t.co/hurGWtqczN https://t.co/BV7poEeWln", 'created_at': u'Tue Apr 11 00:23:29 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'Que pasoooo? se te quedo sin gasolina el truck?', 'created_at': u'Tue Apr 11 00:28:06 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'RT @Yankee0327: Olv\xeddate de eso, disfruta de un camino nuevo. https://t.co/fQ7IOIEvj0', 'created_at': u'Tue Apr 11 00:29:16 +0000 2017', 'location': u'Puerto Rico'}
+{'polarity': 'negative', 'text': u'RT @KathiaMichelle4: Quien invent\xf3 esto deber\xeda saber que el puertorrique\xf1o lo \xfanico que har\xe1 es mirarla bien por dentro y por fuera par\u2026 ', 'created_at': u'Tue Apr 11 00:36:38 +0000 2017', 'location': u'Puerto Rico '}
