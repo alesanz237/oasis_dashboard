@@ -347,10 +347,10 @@ class DataGathering:
 			return 'No hourly data'
 		return conditions
 
-	def getHourlyWeatherFromCSV(self,town,deg,key):
+	def getHourlyWeatherFromCSV(self,town,scale,key):
 		"""
 			Function that returns weather data that is read from a csv file.
-			The csv file is accessed based on the town, deg and temperature data
+			The csv file is accessed based on the town, scale and temperature data
 			that the user wants.
 
 			Returns:
@@ -359,7 +359,7 @@ class DataGathering:
 		"""
 
 		# Variables
-		file         = "data/weather/"+town+"_"+deg+".csv"
+		file         = "data/weather/"+town+"_"+scale+".csv"
 		csv_data     = []
 		weather_data = []
 		weather      = {}
@@ -370,6 +370,9 @@ class DataGathering:
 			for row in reader:
 				csv_data.append(row) 
 		# Getting data that is needed for visualization
+
+		print csv_data
+
 		for data in csv_data:
 			# Parsing date
 			hour = int(data["date"].split(" ")[4].split(":")[0])
@@ -395,7 +398,7 @@ class DataGathering:
 			weather = {}
 		return weather_data
 
-	def getHourlyWeatherInCSV(self, keyword, temp):
+	def storeHourlyWeatherInCSV(self, keyword, temp):
 		""" 
 			Function that gets hourly weather data from
 			dark sky API for the next 24 hours and stores 
@@ -415,7 +418,7 @@ class DataGathering:
 		else:
 			filename = "data/weather/"+keyword+"_c.csv"
 		f = csv.writer(open(filename, "wb+"))
-		f.writerow(["date", "description", "precipitation", "cloud coverage", "temperature", "humidity", "wind", "icon"])
+		f.writerow(["date", "description", "precipitation", "cloudCover", "temperature", "humidity", "wind"])
 		for condition in conditions:
 			temp = condition['temperature'].split(" ")[0][:-2] + " " + condition['temperature'].split(" ")[1]
 			try:
@@ -425,8 +428,7 @@ class DataGathering:
 					condition['cloudCover'],
 					temp,
 					condition['humidity'],
-					condition['wind'],
-					condition['icon']])
+					condition['wind']])
 			except:
 				pass
 
@@ -441,8 +443,8 @@ class DataGathering:
 				File name will be <town>_<c or f>.csv
 		"""
 		for town in self.helper.getTowns():
-			self.getHourlyWeatherInCSV(unicode(town),"f")
-			self.getHourlyWeatherInCSV(unicode(town),"c")
+			self.storeHourlyWeatherInCSV(unicode(town),"f")
+			self.storeHourlyWeatherInCSV(unicode(town),"c")
 
 	def getHourlyPrecip(self, keyword):
 		""" 
@@ -490,7 +492,7 @@ class DataGathering:
 			cloud_cover_values.append(cloud_cover_data)
 			cloud_cover_data = {}
 
-		return precip_values
+		return cloud_cover_values
 
 	def getHourlyHumidity(self, keyword):
 		""" 
@@ -542,10 +544,10 @@ class DataGathering:
 
 		return wind_values
 
-	def getHourlyTemp(self, keyword, deg):
+	def getHourlyTemp(self, keyword, scale):
 		""" 
 			Function that returns an array of dicitionaries that
-			contain hourly temperature based on degree (C or F).
+			contain hourly temperature based on scale (C or F).
 
 			Return:
 				Array: filled with dictionary that have the 
@@ -554,7 +556,7 @@ class DataGathering:
 					y: the float value of the temperature in C or F
 		"""
 
-		weather_data = self.getHourlyWeatherFromCSV(keyword, deg, "temperature")
+		weather_data = self.getHourlyWeatherFromCSV(keyword, scale, "temperature")
 		temp_values  = [] # Array that will contain all the temperature data
 		temp_data    = {} # Dictionary of temperature data
 
@@ -756,16 +758,17 @@ def job():
 
 if __name__ == '__main__':
 
-	# schedule.every().day.at("23:00").do(job)
+	schedule.every().day.at("23:00").do(job)
 
-	# while True:
-	    # schedule.run_pending()
-	    # time.sleep(20) # wait one minute
+	while True:
+	    schedule.run_pending()
+	    time.sleep(20) # wait one minute
 
 	# pprint(DataGathering().getDayAheadMarketLBMPZonal())
 
-	data = DataGathering()
-	data.getHourlyWeatherInCSV(u"mayaguez","f")
+	# data = DataGathering()
+	# data.getHourlyWeatherInCSV(u"mayaguez","f")
+	# data.storeHourlyWeatherInCSV(u"aguada", "f")
 	# pprint(data.getDailyWeather(u"mayaguez","f"))
 	# pprint(data.getHourlyWeather(u"mayaguez","f",13))
 	# pprint(data.getHourlyLoads())

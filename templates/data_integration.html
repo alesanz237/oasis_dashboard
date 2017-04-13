@@ -164,8 +164,10 @@
                             function (select_values) {
                                 if ($('#select_1').val() === "precip"   ||
                                     $('#select_1').val() === "humidity" ||
-                                    $('#select_1').val() === "wind"     ){
+                                    $('#select_1').val() === "wind"     ||
+                                    $('#select_1').val() === "cloudCover"){
                                     getTowns(1);
+                                    console.log("")
                                 }
                                 else if ($('#select_1').val() === "temp"){
                                     getTowns(1);
@@ -194,7 +196,8 @@
                             function (select_values) {
                                 if ($('#select_2').val() === "precip"   ||
                                     $('#select_2').val() === "humidity" ||
-                                    $('#select_2').val() === "wind"     ){
+                                    $('#select_2').val() === "wind"     ||
+                                    $('#select_2').val() === "cloudCover"){
                                     getTowns(2);
                                 }
                                 else if ($('#select_2').val() === "temp"){
@@ -224,7 +227,8 @@
                             function (select_values) {
                                 if ($('#select_3').val() === "precip"   ||
                                     $('#select_3').val() === "humidity" ||
-                                    $('#select_3').val() === "wind"     ){
+                                    $('#select_3').val() === "wind"     ||
+                                    $('#select_3').val() === "cloudCover"){
                                     getTowns(3);
                                 }
                                 else if ($('#select_3').val() === "temp"){
@@ -248,7 +252,8 @@
                     $('#select_4').change(function () { 
                         if ($('#select_4').val() === "precip"   ||
                             $('#select_4').val() === "humidity" ||
-                            $('#select_4').val() === "wind"     ){
+                            $('#select_4').val() === "wind"     ||
+                            $('#select_4').val() === "cloudCover"){
                             getTowns(4);
                         }
                         else if ($('#select_4').val() === "temp"){
@@ -344,14 +349,15 @@
                         var values = {}
 
                         // Getting index of values
-                        var precip_index   = selected_values.indexOf("precip");
-                        var humidity_index = selected_values.indexOf("humidity");
-                        var wind_index     = selected_values.indexOf("wind");
-                        var temp_index     = selected_values.indexOf("temp");
-                        var load_index     = selected_values.indexOf("load");
-                        var lbmp_index     = selected_values.indexOf("lbmp");
-                        var pos_index      = selected_values.indexOf("pos");
-                        var neg_index      = selected_values.indexOf("neg");
+                        var precip_index     = selected_values.indexOf("precip");
+                        var humidity_index   = selected_values.indexOf("humidity");
+                        var wind_index       = selected_values.indexOf("wind");
+                        var temp_index       = selected_values.indexOf("temp");
+                        var load_index       = selected_values.indexOf("load");
+                        var lbmp_index       = selected_values.indexOf("lbmp");
+                        var pos_index        = selected_values.indexOf("pos");
+                        var neg_index        = selected_values.indexOf("neg");
+                        var cloudCover_index = selected_values.indexOf("cloudCover");
 
                         if (precip_index > -1){
                             precip_index +=1
@@ -378,6 +384,11 @@
                             lbmp_index +=1
                             var zone = $('#select_zone_'+lbmp_index).val();
                             datasets.push("lbmp_"+zone);
+                        }
+                        if (cloudCover_index > -1){
+                            cloudCover_index +=1
+                            var town = $('#select_town_'+cloudCover_index).val();
+                            datasets.push("cloudCover_"+town);
                         }
                         if (load_index > -1){
                             datasets.push("load");

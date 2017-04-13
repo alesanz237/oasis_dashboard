@@ -79,7 +79,6 @@ class DataIntegration:
 
 		# Getting precipitation dataset
 		if identifier == "precip":
-
 			town           = dataset[1]
 			# print identifier+"_"+town
 			# print self.data.getHourlyPrecip(town)
@@ -313,36 +312,9 @@ class DataIntegration:
 
 		# pprint(integrated_data)
 
-	def normalizeDataset(self):
-		"""
-			Funtion that normalize the dataset so that it can 
-			be properly graphed. We are utilizing the formula 
-			norm_value = (dataset_value - min(dataset)) / (max(dateset) - min(dateset))
-		"""
-
-		# Setting max and min as the first value
-		min = float(self.dataset[0]['values'][0]['y'])
-		max = min
-
-		# Getting min value of dataset
-		for dataset in self.dataset:
-			for value in dataset['values']:
-				if value['y'] < min:
-					min = value['y']
-
-		# Getting max value of dataset
-		for dataset in self.dataset:
-			for value in dataset['values']:
-				if value['y'] > max:
-					max = value['y']
-
-		for dataset in self.dataset:
-			for value in dataset['values']:
-				value['y'] = (value['y'] - min) / (max - min)
-
 if __name__ == '__main__':
 	comparator = DataIntegration()
-	comparator.addData([u"lbmp_CAPITL",u"load"])
+	comparator.addData([u"cloudCover_aguada",u"load"])
 	pprint(comparator.getDataset())
 	# pprint(comparator.dataset)
 	# comparator.generateCSVFile()
