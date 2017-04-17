@@ -107,3 +107,166 @@ consumer_key        = "7BcsxgQByiwwdgIhCuO6VuOLg"
 consumer_secret     = "iZH0eeEeX4pb69jAxspk0tvo4o54nRE4hdwWHWrt4Ss8RliBqD"
 load_zones          = (["PJM","NORTH","MILLWD","GENESE","MHK VL","O H","HUD VL","CENTRL","LONGIL","WEST","NPX","DUNWOD",
 						"N.Y.C","H Q","CAPITL"])
+glossary            = ({"A": [
+							{"Acceptation":"a particular sense of the generally recognized meaning of a word or phrase"},					
+							{"Aggregator":"are the mediators between the consumer and the markets"},
+							{"Adaptive capacity":"The ability of the stakeholders to agree to experiment with alternatives to mitigate problems with sustainability aspects highlights the potential ability of the social system to learn and adapt to a technological intervention within the carrying capacity of the ecological systems and the technological capacity of the society over time. Renewable energy interventions should therefore provide flexibility for stakeholders to adapt to sustainability aspects within the constraints of the applicable social and institutional systems."},
+							{"Adaptive management":"Renewable energy for electricity generation is relatively new to remote areas of developing countries. The management of a technology during and after intervention requires technical skills and understanding of equipment performance and economic benefits that are not readily available in this traditional context. Traditional social structures that need to support the technological intervention must be engaged to deal with the adaptive responses to changes in social values and eco-services."},
+							{"Agent Based Simulation":"Renewable energy for electricity generation is relatively new to remote areas of developing countries. The management of a technology during and after intervention requires technical skills and understanding of equipment performance and economic benefits that are not readily available in this traditional context. Traditional social structures that need to support the technological intervention must be engaged to deal with the adaptive responses to changes in social values and eco-services."},
+							{"Arnstein’s Influential Ladder of Citizen Participation":"She defines citizen participation as the redistribution of power that enables citizens, presently excluded from the political and economic processes, to be deliberately included in the future."}
+							],
+						"B": [
+							{"Battery Management System":"is any electronic system that manages a rechargeable battery."},
+							{"Bias":"prejudice in favor of or against one thing, person, or group compared with another, usually in a way considered to be unfair."},
+							{"Big data":"extremely large data sets that may be analyzed computationally to reveal patterns, trends, and associations, especially relating to human behavior and interactions."},
+							{"Biofuel":"is a fuel that is produced through contemporary biological processes, such as agriculture and anaerobic digestion, rather than a fuel produced by geological processes such as those involved in the formation of fossil fuels, such as coal and petroleum, from prehistoric biological matter."},
+							{"Biomass":"is a biological material derived from living, or recently living organisms."},
+							{"Bourse":"a stock market in a non-English-spaking country, especially France"},
+							{"Broker":"is an individual or firm that charges a fee or commission for executing buy and sell orders submitted by an investor."},
+							{"Business Community":"the body of individuals who manage business. (Businessmen)"}
+							],
+						"C": [
+							{"Cognitive Architecture":"is a hypothesis about the fixed structures that provide a mind, whether in natural or artificial systems, and how they work together to yield intelligent behavior in a diversity of complex environments."},
+							{"Collaboration":"the action of working with someone to produce or create something."},
+							{"Collaboration capacity":"the collective ability of a group to combine various form of capital within institutional and relational contexts to produce desired results and outcomes."},
+							{"Collaborative management":"The idea behind this type of management style is to allow managers to combine their strengths with the strengths of other members of the team, making it possible to collectively offset any weaknesses that may be found among the team members."},
+							{"Combined Heat and Power (CHP)":"is an integrated set of technologies for the simultaneous, on-site production of electricity and heat."},
+							{"Common Pool Resource":"is a type of good consisting of a natural or human-made resource system, whose size or characteristics makes it costly, but not impossible, to exclude potential beneficiaries from obtaining benefits from its use."},
+							{"Community":"a group of humans or individuals that share stuff in common, such as language, traditions, values, tasks, vision of the world, geographic location, social status and social roles."},
+							{"Community capacity":"the collective ability of a group to combine various form of capital within institutional and relational contexts to produce desired results and outcomes"},
+							{"Community engagement":"is a planned process with the specific purpose of working with identified groups of people, whether they are connected by geographic location, special interest, or affiliation or identify to address issues affecting their well-being."},
+							{"Community of interest":"isn't limited to a location but they do share the same interests."},
+							{"Community of locality":"involves people living in the same area where everyone there has a personal interest in it."},
+							{"Community sense":"is the perception of similarity to other individuals, a recognition of interdependence with others, a willingness to keep this interdependence doing for others what one expects of them and the feeling that one is part of a stable interdependent structure."},
+							{"Complexity":"Interactions between and within human and natural systems can result in misunderstanding and a mismatch between expectations and bio-physical and economic capacities. This complexity is likely to be poorly understood initially, and therefore deductive rather than inductive learning should direct technological design and intervention. Especially behavioral changes in the socio-economic, and the implications thereof for ecological systems, have high uncertainty."},
+							{"Consensus algorithm":"to achieve overall system reliability in the presence of a number of faulty processes."},
+							{"Consumer behavior":"is the study of individuals, groups, or organizations and the processes they use to select, secure, use, and dispose of products, services, experiences, or ideas to satisfy needs and the impacts that these processes have on the consumer and society."},
+							{"Control strategy":"is a set of discrete and specific measures identified and implemented to achieve reductions in air pollution."},
+							{"Cooperative federalism":"when government representatives work with representatives of other governments to make boundary-crossing programs work."},
+							{"Co-provider":" is a term introduced by Van Vlier et al (2005) that refer the shift in the role of end-users from passive consumer to active contributors."},
+							{"Cross-disciplinary collaboration":"that which strives to combine and sometimes integrate concepts, methods and theories drawn from two or more fields."},
+							{"Currents power":"is a form of marine neergy obtained from harnessing of the kinetic energy of marine currents."}
+							],
+						"D": [
+							{"Demand responses":"changes in electricity consumption by end-users in response to supply condition"},
+							{"Demand side management (DSM)":"is the modification of consumer demand for energy through various methods such as financial incentivs and behavioral change through education."},
+							{"Decision-making":"is regarded as the cognitive process resulting in the slection of a belief or a course of action among several alternative possibilitites"},
+							{"Distributed Cognition":"is a hybrid approach to studying all aspects of cognitions, from a cognitive, social and organizational perspective."},
+							{"Distributed Generation":"Generating power on-site, rather than centrally, elimitates the cost, complexity, interdependencies, and inefficiencies associated with transmission and distribution."}
+							],
+						"E": [
+							{"Efficient energy user":"amount of effort expended by user in a household to reduce energy consumption and the extent to which energy efficient appliances are utilized"},
+							{"Electric Power Research Institute (EPRI)":"The Electric Power Research Institute conducts research on issues related to the electric power industry in USA. EPRI is a nonprofit organization funded by the electric utility industry, founded and headquartered in Palo Alto, California."},
+							{"Electricity Market": "is a system enabling purchases, through bids to buy; sales, through offers to sell; and short-term trades, generally in the form of financial or obligation swaps."},
+							{"Embedded systems":"is a computer system with a dedicated function within a larger mechanical or electrical system, often with real-time computing constraints"},
+							{"Empowerement":"is a processes in which the individuals take control over their lives and over their democratic participation in its community, and can endure a critical understanding of its environment."},
+							{"Energy Big Data":"lots and lot of data in the energy sector."},
+							{"Energy consumption":"is the consumption of energy or power"},
+							{"Energy saving":"refers to reducing energy consumption through using less of an energy service."},
+							{"Energy transition":"is a transition towards a sustainable model of energy supply characterized by “universal access to energy services, and security and reliability of supply from efficient, low-carbon sources"},
+							{"Environment":"climate, weather, and natural resoruces that affect human survivival and economic activity."}
+							],
+						"F": [
+							{"Family":"is a group of people affiliated by consanguinity, affinity, or co-residence and/or shared consumption."},
+							{"Feasibility":"the state or degree of being easily or conveniently done"},
+							{"Fossil fuel":"is a general term for buried combustible geologic deposits of organic materials, formed from decayed plants and animals that have been converted to crude oil, coal, natural gas, or heavy oils by exposure to heat and pressure in the earth's crust over hundreds of millions of years."}
+							],
+						"G": [
+							{"Governance":"the practices, processes, and policies of energy regulatory institutions as well as the larger political dynamics and structures within which they are embedded."},
+							{"Government policies":"political activities, plans and intentions relating to a concrete cause or, at the assumption of office."}
+							],
+						"H": [
+							{"Hydroelectricity":"electricity generated by hydropower; the production of electrical power thorugh the use of the garviational forece of afalling or flowing water."}
+							],
+						"I": [
+							{"Innovation":"the process of translating an idea or invention into a good or service that creates value or for which customers will pay"},
+							{"Institution":"a society or organization founded for a religious, educational, social, or similar purpose."},
+							{"Integration":"relationship among commitee members which is conductive to positive results rather than mere compromise."},
+							{"Intelligent Electronic Device (IED)":"is used to describe microporcessor-based controllers of power system equipment, such as circuit breakers, transforemerts and capacitor banks."},
+							{"Interconnection":"Is the physical linking of a carrier's network with equipment or facilitites not belonging to that network."},
+							{"Interdisciplinary":"Interactive process where team members work jointly, each from his or her own discipline-specific perspective to address a common research problem."},
+							{"Intergeneration relations":"are the social and family relationships between memebers of different generations."},
+							{"Irradiance":"is the radiant flux (power) received by a surface per unit area"}
+							],
+						"K": [
+							{"Kinetic energy":"is the energy that an object possesses due to its motion"}
+							],
+						"M": [
+							{"Market":"an area or arena in which commercial dealings are conducted"},
+							{"Mechanical energy":"is the sum of kinetic and potential energy, is the energy associated to the motion and position of an object"},
+							{"Multidisciplinary":"a sequential process in which scholars from disparate fields work independently, each from his or her own discipline-specific perspective, periodically coming together to combine efforts to address a common research problem."}
+							],
+						"N": [
+							{"Network":"a pattern of interdependence among social actors in which at least a portion of the links are framed in terms of something other than superior-subornidate relations."},
+							{"Networks":"structures of interdependence involving multiple organizations or parts thereof, where one unit is not merely the formal subordinate of the others in some larger hierarchical management capacity is an ability to: anticipate and influence change; make informed and intelligent policy decisions; attract, absorb, and manage resources; and evaluate current activities in order to guide future action."}
+							],
+						"O": [
+							{"Ocean current":"is the movement of seawater caused by breaking wind, waves, and salinity differences."},
+							{"Ocean Thermal Energy Conversion (OTEC)":"is a marine renewable energy technology that catches the solar energy absorbed by the oceans."},
+							{"Ocean tides":"are the rise and fall of sea levels cased by the combined effects of gravitational forces exerted by the Moon, Sun, and rotation of the Earth."},
+							{"Ocean waves":"is a disturbance in the ocean that transmits energy from one place to another"},
+							{"Open access":"refers to online research outputs that are free of all restrictions on access and free of many restrictions on use"},
+							{"Organizational behavior":"is the study of the way people interact withing groups. Normally this study is applied in an attempt to create more efficient business organizations"}
+							],
+						"P": [
+							{"Participation":"the action of taking aprt in something"},
+							{"Pipeline":"is a set of data processing elements connected in series, where the output of one element is the input of the next one"},
+							{"Policy":"is a deliberate system of principles to guide decisions and achieve rational outcomes"},
+							{"Potential energy":"is the neergy that an object has due to its position in a force field or that a system has due to the configuration of its parts."},
+							{"Power flow study":"is a numerical analysis of the flow of electric power in an interconnected system."}
+							],
+						"R": [
+							{"Real time deployment":"structures of interdependence involving multiple organizations or parts thereof, where one unit is not merely the formal subordinate of the others in some larger hierarchical management capacity is an ability to: anticipate and influence change; make informed and intelligent policy decisions; attract, absorb, and manage resources; and evaluate current activities in order to guide future action."},
+							{"Redundancy":"the duplication of critical components or functions of a system with the intention of increasing reliability"},
+							{"Reputation systems":"computes and publishes reputation scores for a set of objects withing a community or domain, based on a colection of opinions that other entities hold about the objects."},
+							{"Resilience":"structures of interdependence involving multiple organizations or parts thereof, where one unit is not merely the formal subordinate of the others in some larger hierarchical management capacity is an ability to: anticipate and influence change; make informed and intelligent policy decisions; attract, absorb, and manage resources; and evaluate current activities in order to guide future action."}
+							],
+						"S": [
+							{"Scarcity":"the state of being scarce or in short supply; shortage"},
+							{"Schumpeter's waves":"is an economic theory about innovation cyvles and/or technological changes."},
+							{"Simulation":"is the imitation of the operation of a real-world process or system over time."},
+							{"Smart appliance":"is an appliance that amy be configured to communicate information directly to the utility operator for efficient and more productive use of electricity"},
+							{"Smart energy systems":"is a 100% renewable energy system that is affordable and consumes sustainable bionergy and uses its sysnergies for more efficiency."},
+							{"Smart grid":"an electricity supply network that uses digital communications technology to detect and react to local changes in usage"},
+							{"Smart metering technology":"refer to the information and communication technology working in balance with the power generation and consumption, allowing bidirectional transfer of information between components."},
+							{"Smart meters":"is an electronic device that records consumption of electric energy in intervals of an hour or less and communicates that information at least daily back to the utility for monitoring and billing."},
+							{"Social justice":"is the fair and just relation between the indicidual and society."},
+							{"Sustainability":"is the endurance of systems and processes"},
+							{"Social networks":"a dedicated website or other application that enables users to communicate with each other"},
+							{"Social planning":"understanding and preparing for the societal outcomes of energy transitions, as well as developing strategies to incorporate these considerations into energy policy"},
+							{"Social planning for energy transitions":"is an electronic device that records consumption of electric energy in intervals of an hour or less and communicates that information at least daily back to the utility for monitoring and billing."},
+							{"Social preferences":"includes interpersonal altruism, fairness, reciprocity, and inequity aversion"},
+							{"Sociology of Energy":"is playing a key role in shaping the academic and policy debates around a range of energy issues at every scale: from domestic heating and household energy use, to community energy projects, to urban energy governance, and huge offshore wind farms."},
+							{"Sociotechnological systems":"systems that so fully intertwine social and technological elements that the two are difficult if not impossible to disentangle."},
+							{"Solar winds":"is a stream of charged particles released from the upper atmosphere of the Sun."},
+							{"Spark":"Apache Spark is an open source processing engine built around speed, ease of user, and analytics."},
+							{"Stakeholders":"are creditors, directors, employees, government agencies, owners, suppliers, unions, and the community form which the business draws its resources."},
+							{"Static algorithm":"an algorithm whose operation is known in advance. Also know as deterministic algorithm."},
+							{"Strategic Niche Management (SNM)":"is a tool to support the societal introduction of radical sustainable innovations."},
+							{"Streaming Algorithms":"are algorithms for processing data streams in which the input is presented as a sequence of items and can be examined in only a few passes."},
+							{"Sustainable Energy Market":"is a virtual platform that gathers all renewable energy actors' expertise and work to pursue the deployment of renewable energies in developing countries."},
+							{"System Restoration":"systems that so fully intertwine social and technological elements that the two are difficult if not impossible to disentangle."}
+							],
+						"T": [
+							{"Technology Acceptance Model (TAM)":"model used in research about information systems and information technology with good predicted value"},
+							{"Technology assesment":"the evaluation of an object, function, or sequence of functions – created by human society to assist in achieving a goal- with respect to sustainability in comparison of other solutions providing the same functions."},
+							{"Thermal energy":"is the energy that comes from heat. The heat is generated by movement"},
+							{"Tidal power":"is a form of hydropower that converts the energy obtained from tides into useful forms of power, mainly electricity."},
+							{"Tolerance":"an allowable amount of variation of a specidied quantity, especially in the dimensions of a machine or part."},
+							{"Tragedy of the Commons":"is a situation where individuals acting independently and rationally according to their own self-interest behave contrary to the best interests of the whole by depleting some common resource."},
+							{"Transdisciplinarity":"the different perspectives of experts and stakeholders on the aspects of sustainability are essential for the design stage. Thereby, technology designers can acquire a practical integrated understanding of the most important aspects and obtain agreement on the most important performance indicators for a type of technological intervention."},
+							{"Transdisciplinary":"integrative process in which researchers work jointly to develop and use a shared conceptual framework that synthesizes and extends discipline-specific theories, concepts, methods, or all three to create new models and language to address a common research problem."}
+							],
+						"U": [
+							{"Unidisciplinary":"a process in which researchers from a single discipline work together to address a common research problem"},
+							{"User":"a person who uses or operates something, especially a computer or other machine"},
+							],
+						"W": [
+							{"Wind":"is the movement of air caused by the irrefular heating on Earth's surface."},
+							{"Wind Power":"is the transformation of wind energy into more utile forms, electricity using wind turbine."},
+							{"Wind Turbine":"is a machine that converts the kinetic energy from the wind into mechanical energy."}
+							]
+						})
+
+
+

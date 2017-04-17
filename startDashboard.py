@@ -43,6 +43,10 @@ def getTwitter():
 def getWeather():
     return render_template("weather.html")
 
+@app.route("/capacity_building")
+def getCapacityBuilding():
+    return render_template("capacity_building.html")
+
 @app.route("/integration")
 def dataIntegration():
     return render_template("data_integration.html",select_values=data_integration.getSelectValues(0))
@@ -180,7 +184,7 @@ def getIntegrationDataset():
 @app.route("/_getUserIntegrationDataset")
 def getUserIntegrationDataset():
     data_integration.importDataFromCSV()
-    print data_integration.getDataset()
+    # print data_integration.getDataset()
     return jsonify(result = data_integration.getDataset())
 
 @app.route('/returnTweets')
@@ -228,6 +232,24 @@ def upload_file():
             f.save(secure_filename(filename))
             subprocess.Popen('code/processes/moveIntegratedData.sh',shell=True)
             return redirect(url_for("dataIntegration"))
+
+@app.route('/_getGlossary')
+def get_glossary():
+    """
+        Route that returns the glossary for the capacity building section
+    """
+    return jsonify(result = data.getGlossary())
+
+@app.route('/_searchGlossary')
+def search_glossary():
+    """
+        Route that searches by keyword in the glossary 
+        and returns all words and definitions matching
+        the keyword for the capacity building section.
+    """
+    keyword = str(request.args['keyword'])
+    print keyword
+    return jsonify(result = data.searchGlossary(keyword))
 
 def allowed_filename(filename):
     """ Function that checks that file extension is csv """

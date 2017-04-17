@@ -4,6 +4,7 @@ from pprint import pprint
 from helper import Helper
 from random import randint
 from forecastiopy import *
+from params import glossary
 import json
 import csv
 import urllib2
@@ -747,6 +748,36 @@ class DataGathering:
 			if data["key"] == zone:
 				return data["values"]
 
+	def getGlossary(self):
+		"""
+			Funtion  that returns the glossary for the dashboard
+
+			Return: Dictionary
+				Dictionary that has a "letter":[{array of definitions}]. 
+				Each inner dictionary is of the following: 
+				{"word":"definition"}
+		"""
+		return glossary
+
+	def searchGlossary(self,keyword):
+		"""
+			Funtion  that returns the glossary for the dashboard
+
+			Return: Dictionary
+				Dictionary that has a "letter":[{array of definitions}]. 
+				Each inner dictionary is of the following: 
+				{"word":"definition"}
+
+		"""
+		words = []
+
+		for letter in glossary:
+			for word in glossary[letter]:
+				print word.keys()[0]
+				if keyword.lower() in word.keys()[0].lower():
+					words.append(word)
+
+		return words
 def job():
     """
         Function that generates daily weather data for each town
@@ -758,15 +789,16 @@ def job():
 
 if __name__ == '__main__':
 
-	schedule.every().day.at("23:00").do(job)
+	# schedule.every().day.at("23:00").do(job)
 
-	while True:
-	    schedule.run_pending()
-	    time.sleep(20) # wait one minute
+	# while True:
+	#     schedule.run_pending()
+	#     time.sleep(20) # wait one minute
 
 	# pprint(DataGathering().getDayAheadMarketLBMPZonal())
 
-	# data = DataGathering()
+	data = DataGathering()
+	pprint(data.searchGlossary("big data"))
 	# data.getHourlyWeatherInCSV(u"mayaguez","f")
 	# data.storeHourlyWeatherInCSV(u"aguada", "f")
 	# pprint(data.getDailyWeather(u"mayaguez","f"))
